@@ -1,4 +1,4 @@
-import database.Posts
+import database.Checks
 import database.database
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -13,34 +13,13 @@ import io.ktor.routing.get
 import io.ktor.routing.route
 import io.ktor.routing.routing
 import kotlinx.coroutines.launch
-import kotlinx.css.*
-import kotlinx.css.properties.lh
 import kotlinx.html.*
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.list
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.list
-import kotlinx.serialization.parse
-import model.Post
-import model.PostWithComments
-import network.PostClient
+import model.Check
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.insert
 import rpc.rpc
-import services.PostService
-import services.PostWithCommentsService
-
-private val globalCss = CSSBuilder().apply {
-    body {
-        margin(0.px)
-        padding(0.px)
-
-        fontSize = 13.px
-        fontFamily = "-system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, Arial, sans-serif"
-
-        lineHeight = 20.px.lh
-    }
-}
+import services.CheckService
 
 fun Application.main() {
     install(ContentNegotiation) {
@@ -48,19 +27,15 @@ fun Application.main() {
     }
 
     database {
-        SchemaUtils.create(Posts)
+        SchemaUtils.create(Checks)
     }
 
     launch {
-        val result = PostClient(this.coroutineContext).getPosts()
-        val posts = Json.decodeFromString(ListSerializer(Post.serializer()), result)
 
         database {
-            Posts.batchInsert(posts) {
-                this[Posts.postId] = it.id
-                this[Posts.userId] = it.userId
-                this[Posts.title] = it.title.take(50)
-                this[Posts.body] = it.body.take(255)
+            Checks.insert {
+                it[checkId] = 1
+                it[checkText] = "Everything is fine. Thanks."
             }
         }
     }
@@ -75,19 +50,13 @@ fun Application.main() {
                     title {
                         +"Kotlin full stack application demo"
                     }
-                    style {
-                        unsafe {
-                            +globalCss.toString()
-                        }
-                    }
                 }
                 body {
                     div {
                         id = "react-app"
                         +"Loading..."
                     }
-                    script(src = "/client.js") {
-                    }
+                    script(src = "/client.js") { }
                 }
             }
         }
@@ -97,8 +66,7 @@ fun Application.main() {
         }
 
         route("/api") {
-            rpc(PostService::class, Post.serializer())
-            rpc(PostWithCommentsService::class, PostWithComments.serializer())
+            rpc(CheckService::class, Check.serializer())
         }
     }
 }
