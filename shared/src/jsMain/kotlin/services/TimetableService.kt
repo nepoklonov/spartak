@@ -1,12 +1,10 @@
 package services
 
-import model.Workout
+import model.WorkoutDTO
 
 actual class TimetableService {
-
-    actual suspend fun getWeekTimetable(): List<Workout> = TODO()
-    actual suspend fun addWorkout(): Workout = TODO()
-    actual suspend fun editWorkout(): Workout = TODO()
-    actual suspend fun deleteWorkout(): Workout = TODO()
-
+    actual suspend fun getWeekTimetable(): List<WorkoutDTO> = TODO()
+    actual suspend fun addWorkout(newWorkout: WorkoutDTO): Int = TODO()
+    actual suspend fun editWorkout(workout: WorkoutDTO): Boolean = TODO()
+    actual suspend fun deleteWorkoutById(id: Int): Boolean = TODO()
 }

@@ -3,8 +3,9 @@ package model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TeamMember(
-        val Id: Int,
+data class TeamMemberDTO(
+        var id: Int?,
+        val teamId: Int,
         //val photo: ???,
         val firstName: String,
         val lastName: String,

@@ -1,11 +1,11 @@
 package services
 
-import model.Team
+import model.TeamDTO
 
 expect class TeamService {
-    suspend fun getTeam(name: String): Team
-    suspend fun editTeam(team: Team): Unit
-    suspend fun addTeam(team: Team): Unit
-    suspend fun deleteTeam(team: Team): Unit
-
+    suspend fun getTeam(name: String): TeamDTO
+    suspend fun getTeamByYear(year: Int): List<TeamDTO>
+    suspend fun editTeam(team: TeamDTO): Boolean
+    suspend fun addTeam(team: TeamDTO): Int // return new team id
+    suspend fun deleteTeam(team: TeamDTO): Boolean
 }

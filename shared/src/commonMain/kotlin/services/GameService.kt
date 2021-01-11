@@ -1,10 +1,10 @@
 package services
 
-import model.Game
+import model.GameDTO
 
 expect class GameService {
-    suspend fun getAllGamesByYear(year: Int): List<Game>
-    suspend fun addGameById(id: Int): Game
-    suspend fun editGameById(id: Int): Game
-    suspend fun deleteGameById(id: Int): Game
+    suspend fun getAllGamesByYear(year: Int): List<GameDTO>
+    suspend fun addGame(newGame: GameDTO): Int
+    suspend fun editGame(game: GameDTO): Boolean
+    suspend fun deleteGameById(id: Int): Boolean
 }
