@@ -6,8 +6,8 @@ import kotlin.coroutines.CoroutineContext
 
 actual class TeamMembersService(coroutineContext: CoroutineContext) {
     private val transport = Transport(coroutineContext)
-    actual suspend fun getTeamMemberById(id: Int): TeamMemberDTO {
-        return transport.get("getTeamMemberDTO", TeamMemberDTO.serializer())
+    actual suspend fun getTeamMemberById(id: String): TeamMemberDTO {
+        return transport.get("getTeamMemberById", TeamMemberDTO.serializer(), "id" to id)
     }
 
     actual suspend fun addTeamMember(newTeamMember: TeamMemberDTO): Int = TODO()

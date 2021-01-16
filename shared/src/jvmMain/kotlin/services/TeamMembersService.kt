@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.selectAll
 import rpc.RPCService
 
 actual class TeamMembersService : RPCService{
-    actual suspend fun getTeamMemberById(id: Int): TeamMemberDTO{
+    actual suspend fun getTeamMemberById(id: String): TeamMemberDTO{
         return database {
             TeamMembers.selectAll().first().let {
                 TeamMemberDTO(it[TeamMembers.id].value,

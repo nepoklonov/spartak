@@ -42,7 +42,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
             }
 
             val teamMember = try {
-                teamMembersService.getTeamMemberById(0)
+                teamMembersService.getTeamMemberById("0")
             } catch (e: Throwable) {
                 setState {
                     error = e
