@@ -3,9 +3,10 @@ package view
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.Check
+import model.TeamMemberDTO
 import react.*
-import react.dom.br
 import services.CheckService
+import services.TeamMembersService
 import styled.styledDiv
 
 external interface ApplicationProps : RProps {
@@ -15,6 +16,7 @@ external interface ApplicationProps : RProps {
 class ApplicationState : RState {
     var error: Throwable? = null
     var check: Check? = null
+    var teamMember: TeamMemberDTO? = null
 }
 
 class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
@@ -27,6 +29,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
 
     override fun componentDidMount() {
         val checkService = CheckService(coroutineContext)
+        val teamMembersService = TeamMembersService(coroutineContext)
 
         props.coroutineScope.launch {
             val check = try {
@@ -38,8 +41,18 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
                 return@launch
             }
 
+            val teamMember = try {
+                teamMembersService.getTeamMemberById(0)
+            } catch (e: Throwable) {
+                setState {
+                    error = e
+                }
+                return@launch
+            }
+
             setState {
                 this.check = check
+                this.teamMember = teamMember
             }
         }
     }
@@ -51,6 +64,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
         }
         styledDiv {
             +(state.check?.checkText ?: "Let's wait.")
+            +(state.teamMember?.firstName ?: "Let's wait too...")
         }
     }
 }

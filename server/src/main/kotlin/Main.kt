@@ -1,25 +1,22 @@
+
 import database.Checks
+import database.TeamMembers
 import database.database
-import io.ktor.application.Application
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.html.respondHtml
-import io.ktor.http.content.files
-import io.ktor.http.content.resources
-import io.ktor.http.content.static
-import io.ktor.jackson.jackson
-import io.ktor.routing.get
-import io.ktor.routing.route
-import io.ktor.routing.routing
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.html.*
+import io.ktor.http.content.*
+import io.ktor.jackson.*
+import io.ktor.routing.*
 import kotlinx.coroutines.launch
 import kotlinx.html.*
 import model.Check
+import model.TeamMemberDTO
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.CheckService
+import services.TeamMembersService
 
 fun Application.main() {
     install(ContentNegotiation) {
@@ -28,6 +25,7 @@ fun Application.main() {
 
     database {
         SchemaUtils.create(Checks)
+        SchemaUtils.create(TeamMembers)
     }
 
     launch {
@@ -36,6 +34,17 @@ fun Application.main() {
             Checks.insert {
                 it[checkId] = 1
                 it[checkText] = "Everything is fine. Thanks."
+            }
+        }
+
+        database {
+            TeamMembers.insert {
+                it[teamId] = 1
+                it[firstName] = "Змейка"
+                it[lastName] = "Гитарова"
+                it[role] = "начальная подготовка -- НП"
+                it[birthday] = "28.08.2019"
+                it[city] = "г.Ейск"
             }
         }
     }
@@ -67,6 +76,7 @@ fun Application.main() {
 
         route("/api") {
             rpc(CheckService::class, Check.serializer())
+            rpc(TeamMembersService::class, TeamMemberDTO.serializer())
         }
     }
 }
