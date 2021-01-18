@@ -1,15 +1,13 @@
 package rpc
 
+import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.list
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.parse
 import org.w3c.fetch.RequestInit
-import kotlinx.browser.window
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.json
 
@@ -25,7 +23,15 @@ class Transport(private val coroutineContext: CoroutineContext) {
         deserializationStrategy: KSerializer<T>,
         vararg args: Pair<String, Any>
     ): T {
-        return parse(deserializationStrategy, fetch(url, *args))
+        return parse(deserializationStrategy, fetch("GET", url, *args))
+    }
+
+    internal suspend fun <T> post(
+            url: String,
+            deserializationStrategy: KSerializer<T>,
+            vararg args: Pair<String, Any>
+    ): T {
+        return parse(deserializationStrategy, fetch("POST", url, *args))
     }
 
     internal suspend fun <T> getList(
@@ -33,12 +39,12 @@ class Transport(private val coroutineContext: CoroutineContext) {
         deserializationStrategy: KSerializer<T>,
         vararg args: Pair<String, Any>
     ): List<T> {
-        return parse(ListSerializer(deserializationStrategy), fetch(url, *args))
+        return parse(ListSerializer(deserializationStrategy), fetch("GET", url, *args))
     }
 
-    private suspend fun fetch(method: String, vararg args: Pair<String, Any>): String {
-        var url = "/api/$method"
-        if (args.isNotEmpty()) {
+    private suspend fun fetch(method: String, shortUrl: String, vararg args: Pair<String, Any>): String {
+        var url = "/api/$shortUrl"
+        if (method == "GET" && args.isNotEmpty()) {
             url += "?"
             url += args.joinToString("&", transform = { "${it.first}=${urlEncode(it.second.toString())}" })
         }
@@ -46,10 +52,13 @@ class Transport(private val coroutineContext: CoroutineContext) {
         return withContext(coroutineContext) {
             val response = window.fetch(
                 url, RequestInit(
-                    "GET", headers = json(
+                    method = method,
+                    headers = json(
                         "Accept" to "application/json",
                         "Content-Type" to "application/json"
-                    ), credentials = "same-origin".asDynamic()
+                    ),
+                    credentials = "same-origin".asDynamic(),
+                    body = if (method == "POST") JSON.stringify(json(*args)).also {console.log(it)} else undefined
                 )
             ).await()
 
