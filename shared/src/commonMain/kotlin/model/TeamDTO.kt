@@ -7,6 +7,7 @@ data class TeamDTO(
         var id: Int?,
         val name: String,
         val isOur: Boolean,
+        val type: String,
         val year: String?,
-        val trainerId: Int?,
+        val trainerId: Int,
 )

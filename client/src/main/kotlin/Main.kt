@@ -6,7 +6,7 @@ import kotlinx.serialization.json.Json
 import model.TeamMemberDTO
 import react.buildElements
 import react.dom.render
-import services.TeamMembersService
+import services.TeamService
 import styled.styledDiv
 import view.ApplicationComponent
 import kotlin.coroutines.CoroutineContext
@@ -16,24 +16,24 @@ private class Application : CoroutineScope {
 
     fun start() {
 
-        val teamMembersService = TeamMembersService(coroutineContext)
+        val teamMembersService = TeamService(coroutineContext)
         launch {
             teamMembersService.addTeamMember(
-                    Json.encodeToString(TeamMemberDTO.serializer(), TeamMemberDTO(null, 1, "Савелий", "Жопа", "вратарь", "02.02.2000", "Москоу"))
+                    TeamMemberDTO(-1, 1, "Савелий", "Жопа", "вратарь", "02.02.2000", "Москоу")
             ).also { console.log(it) }
 
-            teamMembersService.getTeamMemberById("1").also { console.log(it) }
+            teamMembersService.getTeamMemberById(1).also { console.log(it) }
 
             teamMembersService.editTeamMember(
-                    Json.encodeToString(TeamMemberDTO.serializer(), TeamMemberDTO(null, 1, "Савелий", "Светлый", "враторь", "02.02.2000", "Москоу"))
+                    Json.encodeToString(TeamMemberDTO.serializer(), TeamMemberDTO(1, 1, "Савелий", "Светлый", "враторь", "02.02.2000", "Москоу"))
             ).also { console.log(it) }
 
-            teamMembersService.getTeamMemberById("1").also { console.log(it) }
+            teamMembersService.getTeamMemberById(1).also { console.log(it) }
 
 
-            teamMembersService.deleteTeamMemberById("1").also { console.log(it) }
+            teamMembersService.deleteTeamMemberById(1).also { console.log(it) }
 
-            teamMembersService.getTeamMemberById("1").also { console.log(it) }
+            teamMembersService.getTeamMemberById(1).also { console.log(it) }
         }
 
         document.getElementById("react-app")?.let {

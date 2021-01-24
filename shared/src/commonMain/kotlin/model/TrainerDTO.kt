@@ -7,5 +7,5 @@ data class TrainerDTO(
         var id: Int?,
         val name: String,
         val dateOfBirth: String,
-        val info: Int,
+        val info: String,
 )

@@ -10,13 +10,11 @@ import io.ktor.jackson.*
 import io.ktor.routing.*
 import kotlinx.coroutines.launch
 import kotlinx.html.*
-import model.Check
-import model.TeamMemberDTO
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.CheckService
-import services.TeamMembersService
+import services.TeamService
 
 fun Application.main() {
     install(ContentNegotiation) {
@@ -74,9 +72,12 @@ fun Application.main() {
             resources("/")
         }
 
+        static("images") { files("images") }
+
+
         route("/api") {
-            rpc(CheckService::class, Check.serializer())
-            rpc(TeamMembersService::class, TeamMemberDTO.serializer())
+            rpc(CheckService::class)
+            rpc(TeamService::class)
         }
     }
 }

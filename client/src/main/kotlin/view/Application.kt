@@ -6,7 +6,7 @@ import model.Check
 import model.TeamMemberDTO
 import react.*
 import services.CheckService
-import services.TeamMembersService
+import services.TeamService
 import styled.styledDiv
 
 external interface ApplicationProps : RProps {
@@ -29,7 +29,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
 
     override fun componentDidMount() {
         val checkService = CheckService(coroutineContext)
-        val teamMembersService = TeamMembersService(coroutineContext)
+        val teamService = TeamService(coroutineContext)
 
         props.coroutineScope.launch {
             val check = try {
@@ -42,7 +42,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
             }
 
             val teamMember = try {
-                teamMembersService.getTeamMemberById("0")
+                teamService.getTeamMemberById(2)
             } catch (e: Throwable) {
                 setState {
                     error = e
