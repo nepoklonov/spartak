@@ -1,3 +1,4 @@
+
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -7,8 +8,7 @@ import model.TeamMemberDTO
 import react.buildElements
 import react.dom.render
 import services.TeamService
-import styled.styledDiv
-import view.ApplicationComponent
+import view.RootComponent
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {
@@ -38,8 +38,7 @@ private class Application : CoroutineScope {
 
         document.getElementById("react-app")?.let {
             render(buildElements {
-                styledDiv { +"Let's check!" }
-                child(ApplicationComponent::class) {
+                child(RootComponent::class) {
                     attrs.coroutineScope = this@Application
                 }
             }, it)

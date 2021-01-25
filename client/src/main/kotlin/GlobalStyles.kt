@@ -9,6 +9,10 @@ object GlobalStyles {
                 margin(0.px)
                 padding(0.px)
             }
+            rule("@font-face"){
+                fontFamily = "Russo"
+                put("src", "url('/fonts/Russo-One.ttf')")
+            }
         }
 
         createGlobalStyle(styles.toString())
