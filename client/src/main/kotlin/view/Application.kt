@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.Check
 import react.*
+import react.dom.br
 import services.CheckService
 import styled.styledDiv
 
@@ -14,7 +15,6 @@ external interface ApplicationProps : RProps {
 class ApplicationState : RState {
     var error: Throwable? = null
     var check: Check? = null
-
 }
 
 class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
@@ -27,6 +27,7 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
 
     override fun componentDidMount() {
         val checkService = CheckService(coroutineContext)
+
         props.coroutineScope.launch {
             val check = try {
                 checkService.getCheck()
@@ -53,8 +54,3 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
         }
     }
 }
-
-
-
-
-
