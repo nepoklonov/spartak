@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.parse
 import org.w3c.fetch.RequestInit
 import kotlinx.browser.window
+import kotlin.browser.window
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.json
 
