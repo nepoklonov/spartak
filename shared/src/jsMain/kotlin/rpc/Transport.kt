@@ -1,0 +1,70 @@
+package rpc
+
+import kotlinx.coroutines.await
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.list
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.parse
+import org.w3c.fetch.RequestInit
+import kotlinx.browser.window
+import kotlin.browser.window
+import kotlin.coroutines.CoroutineContext
+import kotlin.js.json
+
+@JsName("encodeURIComponent")
+external fun urlEncode(value: String): String
+
+@JsName("decodeURIComponent")
+external fun urlDecode(encoded: String): String
+
+class Transport(private val coroutineContext: CoroutineContext) {
+    internal suspend fun <T> get(
+        url: String,
+        deserializationStrategy: KSerializer<T>,
+        vararg args: Pair<String, Any>
+    ): T {
+        return parse(deserializationStrategy, fetch(url, *args))
+    }
+
+    internal suspend fun <T> getList(
+        url: String,
+        deserializationStrategy: KSerializer<T>,
+        vararg args: Pair<String, Any>
+    ): List<T> {
+        return parse(ListSerializer(deserializationStrategy), fetch(url, *args))
+    }
+
+    private suspend fun fetch(method: String, vararg args: Pair<String, Any>): String {
+        var url = "/api/$method"
+        if (args.isNotEmpty()) {
+            url += "?"
+            url += args.joinToString("&", transform = { "${it.first}=${urlEncode(it.second.toString())}" })
+        }
+
+        return withContext(coroutineContext) {
+            val response = window.fetch(
+                url, RequestInit(
+                    "GET", headers = json(
+                        "Accept" to "application/json",
+                        "Content-Type" to "application/json"
+                    ), credentials = "same-origin".asDynamic()
+                )
+            ).await()
+
+            response.text().await()
+        }
+    }
+}
+
+fun <T> parse(serializationStrategy: DeserializationStrategy<T>, string: String): T {
+    return try {
+        Json.decodeFromString(serializationStrategy, string)
+    } catch (e: Throwable) {
+        throw TransportException(e.message ?: "")
+    }
+}
+
+class TransportException(message: String) : Exception(message)
