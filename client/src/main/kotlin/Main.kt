@@ -9,6 +9,12 @@ import react.dom.render
 import services.TeamService
 import styled.styledDiv
 import view.ApplicationComponent
+import kotlinx.browser.document
+import react.router.dom.RouteComponent
+import react.router.dom.browserRouter
+import routes.Routes
+import view.AuthFormComponent
+
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {
@@ -38,10 +44,15 @@ private class Application : CoroutineScope {
 
         document.getElementById("react-app")?.let {
             render(buildElements {
-                styledDiv { +"Let's check!" }
-                child(ApplicationComponent::class) {
-                    attrs.coroutineScope = this@Application
+                child(Routes::class) {
+                    styledDiv { +"Let's check!" }
+                    child(ApplicationComponent::class) {
+                        attrs.coroutineScope = this@Application
+                    }
+                    child(AuthFormComponent::class) {
+                    }
                 }
+
             }, it)
         }
     }

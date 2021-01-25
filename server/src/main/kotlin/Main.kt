@@ -67,6 +67,25 @@ fun Application.main() {
                 }
             }
         }
+        get("/admin") {
+            call.respondHtml {
+                head {
+                    meta {
+                        charset = "utf-8"
+                    }
+                    title {
+                        +"Kotlin full stack application demo"
+                    }
+                }
+                body {
+                    div {
+                        id = "react-app"
+                        +"Loading..."
+                    }
+                    script(src = "/client.js") { }
+                }
+            }
+        }
 
         static("/") {
             resources("/")
