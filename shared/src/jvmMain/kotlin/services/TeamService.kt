@@ -78,7 +78,7 @@ actual class TeamService : RPCService {
     actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
         val listOfTeamMembers: MutableList<TeamMemberDTO> = mutableListOf()
         database {
-            TeamMembers.select { TeamMembers.teamId eq teamId }.forEach() {
+            TeamMembers.select { TeamMembers.teamId eq teamId }.forEach {
                 listOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }

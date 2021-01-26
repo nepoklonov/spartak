@@ -13,9 +13,8 @@ import react.router.dom.route
 import react.router.dom.switch
 
 
-
 class Routes : RComponent<RProps, RState>() {
-    fun RBuilder.appWithRouter() {
+    private fun RBuilder.appWithRouter() {
         browserRouter {
             div {
                 switch {
@@ -28,7 +27,7 @@ class Routes : RComponent<RProps, RState>() {
     }
 
     override fun RBuilder.render() {
-            appWithRouter()
+        appWithRouter()
     }
 }
 
