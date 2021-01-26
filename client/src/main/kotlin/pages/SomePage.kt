@@ -10,7 +10,7 @@ import view.ApplicationComponent
 class SomePage : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
-            ("ROUTING IS WORKING")
+            +"ROUTING IS WORKING"
         }
     }
 }

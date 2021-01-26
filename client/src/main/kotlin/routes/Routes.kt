@@ -7,8 +7,12 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
-import react.dom.*
-import react.router.dom.*
+import react.dom.div
+import react.router.dom.browserRouter
+import react.router.dom.route
+import react.router.dom.switch
+
+
 
 class Routes : RComponent<RProps, RState>() {
     fun RBuilder.appWithRouter() {

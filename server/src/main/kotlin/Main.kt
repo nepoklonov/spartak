@@ -1,4 +1,3 @@
-
 import database.Checks
 import database.TeamMembers
 import database.database
@@ -87,11 +86,32 @@ fun Application.main() {
             }
         }
 
+        get("/page") {
+            call.respondHtml {
+                head {
+                    meta {
+                        charset = "utf-8"
+                    }
+                    title {
+                        +"Kotlin full stack application demo"
+                    }
+                }
+                body {
+                    div {
+                        id = "react-app"
+                        +"Loading..."
+                    }
+                    script(src = "/client.js") { }
+                }
+            }
+        }
+
         static("/") {
             resources("/")
         }
 
         static("images") { files("images") }
+        static("fonts") { files("fonts") }
 
 
         route("/api") {
