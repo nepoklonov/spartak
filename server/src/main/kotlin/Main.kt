@@ -47,7 +47,7 @@ fun Application.main() {
     }
 
     routing {
-        get("/") {
+        get("{...}") {
             call.respondHtml {
                 head {
                     meta {
@@ -62,51 +62,12 @@ fun Application.main() {
                         id = "react-app"
                         +"Loading..."
                     }
-                    script(src = "/client.js") { }
-                }
-            }
-        }
-        get("/admin") {
-            call.respondHtml {
-                head {
-                    meta {
-                        charset = "utf-8"
-                    }
-                    title {
-                        +"Kotlin full stack application demo"
-                    }
-                }
-                body {
-                    div {
-                        id = "react-app"
-                        +"Loading..."
-                    }
-                    script(src = "/client.js") { }
+                    script(src = "/resources/client.js") { }
                 }
             }
         }
 
-        get("/page") {
-            call.respondHtml {
-                head {
-                    meta {
-                        charset = "utf-8"
-                    }
-                    title {
-                        +"Kotlin full stack application demo"
-                    }
-                }
-                body {
-                    div {
-                        id = "react-app"
-                        +"Loading..."
-                    }
-                    script(src = "/client.js") { }
-                }
-            }
-        }
-
-        static("/") {
+        static("resources") {
             resources("/")
         }
 
