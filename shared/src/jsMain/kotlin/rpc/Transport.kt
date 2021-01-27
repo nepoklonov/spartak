@@ -4,9 +4,11 @@ import kotlinx.browser.window
 import kotlinx.coroutines.await
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
 import org.w3c.fetch.RequestInit
 import kotlin.coroutines.CoroutineContext
 import kotlin.js.json
@@ -26,12 +28,16 @@ class Transport(private val coroutineContext: CoroutineContext) {
         return parse(deserializationStrategy, fetch("GET", url, *args))
     }
 
+    @OptIn(InternalSerializationApi::class)
     internal suspend fun <T> post(
-            url: String,
-            deserializationStrategy: KSerializer<T>,
-            vararg args: Pair<String, Any>
+        url: String,
+        deserializationStrategy: KSerializer<T>,
+        vararg args: Pair<String, Any>
     ): T {
-        return parse(deserializationStrategy, fetch("POST", url, *args))
+        val stringArgs = args.map {
+            it.first to Json.encodeToString(it.second::class.serializer() as KSerializer<Any>, it.second)
+        }
+        return parse(deserializationStrategy, fetch("POST", url, *stringArgs.toTypedArray()))
     }
 
     internal suspend fun <T> getList(
@@ -58,7 +64,7 @@ class Transport(private val coroutineContext: CoroutineContext) {
                         "Content-Type" to "application/json"
                     ),
                     credentials = "same-origin".asDynamic(),
-                    body = if (method == "POST") JSON.stringify(json(*args)).also {console.log(it)} else undefined
+                    body = if (method == "POST") JSON.stringify(json(*args)).also { console.log(it) } else undefined
                 )
             ).await()
 
