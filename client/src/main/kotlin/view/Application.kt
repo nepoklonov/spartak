@@ -21,9 +21,6 @@ class ApplicationState : RState {
 }
 
 class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
-    init {
-        state = ApplicationState()
-    }
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext

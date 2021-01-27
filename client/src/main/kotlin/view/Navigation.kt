@@ -12,7 +12,7 @@ import styled.styledH1
 
 enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
-    News("Новости", "/news"),
+    News("Новости", "/news/feed"),
     Games("Игры", "/games/championship2003"),
     Club("Клуб", "/club"),
     Recruitment("Набор", "/recruitment"),

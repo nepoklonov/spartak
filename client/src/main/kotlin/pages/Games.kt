@@ -1,5 +1,6 @@
 package pages
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import react.RBuilder
@@ -15,12 +16,17 @@ data class gameNavigation(val header: String, val link: String, val year: String
 val gameNavigationList = listOf<gameNavigation>(
     gameNavigation("Первенство СПБ 2003", "/games/championship2003", "2003"),
     gameNavigation("Первенство СПБ 2004", "/games/championship2004", "2004"),
-    gameNavigation("Первенство СПБ 2006", "/games/championship2005", "2005")
+    gameNavigation("Первенство СПБ 2006", "/games/championship2006", "2006")
 )
 
 val tableHeaders = listOf<String>("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
 
-class Games : RComponent<RProps, RState>() {
+external interface GamesProps : RProps {
+    var coroutineScope: CoroutineScope
+    var selectedChampionship: String
+}
+
+class Games : RComponent<GamesProps, RState>() {
     override fun RBuilder.render() {
         styledH1 {
             css {
@@ -41,7 +47,7 @@ class Games : RComponent<RProps, RState>() {
                     textDecoration = TextDecoration.none
                 }
                 gameNavigationList.forEach {
-                    navLink<RProps>(to = it.link) {
+                    navLink<GamesProps>(to = it.link) {
                         styledDiv {
                             css {
                                 textAlign = TextAlign.center
@@ -50,7 +56,13 @@ class Games : RComponent<RProps, RState>() {
                             }
                             styledH2 {
                                 css {
+//                                    if (props.selectedChampionship == it.header){
+//                                        textDecoration = TextDecoration.
+//                                    }
                                     margin = 40.px.toString()
+                                }
+                                if (props.selectedChampionship == it.header) {
+                                    +"урааа"
                                 }
                                 +it.header
                             }
@@ -58,28 +70,28 @@ class Games : RComponent<RProps, RState>() {
                     }
                 }
             }
-                styledTable {
+            styledTable {
+                css {
+                    textAlign = TextAlign.center
+                    width = 1000.px
+                }
+                styledThead {
                     css {
-                        textAlign = TextAlign.center
-                        width = 1000.px
+                        backgroundColor = ColorSpartak.Grey.color
                     }
-                    styledThead {
-                        css {
-                            backgroundColor = ColorSpartak.Grey.color
+                    tableHeaders.forEach {
+                        styledTh() {
+                            +it
                         }
-                        tableHeaders.forEach {
-                            styledTh() {
-                                +it
-                            }
-                        }
-                    }
-                    styledTbody {
-                        css {
-                            backgroundColor = Color.white
-                        }
-
                     }
                 }
+                styledTbody {
+                    css {
+                        backgroundColor = Color.white
+                    }
+
+                }
+            }
         }
     }
 }
