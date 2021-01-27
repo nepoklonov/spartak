@@ -1,24 +1,19 @@
 package view
-
 import kotlinx.coroutines.CoroutineScope
-
+import kotlinx.coroutines.launch
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onSubmitFunction
-import model.Check
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import react.*
-import react.dom.br
-import react.dom.input
-import services.CheckService
-import styled.StyledDOMBuilder
-import styled.styledDiv
+import services.AdminService
 import styled.styledForm
 import styled.styledInput
 
 
 external interface AuthFormProps : RProps {
+    var coroutineScope: CoroutineScope
 }
 
 class AuthFormState : RState {
@@ -29,13 +24,21 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
     init {
         state = AuthFormState()
     }
+    private val coroutineContext
+        get() = props.coroutineScope.coroutineContext
+    private val adminService = AdminService(coroutineContext)
     override fun componentDidMount() {
     }
+
     private fun handleSubmit (event: Event){
         event.preventDefault()
         event.stopPropagation()
-        console.log("Login : ${this.state.inputs["login"]} password : ${this.state.inputs["password"]}")
-
+        console.log("Login : ${state.inputs["login"]} password : ${state.inputs["password"]}")
+        props.coroutineScope.launch{
+            if (adminService.checkAdmin(state.inputs["login"].toString(), state.inputs["password"].toString())) {
+                console.log("LOGGED IN")
+            }
+        }
     }
 
     private fun handleChange(event: Event) {
