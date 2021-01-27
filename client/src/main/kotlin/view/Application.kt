@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import model.Check
 import model.TeamMemberDTO
 import react.*
+import react.router.dom.navLink
 import services.CheckService
 import services.TeamService
 import styled.styledDiv
@@ -65,6 +66,10 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
         styledDiv {
             +(state.check?.checkText ?: "Let's wait.")
             +(state.teamMember?.firstName ?: "Let's wait too...")
+        }
+
+        navLink<ApplicationProps>("/page"){
+            +"page"
         }
     }
 }

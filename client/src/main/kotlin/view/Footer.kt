@@ -2,6 +2,7 @@ package view
 
 import kotlinx.css.*
 import react.RBuilder
+import react.RComponent
 import react.RProps
 import react.RState
 import styled.css
@@ -10,7 +11,7 @@ import styled.styledH1
 import styled.styledImg
 
 
-class FooterComponent : RootComponent<RProps, RState>() {
+class FooterComponent : RComponent<RProps, RState>() {
 
     private fun RBuilder.addInfo(iconSrc: String, text: String) {
         styledDiv {
