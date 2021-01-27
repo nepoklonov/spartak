@@ -105,7 +105,7 @@ actual class TeamService : RPCService {
 
     actual suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean {
         database {
-            TeamMembers.update({ TeamMembers.id eq id.toInt() }) { insertTeamMemberDtoToDatabase(it, teamMember) }
+            TeamMembers.update({ TeamMembers.id eq teamMember.id }) { insertTeamMemberDtoToDatabase(it, teamMember) }
         }
         return true
     }

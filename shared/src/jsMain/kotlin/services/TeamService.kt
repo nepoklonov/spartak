@@ -48,6 +48,6 @@ actual class TeamService(coroutineContext: CoroutineContext) {
     }
 
     actual suspend fun deleteTeamMemberById(id: Int): Boolean {
-        return transport.post("deleteTeamMember", Boolean.serializer(), "id" to id)
+        return transport.post("deleteTeamMemberById", Boolean.serializer(), "id" to id)
     }
 }
