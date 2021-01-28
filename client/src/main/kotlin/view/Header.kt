@@ -2,6 +2,7 @@ package view
 
 import kotlinx.css.*
 import react.RBuilder
+import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.a
@@ -10,7 +11,7 @@ import styled.styledDiv
 import styled.styledH1
 import styled.styledImg
 
-class HeaderComponent : RootComponent<RProps, RState>() {
+class HeaderComponent : RComponent<RProps, RState>() {
     private fun RBuilder.addIcon(src: String, floatDirection: Float) {
         styledImg(src = src) {
             css {

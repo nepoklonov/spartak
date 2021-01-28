@@ -1,23 +1,23 @@
 package pages
 
-import kotlinx.html.InputType
-import kotlinx.html.js.onChangeFunction
-import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.events.Event
-import react.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.RState
 import styled.styledDiv
-import styled.styledForm
-import styled.styledInput
 import view.ApplicationComponent
-import view.AuthFormComponent
-import view.AuthFormProps
-import view.AuthFormState
+import kotlin.coroutines.CoroutineContext
 
+class Main : RComponent<RProps, RState>(), CoroutineScope {
 
-class Main : RComponent<RProps, RState>() {
+    override val coroutineContext: CoroutineContext = Job()
+
     override fun RBuilder.render() {
         styledDiv {
             child(ApplicationComponent::class) {
+                attrs.coroutineScope = this@Main
             }
         }
     }

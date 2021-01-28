@@ -4,20 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.Check
 import model.TeamMemberDTO
-import pages.Admin
-import pages.Main
-import pages.SomePage
 import react.*
-import react.dom.div
-import react.dom.nav
-import react.router.dom.browserRouter
 import react.router.dom.navLink
-import react.router.dom.route
-import react.router.dom.switch
 import services.CheckService
 import services.TeamService
 import styled.styledDiv
-import react.router.dom.navLink
 
 external interface ApplicationProps : RProps {
     var coroutineScope: CoroutineScope
@@ -30,9 +21,6 @@ class ApplicationState : RState {
 }
 
 class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
-    init {
-        state = ApplicationState()
-    }
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
@@ -73,7 +61,12 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
             throw error
         }
         styledDiv {
+            +(state.check?.checkText ?: "Let's wait.")
+            +(state.teamMember?.firstName ?: "Let's wait too...")
+        }
 
+        navLink<ApplicationProps>("/page"){
+            +"page"
         }
     }
 }

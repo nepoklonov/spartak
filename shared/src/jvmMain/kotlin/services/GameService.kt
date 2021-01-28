@@ -48,14 +48,14 @@ actual class GameService {
 
     actual suspend fun editGame(game: GameDTO): Boolean {
         database {
-            GameCalendar.update({ GameCalendar.id eq id.toInt() }) {
+            GameCalendar.update({ GameCalendar.id eq game.id }) {
                 insertGameDtoToDatabase(it, game)
             }
         }
         return true
     }
 
-    actual suspend fun deleteGameById(id: Int): Boolean {
+    actual suspend fun deleteGame(id: Int): Boolean {
         database {
             GameCalendar.deleteWhere{ GameCalendar.id eq id }
         }

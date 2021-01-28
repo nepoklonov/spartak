@@ -26,7 +26,7 @@ actual class TeamService(coroutineContext: CoroutineContext) {
     }
 
     actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
-        return transport.getList("getAllTeamMembers", TeamMemberDTO.serializer(), "name" to teamId)
+        return transport.getList("getAllTeamMembers", TeamMemberDTO.serializer(), "name" to teamId.toString())
     }
 
     actual suspend fun getTeamMemberById(id: Int): TeamMemberDTO {
@@ -38,16 +38,16 @@ actual class TeamService(coroutineContext: CoroutineContext) {
         return true
     }
 
-    actual suspend fun editTeamMember(teamMember: String): Boolean {
-        return transport.post("addTeamMember", Boolean.serializer(), "teamMember" to teamMember)
+    actual suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean {
+        return transport.post("editTeamMember", Boolean.serializer(), "teamMember" to teamMember)
     }
 
-    actual suspend fun deleteTeamById(teamId: Int): Boolean {
+    actual suspend fun deleteTeam(teamId: Int): Boolean {
         transport.post("deleteTeam", Boolean.serializer(), "team" to teamId)
         return true
     }
 
-    actual suspend fun deleteTeamMemberById(id: Int): Boolean {
-        return transport.post("addTeamMember", Boolean.serializer(), "id" to id)
+    actual suspend fun deleteTeamMember(id: Int): Boolean {
+        return transport.post("deleteTeamMember", Boolean.serializer(), "id" to id)
     }
 }

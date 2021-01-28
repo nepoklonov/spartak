@@ -30,12 +30,12 @@ fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
         val serializedResult = if (function.returnType.arguments.isNotEmpty()) {
             when {
                 function.returnType.isSubtypeOf(List::class.createType(function.returnType.arguments)) -> Json.encodeToString(
-                        ListSerializer(result::class.serializer() as KSerializer<Any>),
-                        result as List<T>
+                    ListSerializer(result::class.serializer() as KSerializer<Any>),
+                    result as List<T>
                 )
                 function.returnType.isSubtypeOf(Set::class.createType(function.returnType.arguments)) -> Json.encodeToString(
-                        SetSerializer(result::class.serializer() as KSerializer<Any>),
-                        result as Set<T>
+                    SetSerializer(result::class.serializer() as KSerializer<Any>),
+                    result as Set<T>
                 )
                 else -> SerializationException("Method must return either List<R> or Set<R>, but it returns ${function.returnType}")
             }
@@ -51,8 +51,8 @@ fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
                     Json.decodeFromString(
-                            param.type.jvmErasure.serializer(),
-                            call.request.queryParameters[param.name.toString()].toString()
+                        param.type.jvmErasure.serializer(),
+                        call.request.queryParameters[param.name.toString()].toString()
                     )
                 }
                 queryBody(function, call, args)
@@ -62,11 +62,11 @@ fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
                     Json.decodeFromString(
-                            param.type.jvmErasure.serializer(),
-                            Json{isLenient = true}.decodeFromString(
-                                    MapSerializer(String.serializer(), String.serializer()),
-                                    call.receiveText()
-                            ).values.first()
+                        param.type.jvmErasure.serializer(),
+                        Json { isLenient = true }.decodeFromString(
+                            MapSerializer(String.serializer(), String.serializer()),
+                            call.receiveText()
+                        ).values.first()
                     )
                 }
                 queryBody(function, call, args)

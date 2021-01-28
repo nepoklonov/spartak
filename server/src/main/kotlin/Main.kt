@@ -73,6 +73,7 @@ fun Application.main() {
 
         static("images") { files("images") }
         static("fonts") { files("fonts") }
+        static("fonts") { files("htmlPages") }
 
 
         route("/api") {
