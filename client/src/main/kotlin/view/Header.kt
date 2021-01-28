@@ -1,5 +1,6 @@
 package view
 
+import headerText
 import kotlinx.css.*
 import react.RBuilder
 import react.RComponent
@@ -51,10 +52,10 @@ class HeaderComponent : RComponent<RProps, RState>() {
             styledH1 {
                 css {
                     fontSize = 32.pt
-                    fontFamily = "Russo"
                     width = 700.px
+
                 }
-                +"Молодежный хоккейный клуб «Спартак»"
+                headerText{ +"Молодежный хоккейный клуб «Спартак»"}
             }
 
             styledDiv {

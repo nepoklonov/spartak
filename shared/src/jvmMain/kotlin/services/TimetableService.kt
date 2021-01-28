@@ -47,7 +47,7 @@ actual class TimetableService {
         return true
     }
 
-    actual suspend fun deleteWorkoutById(id: Int): Boolean {
+    actual suspend fun deleteWorkout(id: Int): Boolean {
         database {
             Timetable.deleteWhere { Timetable.id eq id }
         }

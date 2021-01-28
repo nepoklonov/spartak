@@ -12,6 +12,6 @@ expect class TeamService {
     suspend fun getTeamMemberById(id: Int): TeamMemberDTO
     suspend fun editTeam(team: TeamDTO): Boolean
     suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean
-    suspend fun deleteTeamById(teamId: Int): Boolean
-    suspend fun deleteTeamMemberById(id: Int): Boolean
+    suspend fun deleteTeam(teamId: Int): Boolean
+    suspend fun deleteTeamMember(id: Int): Boolean
 }

@@ -16,7 +16,7 @@ actual class TrainerService(coroutineContext: CoroutineContext) {
     actual suspend fun addTrainer(trainer: TrainerDTO): Int {
         return transport.post("addTrainer", Int.serializer(),"trainer" to trainer)
     }
-    actual suspend fun deleteTrainerById(trainerId: Int): Boolean {
+    actual suspend fun deleteTrainer(trainerId: Int): Boolean {
         return transport.post("deleteTrainer", Boolean.serializer(),"trainerId" to trainerId)
     }
 }

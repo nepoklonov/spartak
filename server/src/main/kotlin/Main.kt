@@ -1,3 +1,4 @@
+
 import database.Checks
 import database.TeamMembers
 import database.database
@@ -94,7 +95,7 @@ fun Application.main() {
 
         static("images") { files("images") }
         static("fonts") { files("fonts") }
-        static("fonts") { files("htmlPages") }
+        static("htmlPages") { files("htmlPages") }
 
 
         route("/api") {

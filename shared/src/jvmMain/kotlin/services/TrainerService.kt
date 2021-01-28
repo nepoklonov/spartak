@@ -43,7 +43,7 @@ actual class TrainerService : RPCService {
         }.value
     }
 
-    actual suspend fun deleteTrainerById(trainerId: Int): Boolean {
+    actual suspend fun deleteTrainer(trainerId: Int): Boolean {
         database {
             Trainers.deleteWhere { Trainers.id eq trainerId}
         }

@@ -42,12 +42,12 @@ actual class TeamService(coroutineContext: CoroutineContext) {
         return transport.post("editTeamMember", Boolean.serializer(), "teamMember" to teamMember)
     }
 
-    actual suspend fun deleteTeamById(teamId: Int): Boolean {
+    actual suspend fun deleteTeam(teamId: Int): Boolean {
         transport.post("deleteTeam", Boolean.serializer(), "team" to teamId)
         return true
     }
 
-    actual suspend fun deleteTeamMemberById(id: Int): Boolean {
-        return transport.post("deleteTeamMemberById", Boolean.serializer(), "id" to id)
+    actual suspend fun deleteTeamMember(id: Int): Boolean {
+        return transport.post("deleteTeamMember", Boolean.serializer(), "id" to id)
     }
 }

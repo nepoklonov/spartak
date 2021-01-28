@@ -3,6 +3,7 @@ package services
 import database.TeamMembers
 import database.Teams
 import database.database
+import kotlinx.serialization.json.Json
 import model.TeamDTO
 import model.TeamMemberDTO
 import org.jetbrains.exposed.sql.*
@@ -110,14 +111,14 @@ actual class TeamService : RPCService {
         return true
     }
 
-    actual suspend fun deleteTeamById(teamId: Int): Boolean {
+    actual suspend fun deleteTeam(teamId: Int): Boolean {
         database {
             Teams.deleteWhere { Teams.id eq teamId }
         }
         return true
     }
 
-    actual suspend fun deleteTeamMemberById(id: Int): Boolean {
+    actual suspend fun deleteTeamMember(id: Int): Boolean {
         database {
             TeamMembers.deleteWhere { TeamMembers.id eq id }
         }

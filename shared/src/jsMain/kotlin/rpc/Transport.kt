@@ -23,33 +23,45 @@ class Transport(private val coroutineContext: CoroutineContext) {
     internal suspend fun <T> get(
         url: String,
         deserializationStrategy: KSerializer<T>,
-        vararg args: Pair<String, Any>
+        vararg args: Pair<String, Any>,
+        isJson: Boolean = true
     ): T {
-        return parse(deserializationStrategy, fetch("GET", url, *args))
+        return parse(deserializationStrategy, fetch("GET", url, isJson, *args), isJson)
     }
 
     @OptIn(InternalSerializationApi::class)
     internal suspend fun <T> post(
         url: String,
         deserializationStrategy: KSerializer<T>,
-        vararg args: Pair<String, Any>
+        vararg args: Pair<String, Any>,
+        isJson: Boolean = true
     ): T {
         val stringArgs = args.map {
             it.first to Json.encodeToString(it.second::class.serializer() as KSerializer<Any>, it.second)
         }
-        return parse(deserializationStrategy, fetch("POST", url, *stringArgs.toTypedArray()))
+        return parse(deserializationStrategy, fetch("POST", url, isJson, *stringArgs.toTypedArray()), isJson)
     }
 
     internal suspend fun <T> getList(
         url: String,
         deserializationStrategy: KSerializer<T>,
-        vararg args: Pair<String, Any>
+        vararg args: Pair<String, Any>,
+        isJson: Boolean = true
     ): List<T> {
-        return parse(ListSerializer(deserializationStrategy), fetch("GET", url, *args))
+        return parse(ListSerializer(deserializationStrategy), fetch("GET", url, isJson, *args), isJson)
     }
 
-    private suspend fun fetch(method: String, shortUrl: String, vararg args: Pair<String, Any>): String {
-        var url = "/api/$shortUrl"
+    private suspend fun fetch(
+        method: String,
+        shortUrl: String,
+        isJson: Boolean,
+        vararg args: Pair<String, Any>,
+    ): String {
+        var url = if (isJson) {
+            "/api/$shortUrl"
+        } else {
+            shortUrl
+        }
         if (method == "GET" && args.isNotEmpty()) {
             url += "?"
             url += args.joinToString("&", transform = { "${it.first}=${urlEncode(it.second.toString())}" })
@@ -73,11 +85,16 @@ class Transport(private val coroutineContext: CoroutineContext) {
     }
 }
 
-fun <T> parse(serializationStrategy: DeserializationStrategy<T>, string: String): T {
-    return try {
-        Json.decodeFromString(serializationStrategy, string)
-    } catch (e: Throwable) {
-        throw TransportException(e.message ?: "")
+@Suppress("UNCHECKED_CAST")
+fun <T> parse(serializationStrategy: DeserializationStrategy<T>, string: String, isJson: Boolean): T {
+    if (isJson) {
+        return try {
+            Json.decodeFromString(serializationStrategy, string)
+        } catch (e: Throwable) {
+            throw TransportException(e.message ?: "")
+        }
+    } else {
+        return string as? T?: error("we should want a json or a string")
     }
 }
 

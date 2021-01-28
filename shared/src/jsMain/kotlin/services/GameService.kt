@@ -8,8 +8,8 @@ import kotlin.coroutines.CoroutineContext
 actual class GameService(coroutineContext: CoroutineContext) {
     private val transport = Transport(coroutineContext)
 
-    actual suspend fun getAllGamesByYear(year: Int): List<GameDTO> {
-        return transport.getList("getAllGamesByYear", GameDTO.serializer(), "year" to  year.toString())
+    actual suspend fun getAllGamesByYear(year: String): List<GameDTO> {
+        return transport.getList("getAllGamesByYear", GameDTO.serializer(), "year" to  year)
     }
     actual suspend fun addGame(newGame: GameDTO): Int {
         return transport.post("addGame", Int.serializer(), "newGame" to newGame)
@@ -17,7 +17,7 @@ actual class GameService(coroutineContext: CoroutineContext) {
     actual suspend fun editGame(game: GameDTO): Boolean {
         return transport.post("editGame", Boolean.serializer(), "game" to game)
     }
-    actual suspend fun deleteGameById(id: Int): Boolean {
-        return transport.post("deleteGameById", Boolean.serializer(), "id" to id)
+    actual suspend fun deleteGame(id: Int): Boolean {
+        return transport.post("deleteGame", Boolean.serializer(), "id" to id)
     }
 }
