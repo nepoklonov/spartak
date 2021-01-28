@@ -45,7 +45,7 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
             if (state.summerCampHtml != null) {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.summerCampHtml!!)
             } else {
-                +"Страница не доступна"
+                +"загрузка..."
             }
         }
     }

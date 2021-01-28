@@ -16,7 +16,11 @@ class Router : RComponent<RouterProps, RState>() {
     fun RBuilder.appWithRouter() {
         switch {
 //                                    redirect(from = "/", to = "/main")
-            route("/main", Main::class, exact = true)
+            route("/main"){
+                child(Main::class){
+                    attrs.coroutineScope = props.coroutineScope
+                }
+            }
             route("/admin", Admin::class, exact = true)
             route("/page", SomePage::class, exact = true)
             route("/news/feed"){

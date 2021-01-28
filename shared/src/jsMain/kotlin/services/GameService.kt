@@ -1,7 +1,6 @@
 package services
 
 import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.Json
 import model.GameDTO
 import rpc.Transport
 import kotlin.coroutines.CoroutineContext
@@ -9,8 +8,8 @@ import kotlin.coroutines.CoroutineContext
 actual class GameService(coroutineContext: CoroutineContext) {
     private val transport = Transport(coroutineContext)
 
-    actual suspend fun getAllGamesByYear(year: Int): List<GameDTO> {
-        return transport.getList("getAllGamesByYear", GameDTO.serializer(), "year" to  year.toString())
+    actual suspend fun getAllGamesByYear(year: String): List<GameDTO> {
+        return transport.getList("getAllGamesByYear", GameDTO.serializer(), "year" to  year)
     }
     actual suspend fun addGame(newGame: GameDTO): Int {
         return transport.post("addGame", Int.serializer(), "newGame" to newGame)

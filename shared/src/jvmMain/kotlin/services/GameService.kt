@@ -5,27 +5,26 @@ import database.database
 import model.GameDTO
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import org.jetbrains.exposed.sql.update
 
 actual class GameService {
-    actual suspend fun getAllGamesByYear(year: Int): List<GameDTO> {
-        val listOfGamesByYear: MutableList<GameDTO> = mutableListOf()
-        database {
-            GameCalendar.select { GameCalendar.year eq year }.forEach() {
-                listOfGamesByYear += GameDTO(
-                        it[GameCalendar.id].value,
-                        it[GameCalendar.date],
-                        it[GameCalendar.time],
-                        it[GameCalendar.year],
-                        it[GameCalendar.teamAId],
-                        it[GameCalendar.teamBId],
-                        it[GameCalendar.stadium],
-                        it[GameCalendar.result])
-            }
-        }
-        return listOfGamesByYear
+    actual suspend fun getAllGamesByYear(year: String): List<GameDTO> { TODO()
+//        val listOfGamesByYear: MutableList<GameDTO> = mutableListOf()
+//        database {
+//            GameCalendar.select { GameCalendar.year eq year }.forEach() {
+//                listOfGamesByYear += GameDTO(
+//                        it[GameCalendar.id].value,
+//                        it[GameCalendar.date],
+//                        it[GameCalendar.time],
+//                        it[GameCalendar.year],
+//                        it[GameCalendar.teamAId],
+//                        it[GameCalendar.teamBId],
+//                        it[GameCalendar.stadium],
+//                        it[GameCalendar.result])
+//            }
+//        }
+//        return listOfGamesByYear
     }
 
     private fun GameCalendar.insertGameDtoToDatabase(it: UpdateBuilder<Int>, newGame:GameDTO){

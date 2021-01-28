@@ -3,6 +3,7 @@ package pages
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
+import model.GameDTO
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -11,12 +12,15 @@ import react.router.dom.navLink
 import styled.*
 import view.ColorSpartak
 
-data class gameNavigation(val header: String, val link: String, val year: String) {}
+data class GameNavigation(val year: String) {
+    val header = "Первенство СПБ $year"
+    val link = "/games/championship$year"
+}
 
-val gameNavigationList = listOf<gameNavigation>(
-    gameNavigation("Первенство СПБ 2003", "/games/championship2003", "2003"),
-    gameNavigation("Первенство СПБ 2004", "/games/championship2004", "2004"),
-    gameNavigation("Первенство СПБ 2006", "/games/championship2006", "2006")
+val gameNavigationList = listOf<GameNavigation>(
+    GameNavigation( "2003"),
+    GameNavigation("2004"),
+    GameNavigation("2006")
 )
 
 val tableHeaders = listOf<String>("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
@@ -26,7 +30,37 @@ external interface GamesProps : RProps {
     var selectedChampionship: String
 }
 
-class Games : RComponent<GamesProps, RState>() {
+class GamesState : RState {
+    var error: Throwable? = null
+    var allGames: List<GameDTO>? = null
+}
+
+class Games : RComponent<GamesProps, GamesState>() {
+//    private val coroutineContext
+//        get() = props.coroutineScope.coroutineContext
+//
+//    override fun componentDidMount() {
+//        val gameService = GameService(coroutineContext)
+//
+//        props.coroutineScope.launch {
+//            val allGamesByYear = try {
+//                gameService.getAllGamesByYear(props.selectedChampionship)
+//            } catch (e: Throwable) {
+//                setState {
+//                    error = e
+//                }
+//                return@launch
+//            }
+//
+//            setState() {
+//                allGames = allGamesByYear
+//            }
+//        }
+//    }
+
+
+
+
     override fun RBuilder.render() {
         styledH1 {
             css {
@@ -56,9 +90,6 @@ class Games : RComponent<GamesProps, RState>() {
                             }
                             styledH2 {
                                 css {
-//                                    if (props.selectedChampionship == it.header){
-//                                        textDecoration = TextDecoration.
-//                                    }
                                     margin = 40.px.toString()
                                 }
                                 if (props.selectedChampionship == it.header) {
