@@ -8,12 +8,28 @@ import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.routing.*
 import kotlinx.coroutines.launch
+import kotlinx.css.*
+import kotlinx.css.properties.lh
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.CheckService
 import services.TeamService
+
+
+private val globalCss = CSSBuilder().apply {
+    body {
+        margin(0.px)
+        padding(0.px)
+
+        fontSize = 13.px
+        fontFamily = "-system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, Arial, sans-serif"
+
+        lineHeight = 20.px.lh
+    }
+}
+
 
 fun Application.main() {
     install(ContentNegotiation) {
@@ -55,6 +71,11 @@ fun Application.main() {
                     }
                     title {
                         +"Kotlin full stack application demo"
+                    }
+                    style {
+                        unsafe {
+                            +globalCss.toString()
+                        }
                     }
                 }
                 body {
