@@ -11,7 +11,7 @@ import styled.css
 import styled.styledDiv
 import view.FooterComponent
 import view.HeaderComponent
-import view.NavigationComponent
+import view.MainNavigationComponent
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {
@@ -41,7 +41,7 @@ private class Application : CoroutineScope {
                                 backgroundColor = rgba(255, 255, 255, 0.5)
                             }
                             child(HeaderComponent::class) {}
-                            child(NavigationComponent::class) {}
+                            child(MainNavigationComponent::class) {}
                             child(Router::class) {
                                 attrs.coroutineScope = this@Application
                             }

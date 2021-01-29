@@ -14,15 +14,15 @@ enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
     News("Новости", "/news/feed"),
     Games("Игры", "/games/championship2003"),
-    Club("Команды", "/club"),
+    Club("Команды", "/teams/2003"),
     Recruitment("Набор", "/recruitment"),
-    Workouts("Тренировки", "/workouts"),
+    Workouts("Тренировки", "/workouts/shhm"),
     SummerCamp("Летние Сборы", "/summerCamp"),
-    Gallery("Галерея", "/gallery")
+    Gallery("Галерея", "/gallery/trainingProcess")
 }
 
 
-class NavigationComponent : RComponent<RProps, RState>() {
+class MainNavigationComponent : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {

@@ -15,10 +15,11 @@ actual class TrainerService : RPCService {
         return database {
             Trainers.select { Trainers.name eq name }.first().let {
                 TrainerDTO(
-                        it[Trainers.id].value,
-                        it[Trainers.name],
-                        it[Trainers.dateOfBirth],
-                        it[Trainers.info]
+                    it[Trainers.id].value,
+                    it[Trainers.photo],
+                    it[Trainers.name],
+                    it[Trainers.dateOfBirth],
+                    it[Trainers.info]
                 )
             }
         }
@@ -26,6 +27,7 @@ actual class TrainerService : RPCService {
 
     private fun Trainers.insertTrainerDtoToDatabase(it: UpdateBuilder<Int>, trainer: TrainerDTO) {
         it[name] = trainer.name
+        it[photo] = trainer.photo
         it[dateOfBirth] = trainer.dateOfBirth
         it[info] = trainer.info
     }
@@ -45,7 +47,7 @@ actual class TrainerService : RPCService {
 
     actual suspend fun deleteTrainer(trainerId: Int): Boolean {
         database {
-            Trainers.deleteWhere { Trainers.id eq trainerId}
+            Trainers.deleteWhere { Trainers.id eq trainerId }
         }
         return true
     }

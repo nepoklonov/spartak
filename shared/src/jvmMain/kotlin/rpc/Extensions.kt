@@ -22,20 +22,22 @@ import kotlin.reflect.jvm.jvmErasure
 @OptIn(InternalSerializationApi::class)
 @Suppress("UNCHECKED_CAST")
 
-fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
+fun Route.rpc(serviceClass: KClass<out RPCService>) {
     val instance = serviceClass.createInstance()
 
     suspend fun queryBody(function: KFunction<*>, call: ApplicationCall, args: MutableList<Any>) {
+        println(function.returnType)
+        println(function.returnType.arguments)
         val result = function.callSuspend(*args.toTypedArray())!!
         val serializedResult = if (function.returnType.arguments.isNotEmpty()) {
             when {
                 function.returnType.isSubtypeOf(List::class.createType(function.returnType.arguments)) -> Json.encodeToString(
-                    ListSerializer(result::class.serializer() as KSerializer<Any>),
-                    result as List<T>
+                    ListSerializer(function.returnType.arguments.first().type?.jvmErasure!!.serializer() as KSerializer<Any>),
+                    result as List<Any>
                 )
                 function.returnType.isSubtypeOf(Set::class.createType(function.returnType.arguments)) -> Json.encodeToString(
-                    SetSerializer(result::class.serializer() as KSerializer<Any>),
-                    result as Set<T>
+                    SetSerializer(function.returnType.arguments.first().type?.jvmErasure!!.serializer() as KSerializer<Any>),
+                    result as Set<Any>
                 )
                 else -> SerializationException("Method must return either List<R> or Set<R>, but it returns ${function.returnType}")
             }
@@ -50,7 +52,7 @@ fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
             get(function.name) {
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json.decodeFromString(
+                    Json{isLenient = true}.decodeFromString(
                         param.type.jvmErasure.serializer(),
                         call.request.queryParameters[param.name.toString()].toString()
                     )
@@ -61,7 +63,7 @@ fun <T : RPCService> Route.rpc(serviceClass: KClass<T>) {
             post(function.name) {
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json.decodeFromString(
+                    Json{isLenient = true}.decodeFromString(
                         param.type.jvmErasure.serializer(),
                         Json { isLenient = true }.decodeFromString(
                             MapSerializer(String.serializer(), String.serializer()),

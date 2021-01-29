@@ -5,8 +5,9 @@ import database.database
 import model.WorkoutDTO
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
+import rpc.RPCService
 
-actual class TimetableService {
+actual class TimetableService: RPCService {
     actual suspend fun getWeekTimetable(beginningOfTheWeek: Int, endOfTheWeek: Int): List<WorkoutDTO> {
         val listOfWorkoutDTO = mutableListOf<WorkoutDTO>()
         database {

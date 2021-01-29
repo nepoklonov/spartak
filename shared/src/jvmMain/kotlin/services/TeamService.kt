@@ -3,7 +3,6 @@ package services
 import database.TeamMembers
 import database.Teams
 import database.database
-import kotlinx.serialization.json.Json
 import model.TeamDTO
 import model.TeamMemberDTO
 import org.jetbrains.exposed.sql.*
@@ -11,8 +10,22 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import rpc.RPCService
 
 actual class TeamService : RPCService {
+    private fun TeamMembers.getTeamMemberDtoFromDatabase(it: ResultRow): TeamMemberDTO {
+        return TeamMemberDTO(
+            it[TeamMembers.id].value,
+            it[teamId],
+            it[photo],
+            it[firstName],
+            it[lastName],
+            it[role],
+            it[birthday],
+            it[city]
+        )
+    }
+
     private fun TeamMembers.insertTeamMemberDtoToDatabase(it: UpdateBuilder<Int>, newTeamMember: TeamMemberDTO) {
         it[teamId] = newTeamMember.teamId
+        it[photo] = newTeamMember.photo
         it[firstName] = newTeamMember.firstName
         it[lastName] = newTeamMember.lastName
         it[role] = newTeamMember.role
@@ -39,18 +52,6 @@ actual class TeamService : RPCService {
         it[trainerId] = team.trainerId
     }
 
-    private fun TeamMembers.getTeamMemberDtoFromDatabase(it: ResultRow): TeamMemberDTO {
-        return TeamMemberDTO(
-            it[TeamMembers.id].value,
-            it[teamId],
-            it[firstName],
-            it[lastName],
-            it[role],
-            it[birthday],
-            it[city]
-        )
-    }
-
     actual suspend fun addTeam(team: TeamDTO): Int {
         return database {
             Teams.insertAndGetId { insertTeamDtoToDatabase(it, team) }
@@ -63,9 +64,9 @@ actual class TeamService : RPCService {
         }.value
     }
 
-    actual suspend fun getTeam(name: String): TeamDTO {
+    actual suspend fun getTeamById(id: Int): TeamDTO {
         return database {
-            Teams.selectAll().first().let { Teams.getTeamDTO(it) }
+            Teams.select { Teams.id eq id }.first().let { Teams.getTeamDTO(it) }
         }
     }
 
@@ -89,12 +90,14 @@ actual class TeamService : RPCService {
         return listOfTeamMembers
     }
 
-    actual suspend fun getTeamMemberById(id: Int): TeamMemberDTO {
-        return database {
-            TeamMembers.select { TeamMembers.id eq id }.single().let {
-                TeamMembers.getTeamMemberDtoFromDatabase(it)
+    actual suspend fun getTeamMemberByRole(role: String): List<TeamMemberDTO> {
+        val liftOfTeamMembers = mutableListOf<TeamMemberDTO>()
+        database {
+            TeamMembers.select { TeamMembers.role eq role }.forEach {
+                liftOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }
+        return liftOfTeamMembers
     }
 
     actual suspend fun editTeam(team: TeamDTO): Boolean {

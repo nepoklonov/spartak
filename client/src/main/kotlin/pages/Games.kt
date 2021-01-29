@@ -1,14 +1,15 @@
 package pages
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
-import model.GameDTO
-import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
+import model.TeamDTO
+import react.*
+import react.dom.td
 import react.router.dom.navLink
+import services.GameService
+import services.TeamService
 import styled.*
 import view.ColorSpartak
 
@@ -17,13 +18,22 @@ data class GameNavigation(val year: String) {
     val link = "/games/championship$year"
 }
 
-val gameNavigationList = listOf<GameNavigation>(
-    GameNavigation( "2003"),
+val gameNavigationList = listOf(
+    GameNavigation("2003"),
     GameNavigation("2004"),
     GameNavigation("2006")
 )
 
-val tableHeaders = listOf<String>("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
+val tableHeaders = listOf("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
+
+data class GameWhithTeams(
+    val date: String,
+    val time: String?,
+    val teamA: TeamDTO? = null,
+    val teamB: TeamDTO? = null,
+    val stadium: String,
+    val result: String?,
+)
 
 external interface GamesProps : RProps {
     var coroutineScope: CoroutineScope
@@ -32,33 +42,58 @@ external interface GamesProps : RProps {
 
 class GamesState : RState {
     var error: Throwable? = null
-    var allGames: List<GameDTO>? = null
+    var allGamesWhithTeams: List<GameWhithTeams>? = null
 }
 
 class Games : RComponent<GamesProps, GamesState>() {
-//    private val coroutineContext
-//        get() = props.coroutineScope.coroutineContext
-//
-//    override fun componentDidMount() {
-//        val gameService = GameService(coroutineContext)
-//
-//        props.coroutineScope.launch {
-//            val allGamesByYear = try {
-//                gameService.getAllGamesByYear(props.selectedChampionship)
-//            } catch (e: Throwable) {
-//                setState {
-//                    error = e
-//                }
-//                return@launch
-//            }
-//
-//            setState() {
-//                allGames = allGamesByYear
-//            }
-//        }
-//    }
+    private val coroutineContext
+        get() = props.coroutineScope.coroutineContext
 
+    override fun componentDidMount() {
+        val gameService = GameService(coroutineContext)
+        val teamsService = TeamService(coroutineContext)
 
+        props.coroutineScope.launch {
+            val allGames = try {
+                gameService.getAllGamesByYear("2003").also { console.log(it) }
+            } catch (e: Throwable) {
+                console.log(e)
+                setState {
+                    error = e
+                }
+                return@launch
+            }
+
+            val allGamesWhithTeams: MutableList<GameWhithTeams> = mutableListOf<GameWhithTeams>()
+
+            allGames.forEach {
+                val teamA = try {
+                    teamsService.getTeamById(it.teamAId)
+                } catch (e: Throwable) {
+                    console.log(e)
+                    setState {
+                        error = e
+                    }
+                    return@launch
+                }
+                val teamB = try {
+                    teamsService.getTeamById(it.teamBId)
+                } catch (e: Throwable) {
+                    console.log(e)
+                    setState {
+                        error = e
+                    }
+                    return@launch
+                }
+
+                allGamesWhithTeams += GameWhithTeams(it.date, it.time, teamA, teamB, it.stadium, it.result)
+            }
+
+            setState() {
+                this.allGamesWhithTeams = allGamesWhithTeams
+            }
+        }
+    }
 
 
     override fun RBuilder.render() {
@@ -92,9 +127,6 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 css {
                                     margin = 40.px.toString()
                                 }
-                                if (props.selectedChampionship == it.header) {
-                                    +"урааа"
-                                }
                                 +it.header
                             }
                         }
@@ -120,7 +152,26 @@ class Games : RComponent<GamesProps, GamesState>() {
                     css {
                         backgroundColor = Color.white
                     }
-
+                    state.allGamesWhithTeams?.forEach {
+                        td {
+                            +it.date
+                        }
+                        td {
+                            +it.time!!
+                        }
+                        td {
+                            +it.teamA?.name!!
+                        }
+                        td {
+                            +it.teamB?.name!!
+                        }
+                        td {
+                            +it.stadium
+                        }
+                        td {
+                            +it.result!!
+                        }
+                    }
                 }
             }
         }

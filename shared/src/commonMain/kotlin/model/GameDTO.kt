@@ -7,7 +7,7 @@ data class GameDTO(
         var id: Int?,
         val date: String,
         val time: String?,
-        val year: Int,
+        val year: String,
         val teamAId: Int,
         val teamBId: Int,
         val stadium: String,

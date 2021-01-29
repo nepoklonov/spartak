@@ -1,4 +1,3 @@
-
 import kotlinx.coroutines.CoroutineScope
 import pages.*
 import react.RBuilder
@@ -16,43 +15,63 @@ class Router : RComponent<RouterProps, RState>() {
     fun RBuilder.appWithRouter() {
         switch {
 //                                    redirect(from = "/", to = "/main")
-            route("/main"){
-                child(Main::class){
+            route("/main") {
+                child(Main::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
             route("/admin", Admin::class, exact = true)
             route("/page", SomePage::class, exact = true)
-            route("/news/feed"){
-                child(News::class){
+            route("/news/feed") {
+                child(News::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedNewsId = "feed"
                 }
             }
 
-            route<NewsProps>("/news/:selectedNewsId"){idProps ->
-                child(News::class){
+            route<NewsProps>("/news/:selectedNewsId") { idProps ->
+                child(News::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedNewsId = idProps.match.params.selectedNewsId
                 }
             }
 
-            route<GamesProps>("/games/:selectedChampionship") {championshipProps ->
+            route<GamesProps>("/games/:selectedChampionship") { championshipProps ->
                 child(Games::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedChampionship = championshipProps.match.params.selectedChampionship
                 }
             }
 
-            route("/club", Club::class, exact = true)
-            route("/recruitment", Recruitment::class, exact = true)
-            route("/workouts", Workouts::class, exact = true)
+            route<TeamsProps>("/teams/:selectedTeam") {teamsProps ->
+                child(Teams::class) {
+                    attrs.coroutineScope = props.coroutineScope
+                    attrs.selectedTeam = teamsProps.match.params.selectedTeam
+                }
+            }
+            route("/recruitment"){
+                child(Recruitment::class){
+                    attrs.coroutineScope = props.coroutineScope
+                }
+            }
+            route<WorkoutsProps>("/workouts/:selectedString"){ workoutsProps ->
+                child(Workouts::class){
+                    attrs.coroutineScope = props.coroutineScope
+                    attrs.selectedString = workoutsProps.match.params.selectedString
+                }
+            }
+
             route("/summerCamp") {
                 child(SummerCamp::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route("/gallery", Gallery::class, exact = true)
+            route<GalleryProps>("/gallery/:selectedGallerySection"){ galleryProps ->
+                child(Gallery::class){
+                    attrs.coroutineScope = props.coroutineScope
+                    attrs.selectedGallerySection = galleryProps.match.params.selectedGallerySection
+                }
+            }
         }
     }
 

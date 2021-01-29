@@ -1,7 +1,4 @@
-
-import database.Checks
-import database.TeamMembers
-import database.database
+import database.*
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
@@ -13,8 +10,7 @@ import kotlinx.html.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
-import services.CheckService
-import services.TeamService
+import services.*
 
 fun Application.main() {
     install(ContentNegotiation) {
@@ -24,6 +20,10 @@ fun Application.main() {
     database {
         SchemaUtils.create(Checks)
         SchemaUtils.create(TeamMembers)
+        SchemaUtils.create(GameCalendar)
+        SchemaUtils.create(Trainers)
+        SchemaUtils.create(Photos)
+        SchemaUtils.create(Teams)
     }
 
     launch {
@@ -34,15 +34,61 @@ fun Application.main() {
                 it[checkText] = "Everything is fine. Thanks."
             }
         }
-
+        for (i in 1 until 20) {
+            database {
+                Photos.insert {
+                    it[url] = "logo.png"
+                    it[gallerySection] = "trainingProcess"
+                }
+            }
+        }
         database {
             TeamMembers.insert {
                 it[teamId] = 1
+                it[photo] = "logo.png"
                 it[firstName] = "Змейка"
                 it[lastName] = "Гитарова"
-                it[role] = "начальная подготовка -- НП"
+                it[role] = "НП"
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
+            }
+        }
+
+        database {
+            GameCalendar.insert {
+                it[date] = "dhzkjfh"
+                it[time] = "Змейка"
+                it[year] = "2003"
+                it[teamAId] = 1
+                it[teamBId] = 2
+                it[stadium] = "28.08.2019"
+                it[result] = "г.Ейск"
+            }
+        }
+        database {
+            Trainers.insert {
+                it[name] = "2003"
+                it[photo] = "logo.png"
+                it[dateOfBirth] = "2003"
+                it[info] = "drfghygtfrdesdrftgyhujhygtfrdesrftgyhujiuhygtrfeddrftgyhukjiuhygtrfedswredrftgyhu"
+            }
+        }
+        database {
+            Teams.insert {
+                it[name] = "spartak"
+                it[isOur] = true
+                it[type] = ""
+                it[year] = "2003"
+                it[trainerId] = 1
+            }
+        }
+        database {
+            Teams.insert {
+                it[name] = "ne spartak"
+                it[isOur] = false
+                it[type] = ""
+                it[year] = "2003"
+                it[trainerId] = 1
             }
         }
     }
@@ -79,7 +125,11 @@ fun Application.main() {
 
         route("/api") {
             rpc(CheckService::class)
+            rpc(GameService::class)
             rpc(TeamService::class)
+            rpc(TimetableService::class)
+            rpc(TrainerService::class)
+            rpc(PhotoService::class)
         }
     }
 }
