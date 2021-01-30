@@ -1,4 +1,5 @@
 package view
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.InputType
@@ -42,22 +43,24 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
     }
 
     private fun handleChange(event: Event) {
-        console.log(event.target)
         val target = event.target as HTMLInputElement
-        setState{
-            this.inputs[target.name] = target.value
+        setState {
+            inputs[target.name] = target.value
         }
     }
 
     override fun RBuilder.render() {
         styledForm {
+            attrs.onSubmitFunction = {
+                handleSubmit(it)
+            }
             styledInput(type = InputType.text) {
                 attrs.onChangeFunction = {
                     handleChange(it)
                 }
                 attrs {
-                    this.name = "login"
-                    this.value = state.inputs["login"]!!
+                    name = "login"
+                    value = state.inputs["login"]!!
                 }
             }
             styledInput(type = InputType.password) {
@@ -66,14 +69,11 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
                 }
 
                 attrs {
-                    this.name = "password"
-                    this.value = state.inputs["password"]!!
+                    name = "password"
+                    value = state.inputs["password"]!!
                 }
             }
             styledInput {
-                attrs.onSubmitFunction = {
-                    handleSubmit(it)
-                }
                 attrs.type = InputType.submit
                 attrs.value = "Submit"
             }
