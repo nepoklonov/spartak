@@ -1,7 +1,9 @@
 package pages
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.w3c.dom.get
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -38,6 +40,7 @@ class Main : RComponent<MainProps, MainState>() {
                 this.mainHtml = mainHtml
             }
         }
+
     }
 
     override fun RBuilder.render() {
@@ -48,7 +51,15 @@ class Main : RComponent<MainProps, MainState>() {
                 +"загрузка..."
             }
         }
+//        cutHTMLMain()
     }
 }
 
-
+//fun cutHTMLMain() {
+//    var pics = document.getElementsByTagName("img")
+//    console.log(pics.length)
+//    for (i in 0..pics.length){
+//        if (i>0) pics[i]?.outerHTML  = ""
+//        console.log(pics[i])
+//    }
+//}

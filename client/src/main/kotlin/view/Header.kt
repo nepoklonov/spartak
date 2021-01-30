@@ -2,22 +2,21 @@ package view
 
 import headerText
 import kotlinx.css.*
+import kotlinx.css.VerticalAlign.Companion.top
+import kotlinx.css.properties.LineHeight
+import kotlinx.css.properties.TextDecoration
 import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.a
-import styled.css
-import styled.styledDiv
-import styled.styledH1
-import styled.styledImg
+import styled.*
 
 class HeaderComponent : RComponent<RProps, RState>() {
     private fun RBuilder.addIcon(src: String, floatDirection: Float) {
         styledImg(src = src) {
             css {
                 height = 20.px
-                float = floatDirection
                 margin = 5.px.toString()
             }
         }
@@ -36,35 +35,50 @@ class HeaderComponent : RComponent<RProps, RState>() {
     }
 
     override fun RBuilder.render() {
-
         styledDiv {
             css {
-                padding = 40.px.toString()
-                overflow = Overflow.hidden
+                height = 230.px
+                display = Display.flex
+                justifyContent = JustifyContent.spaceEvenly
+                alignItems = Align.center
             }
-            styledImg(src = "/images/logo.png") {
+            styledDiv {
                 css {
-                    height = 200.px
+                    padding = 0.px.toString()
+                    overflow = Overflow.hidden
                     float = Float.left
+                    width = 880.px
                 }
-            }
-
-            styledH1 {
-                css {
-                    fontSize = 32.pt
-                    width = 700.px
-
+                styledImg(src = "/images/logo.png") {
+                    css {
+                        height = 200.px
+                        float = Float.left
+                        border = 20.px.toString()
+                    }
                 }
-                headerText{ +"Молодежный хоккейный клуб «Спартак»"}
+
+                styledH1 {
+                    css {
+                        alignSelf = Align.center
+                        fontSize = 18.pt
+                        lineHeight = LineHeight.normal
+                    }
+                    headerText { +"Молодежный хоккейный клуб «Спартак»" }
+                }
             }
 
             styledDiv {
                 css {
-                    float = Float.right
-                    width = 300.px
+                    fontSize = 16.pt
+                    alignItems = Align.center
+                    border = 20.px.toString()
                 }
 
                 styledDiv {
+                    css{
+                        lineHeight = LineHeight.normal
+                        width = 320.px
+                    }
                     TextWithIcon.Address.let {
                         addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.left)
                     }
@@ -83,7 +97,6 @@ class HeaderComponent : RComponent<RProps, RState>() {
 
             }
         }
-
     }
-
 }
+
