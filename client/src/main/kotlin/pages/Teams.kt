@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
-import model.Check
+import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
 import react.*
@@ -25,6 +25,8 @@ val teamsNavigationList = listOf(
     TeamsNavigation("2006")
 )
 
+val roleList = listOf("Защитники", "Вратари", "Нападающие")
+
 
 external interface TeamsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -33,9 +35,9 @@ external interface TeamsProps : RProps {
 
 class TeamsState : RState {
     var error: Throwable? = null
+    var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
-    var check: Check? = null
-    var teamMember: List<TeamMemberDTO>? = null
+    var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
 
 }
 
@@ -44,92 +46,128 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
-    override fun componentDidMount() {
+    private fun getState(selectedTeam: String, coroutineScope: CoroutineScope){
         val trainerService = TrainerService(coroutineContext)
         val teamService = TeamService(coroutineContext)
 
-        props.coroutineScope.launch {
-            val trainer = try {
-                trainerService.getTrainer("2003")
+        coroutineScope.launch {
+            val team = try {
+                teamService.getTeamByYear(selectedTeam)
             } catch (e: Throwable) {
                 setState {
                     error = e
                 }
                 return@launch
             }
-
-
-            val teamMember = try {
-                teamService.getTeamMemberByRole("Защитники")
-            } catch (e: Throwable) {
-                setState {
-                    error = e
+            if (team.id != null) {
+                val trainer = try {
+                    trainerService.getTrainerById(team.id!!)
+                } catch (e: Throwable) {
+                    setState {
+                        error = e
+                    }
+                    return@launch
                 }
-                return@launch
-            }
 
-            setState {
-                this.teamMember = teamMember
-                this.trainer = trainer
+                val teamMembersWithRoles = mutableMapOf<String, List<TeamMemberDTO>>()
+
+                roleList.forEach { header ->
+                    val teamMembers = try {
+                        teamService.getTeamMemberByTeamIdAndRole(header, team.id!!)
+                    } catch (e: Throwable) {
+                        setState {
+                            error = e
+                        }
+                        return@launch
+                    }
+                    teamMembersWithRoles[header] = teamMembers
+
+                }
+
+
+                setState {
+                    this.team = team
+                    this.teamMembersWithRoles = teamMembersWithRoles
+                    this.trainer = trainer
+                }
             }
         }
     }
 
-    override fun RBuilder.render() {
-        styledH1 {
-            +"Команды"
-        }
+    override fun componentDidMount() {
+        getState(props.selectedTeam, props.coroutineScope)
+    }
 
+    override fun componentDidUpdate(prevProps: TeamsProps, prevState: TeamsState, snapshot: Any) {
+        if(this.props.selectedTeam != prevProps.selectedTeam){
+            getState(props.selectedTeam, props.coroutineScope)
+        }
+    }
+
+    override fun RBuilder.render() {
         styledDiv {
             css {
-                float = kotlinx.css.Float.left
-                backgroundColor = Color.white
-                textDecoration = TextDecoration.none
+                overflow = Overflow.hidden
             }
-            teamsNavigationList.forEach {
-                navLink<TeamsProps>(to = it.link) {
-                    styledDiv {
-                        css {
-                            textAlign = TextAlign.center
-                            color = ColorSpartak.Red.color
-                            width = 200.px
-                        }
-                        styledH2 {
-                            css {
-                                margin = 40.px.toString()
-                            }
-                            +it.header
-                        }
-                    }
-                }
-            }
-        }
 
-        val error = state.error
-        if (error != null) {
-            throw error
-        }
-        styledDiv {
-            styledH2 {
-                +"Тренер"
+            styledH1 {
+                +"Команды"
             }
-            if (state.trainer != null) {
-                styledImg(src = "/images/" + state.trainer!!.photo) {
-                    css {
-                        float = Float.left
+
+            styledDiv {
+                css {
+                    float = Float.left
+                    backgroundColor = Color.white
+                    textDecoration = TextDecoration.none
+                }
+                teamsNavigationList.forEach {
+                    navLink<TeamsProps>(to = it.link) {
+                        styledDiv {
+                            css {
+                                textAlign = TextAlign.center
+                                color = ColorSpartak.Red.color
+                                width = 200.px
+                            }
+                            styledH2 {
+                                css {
+                                    margin = 40.px.toString()
+                                }
+                                +it.header
+                            }
+                        }
                     }
                 }
-                styledH3 {
-                    +(state.trainer?.name ?: "загрузка...")
-                }
-                +(state.trainer?.info ?: "загрузка...")
             }
-        }
-        styledH2 {
-            +"Игроки"
-        }
-        state.teamMember?.forEach() {
-            styledImg(src = "/images/" + it.photo) { }
+
+            val error = state.error
+            if (error != null) {
+                throw error
+            }
+            styledDiv {
+                styledH2 {
+                    +"Тренер"
+                }
+                if (state.trainer != null) {
+                    styledImg(src = "/images/" + state.trainer!!.photo) {
+                        css {
+                            float = Float.left
+                        }
+                    }
+                    styledH3 {
+                        +(state.trainer?.name ?: "загрузка...")
+                    }
+                    +(state.trainer?.info ?: "загрузка...")
+                }
+            }
+
+            state.teamMembersWithRoles?.forEach() {
+                styledH2 {
+                    +it.key
+                }
+                it.value.forEach {
+                    styledImg(src = "/images/" + it.photo) { }
+                }
+            }
         }
     }
 }

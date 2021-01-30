@@ -49,13 +49,13 @@ class Games : RComponent<GamesProps, GamesState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
-    override fun componentDidMount() {
+    private fun getState(year: String, coroutineScope: CoroutineScope){
         val gameService = GameService(coroutineContext)
         val teamsService = TeamService(coroutineContext)
 
-        props.coroutineScope.launch {
+        coroutineScope.launch {
             val allGames = try {
-                gameService.getAllGamesByYear("2003").also { console.log(it) }
+                gameService.getAllGamesByYear(year)
             } catch (e: Throwable) {
                 console.log(e)
                 setState {
@@ -92,6 +92,16 @@ class Games : RComponent<GamesProps, GamesState>() {
             setState() {
                 this.allGamesWhithTeams = allGamesWhithTeams
             }
+        }
+    }
+
+    override fun componentDidMount() {
+        getState(props.selectedChampionship, props.coroutineScope)
+    }
+
+    override fun componentDidUpdate(prevProps: GamesProps, prevState: GamesState, snapshot: Any) {
+        if(this.props.selectedChampionship != prevProps.selectedChampionship){
+            getState(props.selectedChampionship, props.coroutineScope)
         }
     }
 

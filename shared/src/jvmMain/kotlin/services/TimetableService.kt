@@ -8,16 +8,15 @@ import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import rpc.RPCService
 
 actual class TimetableService: RPCService {
-    actual suspend fun getWeekTimetable(beginningOfTheWeek: Int, endOfTheWeek: Int): List<WorkoutDTO> {
+    actual suspend fun getWeekTimetableByType(beginningOfTheWeek: Double, endOfTheWeek: Double, type: String): List<WorkoutDTO> {
         val listOfWorkoutDTO = mutableListOf<WorkoutDTO>()
         database {
             Timetable.select {
-                (Timetable.date greaterEq beginningOfTheWeek) and (Timetable.date lessEq endOfTheWeek)
-            }.forEach() {
+                (Timetable.type eq type) and (Timetable.datetime greaterEq beginningOfTheWeek) and (Timetable.datetime lessEq endOfTheWeek)
+            }.orderBy(Timetable.datetime to SortOrder.ASC ).forEach() {
                 listOfWorkoutDTO += WorkoutDTO(
                         it[Timetable.id].value,
-                        it[Timetable.date],
-                        it[Timetable.time],
+                        it[Timetable.datetime],
                         it[Timetable.teamId],
                         it[Timetable.type],
                         it[Timetable.place]
@@ -28,8 +27,7 @@ actual class TimetableService: RPCService {
     }
 
     private fun Timetable.insertWorkoutDtoToDatabase(it: UpdateBuilder<Int>, workout: WorkoutDTO) {
-        it[date] = workout.date
-        it[time] = workout.time
+        it[datetime] = workout.datetime
         it[teamId] = workout.teamId
         it[type] = workout.type
         it[place] = workout.place

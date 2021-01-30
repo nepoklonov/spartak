@@ -58,10 +58,10 @@ class Router : RComponent<RouterProps, RState>() {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route<WorkoutsProps>("/workouts/:selectedString"){ workoutsProps ->
+            route<WorkoutsProps>("/workouts/:selectedWorkout"){ workoutsProps ->
                 child(Workouts::class){
                     attrs.coroutineScope = props.coroutineScope
-                    attrs.selectedString = workoutsProps.match.params.selectedString
+                    attrs.selectedWorkout = workoutsProps.match.params.selectedWorkout
                 }
             }
 
