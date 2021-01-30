@@ -40,9 +40,17 @@ fun Application.main() {
         SchemaUtils.create(Trainers)
         SchemaUtils.create(Photos)
         SchemaUtils.create(Teams)
+        SchemaUtils.create(Admins)
     }
 
     launch {
+
+        database {
+            Admins.insert {
+                it[login] = "admin"
+                it[password] = "admin"
+            }
+        }
 
         database {
             Checks.insert {
@@ -151,6 +159,7 @@ fun Application.main() {
             rpc(TimetableService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
+            rpc(AdminService::class)
         }
     }
 }

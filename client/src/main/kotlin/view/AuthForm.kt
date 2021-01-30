@@ -25,19 +25,19 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
     init {
         state = AuthFormState()
     }
+
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
-    private val adminService = AdminService(coroutineContext)
-    override fun componentDidMount() {
-    }
 
-    private fun handleSubmit (event: Event){
+    private fun handleSubmit(adminService: AdminService, event: Event) {
         event.preventDefault()
         event.stopPropagation()
         console.log("Login : ${state.inputs["login"]} password : ${state.inputs["password"]}")
-        props.coroutineScope.launch{
+        props.coroutineScope.launch {
             if (adminService.checkAdmin(state.inputs["login"].toString(), state.inputs["password"].toString())) {
                 console.log("LOGGED IN")
+            } else {
+                console.log("FAILED")
             }
         }
     }
@@ -50,9 +50,10 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
     }
 
     override fun RBuilder.render() {
+        val adminService = AdminService(coroutineContext)
         styledForm {
             attrs.onSubmitFunction = {
-                handleSubmit(it)
+                handleSubmit(adminService, it)
             }
             styledInput(type = InputType.text) {
                 attrs.onChangeFunction = {

@@ -94,7 +94,7 @@ fun <T> parse(serializationStrategy: DeserializationStrategy<T>, string: String,
             throw TransportException(e.message ?: "")
         }
     } else {
-        return string as? T?: error("we should want a json or a string")
+        return string as? T ?: error("we should want a json or a string")
     }
 }
 

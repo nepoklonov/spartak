@@ -20,7 +20,11 @@ class Router : RComponent<RouterProps, RState>() {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route("/admin", Admin::class, exact = true)
+            route("/admin", exact = true) {
+                child(Admin::class) {
+                    attrs.coroutineScope = props.coroutineScope
+                }
+            }
             route("/page", SomePage::class, exact = true)
             route("/news/feed") {
                 child(News::class) {

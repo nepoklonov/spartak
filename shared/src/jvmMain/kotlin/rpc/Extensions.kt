@@ -52,7 +52,7 @@ fun Route.rpc(serviceClass: KClass<out RPCService>) {
             get(function.name) {
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json{isLenient = true}.decodeFromString(
+                    Json { isLenient = true }.decodeFromString(
                         param.type.jvmErasure.serializer(),
                         call.request.queryParameters[param.name.toString()].toString()
                     )
@@ -61,14 +61,15 @@ fun Route.rpc(serviceClass: KClass<out RPCService>) {
             }
         } else {
             post(function.name) {
+                val queryParameters = Json { isLenient = true }.decodeFromString(
+                    MapSerializer(String.serializer(), String.serializer()),
+                    call.receiveText()
+                )
                 val args = mutableListOf<Any>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json{isLenient = true}.decodeFromString(
+                    Json { isLenient = true }.decodeFromString(
                         param.type.jvmErasure.serializer(),
-                        Json { isLenient = true }.decodeFromString(
-                            MapSerializer(String.serializer(), String.serializer()),
-                            call.receiveText()
-                        ).values.first()
+                        queryParameters[param.name!!] ?: error("param is missing")
                     )
                 }
                 queryBody(function, call, args)
