@@ -40,6 +40,7 @@ fun Application.main() {
         SchemaUtils.create(Trainers)
         SchemaUtils.create(Photos)
         SchemaUtils.create(Teams)
+        SchemaUtils.create(Timetable)
     }
 
     launch {
@@ -55,6 +56,14 @@ fun Application.main() {
                 Photos.insert {
                     it[url] = "logo.png"
                     it[gallerySection] = "trainingProcess"
+                }
+            }
+        }
+        for (i in 1 until 20) {
+            database {
+                Photos.insert {
+                    it[url] = "vk.png"
+                    it[gallerySection] = "LadogaCup2019"
                 }
             }
         }
@@ -74,7 +83,7 @@ fun Application.main() {
             GameCalendar.insert {
                 it[date] = "dhzkjfh"
                 it[time] = "Змейка"
-                it[year] = "2003"
+                it[year] = "championship2003"
                 it[teamAId] = 1
                 it[teamBId] = 2
                 it[stadium] = "28.08.2019"
@@ -83,6 +92,7 @@ fun Application.main() {
         }
         database {
             Trainers.insert {
+                it[teamId] = 1
                 it[name] = "2003"
                 it[photo] = "logo.png"
                 it[dateOfBirth] = "2003"
@@ -105,6 +115,14 @@ fun Application.main() {
                 it[type] = ""
                 it[year] = "2003"
                 it[trainerId] = 1
+            }
+        }
+        database {
+            Timetable.insert {
+                it[datetime] = 1612020600000.0
+                it[teamId] = 1
+                it[type] = "shhm"
+                it[place] = "ура наконец-то я доделала это ебанное расписание"
             }
         }
     }
@@ -151,6 +169,7 @@ fun Application.main() {
             rpc(TimetableService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
+            rpc(TimetableService::class)
         }
     }
 }

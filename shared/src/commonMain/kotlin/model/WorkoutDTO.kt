@@ -8,8 +8,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WorkoutDTO(
         var id: Int?,
-        val date: Int,
-        val time: String,
+        val datetime: Double,
         val teamId: Int,
         val type: String,// нападающие/маневренное катание/инд. работа
         val place: String, // лёд/земля/зал/игра дома -- у них много всякого

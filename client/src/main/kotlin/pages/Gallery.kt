@@ -35,12 +35,11 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
-    override fun componentDidMount() {
+    private fun getState(section: String, coroutineScope: CoroutineScope) {
         val photoService = PhotoService(coroutineContext)
-
-        props.coroutineScope.launch {
+        coroutineScope.launch {
             val listOfPhotos = try {
-                photoService.getAllPhotosBySection("trainingProcess")
+                photoService.getAllPhotosBySection(section)
             } catch (e: Throwable) {
                 setState {
                     error = e
@@ -54,7 +53,18 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
         }
     }
 
+    override fun componentDidMount() {
+        getState(props.selectedGallerySection, props.coroutineScope)
+    }
+
+    override fun componentDidUpdate(prevProps: GalleryProps, prevState: GalleryState, snapshot: Any) {
+        if (this.props.selectedGallerySection != prevProps.selectedGallerySection) {
+            getState(props.selectedGallerySection, props.coroutineScope)
+        }
+    }
+
     override fun RBuilder.render() {
+
         styledDiv {
             css {
                 overflow = Overflow.hidden
@@ -66,7 +76,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
             styledDiv {
                 css {
-                    float = kotlinx.css.Float.left
+                    float = Float.left
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }

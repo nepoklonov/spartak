@@ -70,14 +70,12 @@ actual class TeamService : RPCService {
         }
     }
 
-    actual suspend fun getAllTeamsByYear(year: String): List<TeamDTO> {
-        val listOfTeams: MutableList<TeamDTO> = mutableListOf()
-        database {
-            Teams.select { Teams.year eq year }.forEach() {
-                listOfTeams += Teams.getTeamDTO(it)
+    actual suspend fun getTeamByYear(year: String): TeamDTO {
+        return database {
+            Teams.select { Teams.year eq year }.first().let {
+                Teams.getTeamDTO(it)
             }
         }
-        return listOfTeams
     }
 
     actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
@@ -90,10 +88,10 @@ actual class TeamService : RPCService {
         return listOfTeamMembers
     }
 
-    actual suspend fun getTeamMemberByRole(role: String): List<TeamMemberDTO> {
+    actual suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO> {
         val liftOfTeamMembers = mutableListOf<TeamMemberDTO>()
         database {
-            TeamMembers.select { TeamMembers.role eq role }.forEach {
+            TeamMembers.select { (TeamMembers.teamId eq teamId) and (TeamMembers.role eq role) }.forEach {
                 liftOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }

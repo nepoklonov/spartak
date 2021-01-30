@@ -11,11 +11,12 @@ import org.jetbrains.exposed.sql.update
 import rpc.RPCService
 
 actual class TrainerService : RPCService {
-    actual suspend fun getTrainer(name: String): TrainerDTO {
+    actual suspend fun getTrainerById(teamId: Int): TrainerDTO {
         return database {
-            Trainers.select { Trainers.name eq name }.first().let {
+            Trainers.select { Trainers.teamId eq teamId }.first().let {
                 TrainerDTO(
                     it[Trainers.id].value,
+                    it[Trainers.teamId],
                     it[Trainers.photo],
                     it[Trainers.name],
                     it[Trainers.dateOfBirth],
@@ -26,6 +27,7 @@ actual class TrainerService : RPCService {
     }
 
     private fun Trainers.insertTrainerDtoToDatabase(it: UpdateBuilder<Int>, trainer: TrainerDTO) {
+        it[teamId] = trainer.teamId
         it[name] = trainer.name
         it[photo] = trainer.photo
         it[dateOfBirth] = trainer.dateOfBirth

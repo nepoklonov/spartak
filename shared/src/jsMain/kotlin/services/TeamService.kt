@@ -21,16 +21,16 @@ actual class TeamService(coroutineContext: CoroutineContext) {
         return transport.get("getTeamById", TeamDTO.serializer(), "id" to id)
     }
 
-    actual suspend fun getAllTeamsByYear(year: String): List<TeamDTO> {
-        return transport.getList("getAllTeamsByYear", TeamDTO.serializer(), "year" to year)
+    actual suspend fun getTeamByYear(year: String): TeamDTO {
+        return transport.get("getTeamByYear", TeamDTO.serializer(), "year" to year)
     }
 
     actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
         return transport.getList("getAllTeamMembers", TeamMemberDTO.serializer(), "name" to teamId.toString())
     }
 
-    actual suspend fun getTeamMemberByRole(role: String): List<TeamMemberDTO> {
-        return transport.getList("getTeamMemberByRole", TeamMemberDTO.serializer(), "role" to role)
+    actual suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO> {
+        return transport.getList("getTeamMemberByTeamIdAndRole", TeamMemberDTO.serializer(), "role" to role, "teamId" to teamId)
     }
 
     actual suspend fun editTeam(team: TeamDTO): Boolean {
