@@ -10,7 +10,7 @@ val kotlinWrappersSuffix = project.property("kotlin.wrappers.suffix") as String
 
 val logbackVersion = project.property("logback.version") as String
 val exposedVersion = project.property("exposed.version") as String
-val h2Version = project.property("h2.version") as String
+val postgresVersion = project.property("postgres.version") as String
 
 kotlin {
     jvm()
@@ -63,7 +63,7 @@ kotlin {
                 implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
                 implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-                implementation("com.h2database:h2:$h2Version")
+                implementation("org.postgresql:postgresql:$postgresVersion")
             }
         }
         val jvmTest by getting {
