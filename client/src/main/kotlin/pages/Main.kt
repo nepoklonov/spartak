@@ -1,7 +1,11 @@
 package pages
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.w3c.dom.asList
+import org.w3c.dom.get
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -21,6 +25,7 @@ class Main : RComponent<MainProps, MainState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
+
     override fun componentDidMount() {
         val htmlService = HtmlService(coroutineContext)
 
@@ -38,7 +43,6 @@ class Main : RComponent<MainProps, MainState>() {
                 this.mainHtml = mainHtml
             }
         }
-
     }
 
     override fun RBuilder.render() {
@@ -49,15 +53,9 @@ class Main : RComponent<MainProps, MainState>() {
                 +"загрузка..."
             }
         }
-//        cutHTMLMain()
+        child(MainNews::class){
+            attrs.coroutineScope = props.coroutineScope
+        }
     }
 }
 
-//fun cutHTMLMain() {
-//    var pics = document.getElementsByTagName("img")
-//    console.log(pics.length)
-//    for (i in 0..pics.length){
-//        if (i>0) pics[i]?.outerHTML  = ""
-//        console.log(pics[i])
-//    }
-//}
