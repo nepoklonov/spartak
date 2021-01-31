@@ -1,5 +1,6 @@
 package pages
 
+import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -7,11 +8,13 @@ import kotlinx.css.properties.TextDecoration
 import model.TeamDTO
 import react.*
 import react.dom.td
+import react.dom.tr
 import react.router.dom.navLink
 import services.GameService
 import services.TeamService
 import styled.*
-import view.ColorSpartak
+import tableHeader
+import view.SmallNavigation
 
 data class GameNavigation(val year: String) {
     val header = "Первенство СПБ $year"
@@ -26,7 +29,7 @@ val gameNavigationList = listOf(
 
 val tableHeaders = listOf("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
 
-data class GameWhithTeams(
+data class GameWithTeams(
     val date: String,
     val time: String?,
     val teamA: TeamDTO? = null,
@@ -42,14 +45,14 @@ external interface GamesProps : RProps {
 
 class GamesState : RState {
     var error: Throwable? = null
-    var allGamesWhithTeams: List<GameWhithTeams>? = null
+    var allGamesWithTeams: List<GameWithTeams>? = null
 }
 
 class Games : RComponent<GamesProps, GamesState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
-    private fun getState(year: String, coroutineScope: CoroutineScope){
+    private fun getState(year: String, coroutineScope: CoroutineScope) {
         val gameService = GameService(coroutineContext)
         val teamsService = TeamService(coroutineContext)
 
@@ -64,7 +67,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                 return@launch
             }
 
-            val allGamesWhithTeams: MutableList<GameWhithTeams> = mutableListOf<GameWhithTeams>()
+            val allGamesWithTeams: MutableList<GameWithTeams> = mutableListOf<GameWithTeams>()
 
             allGames.forEach {
                 val teamA = try {
@@ -86,11 +89,11 @@ class Games : RComponent<GamesProps, GamesState>() {
                     return@launch
                 }
 
-                allGamesWhithTeams += GameWhithTeams(it.date, it.time, teamA, teamB, it.stadium, it.result)
+                allGamesWithTeams += GameWithTeams(it.date, it.time, teamA, teamB, it.stadium, it.result)
             }
 
             setState() {
-                this.allGamesWhithTeams = allGamesWhithTeams
+                this.allGamesWithTeams = allGamesWithTeams
             }
         }
     }
@@ -100,17 +103,14 @@ class Games : RComponent<GamesProps, GamesState>() {
     }
 
     override fun componentDidUpdate(prevProps: GamesProps, prevState: GamesState, snapshot: Any) {
-        if(this.props.selectedChampionship != prevProps.selectedChampionship){
+        if (this.props.selectedChampionship != prevProps.selectedChampionship) {
             getState(props.selectedChampionship, props.coroutineScope)
         }
     }
 
 
     override fun RBuilder.render() {
-        styledH1 {
-            css {
-                textAlign = TextAlign.center
-            }
+        headerText {
             +"Расписание игр"
         }
         styledDiv {
@@ -127,18 +127,8 @@ class Games : RComponent<GamesProps, GamesState>() {
                 }
                 gameNavigationList.forEach {
                     navLink<GamesProps>(to = it.link) {
-                        styledDiv {
-                            css {
-                                textAlign = TextAlign.center
-                                color = ColorSpartak.Red.color
-                                width = 200.px
-                            }
-                            styledH2 {
-                                css {
-                                    margin = 40.px.toString()
-                                }
-                                +it.header
-                            }
+                        child(SmallNavigation::class) {
+                            attrs.selectedString = it.header
                         }
                     }
                 }
@@ -149,12 +139,11 @@ class Games : RComponent<GamesProps, GamesState>() {
                     width = 1000.px
                 }
                 styledThead {
-                    css {
-                        backgroundColor = ColorSpartak.Grey.color
-                    }
-                    tableHeaders.forEach {
-                        styledTh() {
-                            +it
+                    tableHeader {
+                        tableHeaders.forEach {
+                            styledTh() {
+                                +it
+                            }
                         }
                     }
                 }
@@ -162,24 +151,27 @@ class Games : RComponent<GamesProps, GamesState>() {
                     css {
                         backgroundColor = Color.white
                     }
-                    state.allGamesWhithTeams?.forEach {
-                        td {
-                            +it.date
-                        }
-                        td {
-                            +it.time!!
-                        }
-                        td {
-                            +it.teamA?.name!!
-                        }
-                        td {
-                            +it.teamB?.name!!
-                        }
-                        td {
-                            +it.stadium
-                        }
-                        td {
-                            +it.result!!
+
+                    state.allGamesWithTeams?.forEach {
+                        tr {
+                            td {
+                                +it.date
+                            }
+                            td {
+                                +it.time!!
+                            }
+                            td {
+                                +it.teamA?.name!!
+                            }
+                            td {
+                                +it.teamB?.name!!
+                            }
+                            td {
+                                +it.stadium
+                            }
+                            td {
+                                +it.result!!
+                            }
                         }
                     }
                 }

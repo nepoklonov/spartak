@@ -1,16 +1,17 @@
 package view
 
-import headerText
 import kotlinx.css.*
-import kotlinx.css.VerticalAlign.Companion.top
 import kotlinx.css.properties.LineHeight
-import kotlinx.css.properties.TextDecoration
+import mainHeaderText
 import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
 import react.dom.a
-import styled.*
+import styled.css
+import styled.styledDiv
+import styled.styledH1
+import styled.styledImg
 
 class HeaderComponent : RComponent<RProps, RState>() {
     private fun RBuilder.addIcon(src: String, floatDirection: Float) {
@@ -63,7 +64,7 @@ class HeaderComponent : RComponent<RProps, RState>() {
                         fontSize = 18.pt
                         lineHeight = LineHeight.normal
                     }
-                    headerText { +"Молодежный хоккейный клуб «Спартак»" }
+                    mainHeaderText { +"Молодежный хоккейный клуб «Спартак»" }
                 }
             }
 

@@ -30,6 +30,7 @@ class MainNavigationComponent : RComponent<RProps, RState>() {
                 backgroundColor = ColorSpartak.Red.color
                 display = Display.flex
                 justifyContent = JustifyContent.spaceAround
+                textAlign = TextAlign.center
             }
 
             Pages.values().forEach { page ->
@@ -38,7 +39,8 @@ class MainNavigationComponent : RComponent<RProps, RState>() {
                     styledH1 {
                         css {
                             color = Color.white
-                            fontSize = 14.pt
+                            fontFamily = "Russo"
+                            fontSize = 11.pt
                             float = Float.left
                         }
                         +page.header

@@ -1,5 +1,6 @@
 package pages
 
+import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -9,9 +10,8 @@ import react.router.dom.navLink
 import services.TimetableService
 import styled.css
 import styled.styledDiv
-import styled.styledH1
-import styled.styledH2
-import view.ColorSpartak
+import tableHeader
+import view.SmallNavigation
 import kotlin.js.Date
 
 val monthes = mapOf(
@@ -73,20 +73,25 @@ class WorkoutsState : RState {
 }
 
 const val msInDay = 1000 * 3600 * 24
-val monday = Date(
-    ((Date(
-        Date().getFullYear(),
-        Date().getMonth(),
-        Date().getDate()
-    )).getTime() - Date().getDay() * msInDay)
-).getTime()
-val sunday = Date(
-    ((Date(
-        Date().getFullYear(),
-        Date().getMonth(),
-        Date().getDate()
-    )).getTime() + (8 - Date().getDay()) * msInDay)
-).getTime()
+val monday = if (Date().getDay() != 0) {
+    Date(
+        ((Date(
+            Date().getFullYear(),
+            Date().getMonth(),
+            Date().getDate()
+        )).getTime() - Date().getDay() * msInDay)
+    ).getTime()
+} else{
+    Date(
+        ((Date(
+            Date().getFullYear(),
+            Date().getMonth(),
+            Date().getDate()
+        )).getTime() - 7 * msInDay)
+    ).getTime()
+}
+
+val sunday = monday + 7 * msInDay
 
 
 class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
@@ -140,8 +145,8 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                 overflow = Overflow.hidden
             }
 
-            styledH1 {
-                +"Тренировки"
+            headerText {
+                +"Расписание тренировок"
             }
             styledDiv {
                 css {
@@ -151,18 +156,8 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                 }
                 workoutsNavigationList.forEach {
                     navLink<WorkoutsProps>(to = it.link) {
-                        styledDiv {
-                            css {
-                                textAlign = TextAlign.center
-                                color = ColorSpartak.Red.color
-                                width = 200.px
-                            }
-                            styledH2 {
-                                css {
-                                    margin = 40.px.toString()
-                                }
-                                +it.header
-                            }
+                        child(SmallNavigation::class) {
+                            attrs.selectedString = it.header
                         }
                     }
                 }
@@ -170,18 +165,14 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
             styledDiv {
 
-
                 daysOfWeek.forEach { daysOfWeek ->
-                    styledDiv {
-                        css {
-                            backgroundColor = ColorSpartak.Grey.color
-                        }
+                    tableHeader {
                         +daysOfWeek.value
                         +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
-                        +monthes[Date(monday + daysOfWeek.key * msInDay).getMonth()]!!
+                        +(monthes[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
                     }
                     styledDiv {
-                        css{
+                        css {
                             backgroundColor = Color.white
                         }
                         if (state.workouts != null) {

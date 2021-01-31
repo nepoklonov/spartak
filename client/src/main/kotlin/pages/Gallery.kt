@@ -1,14 +1,14 @@
 package pages
 
+import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.TextDecoration
 import react.*
 import react.router.dom.navLink
 import services.PhotoService
 import styled.*
-import view.ColorSpartak
+import view.SmallNavigation
 
 data class GalleryNavigation(val header: String, val link: String)
 
@@ -70,7 +70,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                 overflow = Overflow.hidden
             }
 
-            styledH1 {
+            headerText {
                 +"Галерея"
             }
 
@@ -78,22 +78,11 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                 css {
                     float = Float.left
                     backgroundColor = Color.white
-                    textDecoration = TextDecoration.none
                 }
                 galleryNavigationList.forEach {
                     navLink<GalleryProps>(to = it.link) {
-                        styledDiv {
-                            css {
-                                textAlign = TextAlign.center
-                                color = ColorSpartak.Red.color
-                                width = 200.px
-                            }
-                            styledH2 {
-                                css {
-                                    margin = 40.px.toString()
-                                }
-                                +it.header
-                            }
+                        child(SmallNavigation::class) {
+                            attrs.selectedString = it.header
                         }
                     }
                 }
@@ -104,10 +93,13 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     +"загрузка..."
                 } else {
                     state.images!!.forEach {
-                        styledImg(src = "/images/$it") {
-                            css {
-                                width = 100.px
-                                margin = 20.px.toString()
+                        styledDiv {
+                            css{
+                                backgroundImage = Image( "url(/images/$it)")
+                                backgroundSize = 230.px.toString()
+                                width = 230.px
+                                height = 230.px
+                                margin = 10.px.toString()
                                 float = Float.left
                             }
                         }

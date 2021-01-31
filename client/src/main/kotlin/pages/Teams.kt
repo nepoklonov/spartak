@@ -1,5 +1,6 @@
 package pages
 
+import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -11,8 +12,9 @@ import react.*
 import react.router.dom.navLink
 import services.TeamService
 import services.TrainerService
+import smallHeaderText
 import styled.*
-import view.ColorSpartak
+import view.SmallNavigation
 
 data class TeamsNavigation(val year: String) {
     val header = "Команда $year"
@@ -46,7 +48,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
-    private fun getState(selectedTeam: String, coroutineScope: CoroutineScope){
+    private fun getState(selectedTeam: String, coroutineScope: CoroutineScope) {
         val trainerService = TrainerService(coroutineContext)
         val teamService = TeamService(coroutineContext)
 
@@ -99,7 +101,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     }
 
     override fun componentDidUpdate(prevProps: TeamsProps, prevState: TeamsState, snapshot: Any) {
-        if(this.props.selectedTeam != prevProps.selectedTeam){
+        if (this.props.selectedTeam != prevProps.selectedTeam) {
             getState(props.selectedTeam, props.coroutineScope)
         }
     }
@@ -110,7 +112,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 overflow = Overflow.hidden
             }
 
-            styledH1 {
+            headerText {
                 +"Команды"
             }
 
@@ -122,18 +124,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 }
                 teamsNavigationList.forEach {
                     navLink<TeamsProps>(to = it.link) {
-                        styledDiv {
-                            css {
-                                textAlign = TextAlign.center
-                                color = ColorSpartak.Red.color
-                                width = 200.px
-                            }
-                            styledH2 {
-                                css {
-                                    margin = 40.px.toString()
-                                }
-                                +it.header
-                            }
+                        child(SmallNavigation::class) {
+                            attrs.selectedString = it.header
                         }
                     }
                 }
@@ -144,7 +136,10 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 throw error
             }
             styledDiv {
-                styledH2 {
+                css {
+                    overflow = Overflow.hidden
+                }
+                smallHeaderText {
                     +"Тренер"
                 }
                 if (state.trainer != null) {
@@ -153,15 +148,21 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             float = Float.left
                         }
                     }
-                    styledH3 {
-                        +(state.trainer?.name ?: "загрузка...")
+                    styledDiv {
+                        css {
+                            textAlign = TextAlign.center
+                        }
+                        smallHeaderText {
+                            +(state.trainer?.name ?: "загрузка...")
+                        }
+                        +(state.trainer?.info ?: "загрузка...")
                     }
-                    +(state.trainer?.info ?: "загрузка...")
+
                 }
             }
 
             state.teamMembersWithRoles?.forEach() {
-                styledH2 {
+                smallHeaderText {
                     +it.key
                 }
                 it.value.forEach {

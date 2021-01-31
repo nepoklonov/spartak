@@ -12,7 +12,8 @@ enum class TextWithIcon(val header: String, val iconSrc: String, val text: Strin
 
 enum class ColorSpartak(val color: Color){
     Red(Color("#9D0707")),
-    Grey(Color("#484444"))
+    Grey(Color("#484444")),
+    LightGrey(Color("#E0DEDF"))
 }
 
 

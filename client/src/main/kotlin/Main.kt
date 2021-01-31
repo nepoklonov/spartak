@@ -30,6 +30,8 @@ private class Application : CoroutineScope {
                             rule("@font-face") {
                                 fontFamily = "Russo"
                                 put("src", "url('/fonts/Russo-One.ttf')")
+//                                fontFamily = "Sans"
+//                                put("src", "url('/fonts/RT-Sans.ttf')")
                             }
 
                         }
