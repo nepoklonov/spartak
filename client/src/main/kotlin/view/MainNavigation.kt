@@ -34,7 +34,6 @@ class MainNavigationComponent : RComponent<RProps, RState>() {
             }
 
             Pages.values().forEach { page ->
-
                 navLink<RProps>(to = page.link) {
                     styledH1 {
                         css {
