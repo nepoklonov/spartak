@@ -1,9 +1,7 @@
 package pages
 
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.w3c.dom.get
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService

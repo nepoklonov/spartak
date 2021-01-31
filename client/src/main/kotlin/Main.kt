@@ -1,4 +1,3 @@
-
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -7,11 +6,13 @@ import kotlinx.html.id
 import react.buildElements
 import react.dom.render
 import react.router.dom.browserRouter
+import react.router.dom.route
 import styled.css
 import styled.styledDiv
 import view.FooterComponent
 import view.HeaderComponent
 import view.MainNavigationComponent
+import view.MainNavigationProps
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {
@@ -26,14 +27,6 @@ private class Application : CoroutineScope {
                         css {
                             backgroundImage = Image("url(/images/background.jpg)")
                             width = 100.pct
-
-                            rule("@font-face") {
-                                fontFamily = "Russo"
-                                put("src", "url('/fonts/Russo-One.ttf')")
-//                                fontFamily = "Sans"
-//                                put("src", "url('/fonts/RT-Sans.ttf')")
-                            }
-
                         }
                         styledDiv {
                             attrs.id = "root"
@@ -43,7 +36,11 @@ private class Application : CoroutineScope {
                                 backgroundColor = rgba(255, 255, 255, 0.5)
                             }
                             child(HeaderComponent::class) {}
-                            child(MainNavigationComponent::class) {}
+                            route<MainNavigationProps>("/:selectedString") { props ->
+                                child(MainNavigationComponent::class) {
+                                    attrs.selectedString = props.match.params.selectedString
+                                }
+                            }
                             child(Router::class) {
                                 attrs.coroutineScope = this@Application
                             }

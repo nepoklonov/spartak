@@ -1,6 +1,7 @@
 package view
 
 import kotlinx.css.*
+import kotlinx.css.properties.TextDecoration
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -8,7 +9,6 @@ import react.RState
 import react.router.dom.navLink
 import styled.css
 import styled.styledDiv
-import styled.styledH1
 
 enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
@@ -21,8 +21,12 @@ enum class Pages(val header: String, val link: String) {
     Gallery("Галерея", "/gallery/trainingProcess")
 }
 
+external interface MainNavigationProps : RProps {
+    var selectedString: String
+}
 
-class MainNavigationComponent : RComponent<RProps, RState>() {
+
+class MainNavigationComponent : RComponent<MainNavigationProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
@@ -33,16 +37,31 @@ class MainNavigationComponent : RComponent<RProps, RState>() {
                 textAlign = TextAlign.center
             }
 
-            Pages.values().forEach { page ->
+//            +props.selectedString
 
-                navLink<RProps>(to = page.link) {
-                    styledH1 {
-                        css {
+            Pages.values().forEach { page ->
+                styledDiv {
+                    css {
+                        fontFamily = "Russo"
+                        fontSize = 11.pt
+                        float = Float.left
+                        display = Display.flex
+                        alignItems = Align.center
+                        child("a") {
+                            textDecoration = TextDecoration.none
                             color = Color.white
-                            fontFamily = "Russo"
-                            fontSize = 11.pt
-                            float = Float.left
                         }
+                        console.log(page.link)
+                        console.log(props.selectedString)
+                        console.log("${page.link}(/.*)?")
+                        console.log(33333)
+                        if ("/${props.selectedString}(/.*)?".toRegex().matches(page.link)){
+                            borderBottomColor = Color.white
+                            borderBottomWidth = 3.px
+                            borderBottomStyle = BorderStyle.solid
+                        }
+                    }
+                    navLink<RProps>(to = page.link) {
                         +page.header
                     }
                 }

@@ -16,6 +16,15 @@ import services.*
 
 
 private val globalCss = CSSBuilder().apply {
+    fontFace {
+        fontFamily = "Russo"
+        put("src", "url('/fonts/Russo-One.ttf')")
+    }
+    fontFace {
+        fontFamily = "PT"
+        put("src", "url('/fonts/PT-Sans.ttf')")
+    }
+
     body {
         margin(0.px)
         padding(0.px)

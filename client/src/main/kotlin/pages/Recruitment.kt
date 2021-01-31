@@ -2,9 +2,11 @@ package pages
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.css.*
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
+import styled.css
 import styled.styledDiv
 
 external interface RecruitmentProps : RProps {
@@ -41,6 +43,12 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
 
     override fun RBuilder.render() {
         styledDiv {
+            css{
+                textAlign = TextAlign.center
+                fontFamily = "PT"
+                fontSize = 16.pt
+                fontWeight = FontWeight.bold
+            }
             if (state.recruitmentHtml != null) {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.recruitmentHtml!!)
             } else {
