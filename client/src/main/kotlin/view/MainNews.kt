@@ -52,12 +52,13 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                             console.log(pics[i])
                         }
                     }
+
                 }
                 console.log(news[j]?.innerHTML)
                 news[j]?.innerHTML = news[j]?.innerHTML?.subSequence(0,400)?.lastIndexOf(".")?.let {
                     news[j]?.innerHTML?.subSequence(0,
                             it)
-                }as String +"..."
+                }as String +"..." + "<br> <button> Read more </button>"
             }
             setState() {
                 this.newsHtml = e.outerHTML

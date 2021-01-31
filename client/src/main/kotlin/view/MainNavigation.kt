@@ -1,5 +1,6 @@
 package view
 
+import kotlinx.browser.window
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import react.RBuilder
