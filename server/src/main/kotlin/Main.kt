@@ -177,7 +177,6 @@ fun Application.main() {
             rpc(TimetableService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
-            rpc(TimetableService::class)
             rpc(AdminService::class)
         }
     }
