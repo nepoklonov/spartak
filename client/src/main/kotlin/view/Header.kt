@@ -2,7 +2,6 @@ package view
 
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
-import mainHeaderText
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -41,7 +40,6 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 height = 230.px
                 display = Display.flex
                 justifyContent = JustifyContent.spaceEvenly
-                alignItems = Align.center
             }
             styledDiv {
                 css {
@@ -61,10 +59,10 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 styledH1 {
                     css {
                         alignSelf = Align.center
-                        fontSize = 18.pt
+                        fontSize = 36.pt
                         lineHeight = LineHeight.normal
                     }
-                    mainHeaderText { +"Молодежный хоккейный клуб «Спартак»" }
+                    +"Молодежный хоккейный клуб «Спартак»"
                 }
             }
 
@@ -85,6 +83,11 @@ class HeaderComponent : RComponent<RProps, RState>() {
                     }
                 }
                 styledDiv {
+                    css{
+                        display = Display.flex
+                        alignItems = Align.center
+                        justifyContent = JustifyContent.spaceBetween
+                    }
                     TextWithIcon.Phone.let {
                         addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.left)
                     }

@@ -37,8 +37,6 @@ class MainNavigationComponent : RComponent<MainNavigationProps, RState>() {
                 textAlign = TextAlign.center
             }
 
-//            +props.selectedString
-
             Pages.values().forEach { page ->
                 styledDiv {
                     css {

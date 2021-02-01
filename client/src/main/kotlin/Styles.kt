@@ -9,21 +9,13 @@ import styled.*
 import view.ColorSpartak
 
 object Styles : StyleSheet("main") {
-    val mainHeader by css {
-        fontFamily = "Russo"
-        alignSelf = Align.center
-        fontSize = 36.pt
-        lineHeight = LineHeight.initial
-    }
     val header by css {
-        fontFamily = "Russo"
         textAlign = TextAlign.center
         fontSize = 32.pt
         lineHeight = LineHeight.normal
     }
 
     val smallHeader by css {
-        fontFamily = "Russo"
         textAlign = TextAlign.center
         fontSize = 18.pt
         lineHeight = LineHeight.normal
@@ -31,7 +23,6 @@ object Styles : StyleSheet("main") {
 
     val tableHeader by css {
         backgroundColor = ColorSpartak.LightGrey.color
-        fontFamily = "Russo"
         fontSize = 18.px
         padding = 10.px.toString()
 
@@ -49,13 +40,6 @@ object Styles : StyleSheet("main") {
         cursor = Cursor.pointer
     }
 
-}
-
-fun RBuilder.mainHeaderText(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 {
-    css {
-        +Styles.mainHeader
-    }
-    block()
 }
 
 fun RBuilder.headerText(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 {

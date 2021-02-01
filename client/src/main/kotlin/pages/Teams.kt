@@ -123,8 +123,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                    teamsNavigationList.forEach { teamsNavigationProps ->
-                        route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
+                teamsNavigationList.forEach { teamsNavigationProps ->
+                    route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
                         child(SmallNavigation::class) {
                             attrs.string = teamsNavigationProps.header
                             attrs.link = teamsNavigationProps.link
@@ -163,13 +163,14 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
 
                 }
             }
-
-            state.teamMembersWithRoles?.forEach() {
-                smallHeaderText {
-                    +it.key
-                }
-                it.value.forEach {
-                    styledImg(src = "/images/" + it.photo) { }
+            if (state.teamMembersWithRoles != null) {
+                state.teamMembersWithRoles!!.forEach() {
+                    smallHeaderText {
+                        +it.key
+                    }
+                    it.value.forEach {
+                        styledImg(src = "/images/" + it.photo) { }
+                    }
                 }
             }
         }

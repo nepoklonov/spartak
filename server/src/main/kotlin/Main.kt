@@ -30,9 +30,19 @@ private val globalCss = CSSBuilder().apply {
         padding(0.px)
 
         fontSize = 13.px
-        fontFamily = "-system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, Arial, sans-serif"
+        fontFamily =
+            "-system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Droid Sans, Helvetica Neue, Arial, sans-serif"
 
         lineHeight = 20.px.lh
+    }
+    h1 {
+        fontFamily = "Russo"
+    }
+    h2 {
+        fontFamily = "Russo"
+    }
+    h3 {
+        fontFamily = "Russo"
     }
 }
 

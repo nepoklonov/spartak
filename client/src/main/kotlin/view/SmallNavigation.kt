@@ -20,8 +20,6 @@ external interface SmallNavigationProps : RProps {
 
 class SmallNavigation : RComponent<SmallNavigationProps, RState>() {
     override fun RBuilder.render() {
-        console.log(props.selectedLink)
-        console.log(props.link)
         styledDiv {
             css {
                 fontFamily = "Russo"

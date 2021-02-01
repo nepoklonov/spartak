@@ -1,5 +1,6 @@
 package pages
 
+import Styles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -8,6 +9,7 @@ import react.dom.InnerHTML
 import services.HtmlService
 import styled.css
 import styled.styledDiv
+import view.ColorSpartak
 
 external interface RecruitmentProps : RProps {
     var coroutineScope: CoroutineScope
@@ -49,6 +51,12 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 fontWeight = FontWeight.bold
             }
             if (state.recruitmentHtml != null) {
+                css {
+                    child("div button"){
+                        Styles.button
+                        backgroundColor = ColorSpartak.Grey.color
+                    }
+                }
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.recruitmentHtml!!)
             } else {
                 +"загрузка..."

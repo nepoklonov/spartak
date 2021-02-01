@@ -15,12 +15,15 @@ class FooterComponent : RComponent<RProps, RState>() {
 
     private fun RBuilder.addInfo(iconSrc: String, text: String) {
         styledDiv {
+            css {
+                display = Display.flex
+                alignItems = Align.center
+            }
             styledImg(src = iconSrc) {
                 css {
                     float = Float.left
                     height = 20.px
                     margin = 5.px.toString()
-
                 }
             }
             +text
