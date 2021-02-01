@@ -6,12 +6,13 @@ import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import react.*
-import react.router.dom.navLink
+import react.router.dom.route
 import services.TimetableService
 import styled.css
 import styled.styledDiv
 import tableHeader
 import view.SmallNavigation
+import view.SmallNavigationProps
 import kotlin.js.Date
 
 val monthes = mapOf(
@@ -42,15 +43,15 @@ val daysOfWeek = mapOf(
 data class WorkoutsNavigation(val header: String, val link: String) {}
 
 val workoutsNavigationList = listOf(
-    WorkoutsNavigation("ШХМ", "/workouts/shhm"),
-    WorkoutsNavigation("Спартак 2013", "/workouts/2013"),
-    WorkoutsNavigation("Спартак 2003-2004", "/workouts/2003"),
-    WorkoutsNavigation("Спартак 2005", "/workouts/2005"),
-    WorkoutsNavigation("Вратарские Тренировки", "/workouts/goalkeepers"),
-    WorkoutsNavigation("Группа набора", "/workouts/recruitment"),
-    WorkoutsNavigation("Спартак 2006", "/workouts/2006"),
-    WorkoutsNavigation("Спартак Красная Ракета", "/workouts/red"),
-    WorkoutsNavigation("Спартак 2008", "/workouts/20008"),
+    WorkoutsNavigation("ШХМ", "shhm"),
+    WorkoutsNavigation("Спартак 2013", "2013"),
+    WorkoutsNavigation("Спартак 2003-2004", "2003"),
+    WorkoutsNavigation("Спартак 2005", "2005"),
+    WorkoutsNavigation("Вратарские Тренировки", "goalkeepers"),
+    WorkoutsNavigation("Группа набора", "recruitment"),
+    WorkoutsNavigation("Спартак 2006", "2006"),
+    WorkoutsNavigation("Спартак Красная Ракета", "red"),
+    WorkoutsNavigation("Спартак 2008", "20008"),
 )
 
 data class WorkoutWithDate(
@@ -81,7 +82,7 @@ val monday = if (Date().getDay() != 0) {
             Date().getDate()
         )).getTime() - Date().getDay() * msInDay)
     ).getTime()
-} else{
+} else {
     Date(
         ((Date(
             Date().getFullYear(),
@@ -154,10 +155,12 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                workoutsNavigationList.forEach {
-                    navLink<WorkoutsProps>(to = it.link) {
+                workoutsNavigationList.forEach { workoutsNavigationProps ->
+                    route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
                         child(SmallNavigation::class) {
-                            attrs.selectedString = it.header
+                            attrs.string = workoutsNavigationProps.header
+                            attrs.link = workoutsNavigationProps.link
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
                     }
                 }

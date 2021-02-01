@@ -9,16 +9,17 @@ import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
 import react.*
-import react.router.dom.navLink
+import react.router.dom.route
 import services.TeamService
 import services.TrainerService
 import smallHeaderText
 import styled.*
 import view.SmallNavigation
+import view.SmallNavigationProps
 
 data class TeamsNavigation(val year: String) {
     val header = "Команда $year"
-    val link = "/teams/$year"
+    val link = year
 }
 
 val teamsNavigationList = listOf(
@@ -122,10 +123,12 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                teamsNavigationList.forEach {
-                    navLink<TeamsProps>(to = it.link) {
+                    teamsNavigationList.forEach { teamsNavigationProps ->
+                        route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
                         child(SmallNavigation::class) {
-                            attrs.selectedString = it.header
+                            attrs.string = teamsNavigationProps.header
+                            attrs.link = teamsNavigationProps.link
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
                     }
                 }

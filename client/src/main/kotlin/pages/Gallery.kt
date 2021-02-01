@@ -5,10 +5,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import react.*
-import react.router.dom.navLink
+import react.router.dom.route
 import services.PhotoService
 import styled.*
 import view.SmallNavigation
+import view.SmallNavigationProps
 
 data class GalleryNavigation(val header: String, val link: String)
 
@@ -79,10 +80,12 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     float = Float.left
                     backgroundColor = Color.white
                 }
-                galleryNavigationList.forEach {
-                    navLink<GalleryProps>(to = it.link) {
+                galleryNavigationList.forEach { galeryNavigationList ->
+                    route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
                         child(SmallNavigation::class) {
-                            attrs.selectedString = it.header
+                            attrs.string = galeryNavigationList.header
+                            attrs.link = galeryNavigationList.link
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
                     }
                 }
@@ -94,8 +97,8 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                 } else {
                     state.images!!.forEach {
                         styledDiv {
-                            css{
-                                backgroundImage = Image( "url(/images/$it)")
+                            css {
+                                backgroundImage = Image("url(/images/$it)")
                                 backgroundSize = 230.px.toString()
                                 width = 230.px
                                 height = 230.px

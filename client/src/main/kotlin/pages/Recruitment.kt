@@ -45,7 +45,6 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
         styledDiv {
             css{
                 textAlign = TextAlign.center
-                fontFamily = "PT"
                 fontSize = 16.pt
                 fontWeight = FontWeight.bold
             }

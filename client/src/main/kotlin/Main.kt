@@ -27,6 +27,9 @@ private class Application : CoroutineScope {
                         css {
                             backgroundImage = Image("url(/images/background.jpg)")
                             width = 100.pct
+                            child("div"){
+                                fontFamily = "PT"
+                            }
                         }
                         styledDiv {
                             attrs.id = "root"

@@ -9,16 +9,17 @@ import model.TeamDTO
 import react.*
 import react.dom.td
 import react.dom.tr
-import react.router.dom.navLink
+import react.router.dom.route
 import services.GameService
 import services.TeamService
 import styled.*
 import tableHeader
 import view.SmallNavigation
+import view.SmallNavigationProps
 
 data class GameNavigation(val year: String) {
     val header = "Первенство СПБ $year"
-    val link = "/games/championship$year"
+    val link = "championship$year"
 }
 
 val gameNavigationList = listOf(
@@ -125,10 +126,12 @@ class Games : RComponent<GamesProps, GamesState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                gameNavigationList.forEach {
-                    navLink<GamesProps>(to = it.link) {
+                gameNavigationList.forEach { gameNavigationProps ->
+                    route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
                         child(SmallNavigation::class) {
-                            attrs.selectedString = it.header
+                            attrs.string = gameNavigationProps.header
+                            attrs.link = gameNavigationProps.link
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package view
 
-import kotlinx.browser.window
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import react.RBuilder
@@ -52,10 +51,6 @@ class MainNavigationComponent : RComponent<MainNavigationProps, RState>() {
                             textDecoration = TextDecoration.none
                             color = Color.white
                         }
-                        console.log(page.link)
-                        console.log(props.selectedString)
-                        console.log("${page.link}(/.*)?")
-                        console.log(33333)
                         if ("/${props.selectedString}(/.*)?".toRegex().matches(page.link)){
                             borderBottomColor = Color.white
                             borderBottomWidth = 3.px
