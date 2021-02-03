@@ -61,6 +61,7 @@ fun Application.main() {
         SchemaUtils.create(Teams)
         SchemaUtils.create(Timetable)
         SchemaUtils.create(Admins)
+        SchemaUtils.create(Recruitment)
     }
 
     launch {
@@ -197,6 +198,7 @@ fun Application.main() {
             rpc(TrainerService::class)
             rpc(PhotoService::class)
             rpc(AdminService::class)
+            rpc(RecruitmentService::class)
         }
     }
 }
