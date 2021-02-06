@@ -1,4 +1,4 @@
-package view
+package pageComponents
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

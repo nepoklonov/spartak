@@ -9,10 +9,10 @@ import react.router.dom.browserRouter
 import react.router.dom.route
 import styled.css
 import styled.styledDiv
-import view.FooterComponent
-import view.HeaderComponent
-import view.MainNavigationComponent
-import view.MainNavigationProps
+import pageComponents.FooterComponent
+import pageComponents.HeaderComponent
+import pageComponents.MainNavigationComponent
+import pageComponents.MainNavigationProps
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {

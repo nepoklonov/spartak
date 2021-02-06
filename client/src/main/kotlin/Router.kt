@@ -25,7 +25,6 @@ class Router : RComponent<RouterProps, RState>() {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route("/page", SomePage::class, exact = true)
             route("/news/feed") {
                 child(News::class) {
                     attrs.coroutineScope = props.coroutineScope

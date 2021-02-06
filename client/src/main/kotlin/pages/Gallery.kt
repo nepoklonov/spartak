@@ -4,12 +4,14 @@ import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.html.js.onClickFunction
+import model.PhotoDTO
+import pageComponents.SmallNavigation
+import pageComponents.SmallNavigationProps
 import react.*
 import react.router.dom.route
 import services.PhotoService
 import styled.*
-import view.SmallNavigation
-import view.SmallNavigationProps
 
 data class GalleryNavigation(val header: String, val link: String)
 
@@ -29,7 +31,6 @@ external interface GalleryProps : RProps {
 class GalleryState : RState {
     var error: Throwable? = null
     var images: List<String>? = null
-
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
@@ -109,6 +110,21 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     }
                 }
             }
+        }
+
+        styledButton {
+                attrs.onClickFunction = {
+                    val photoService = PhotoService(coroutineContext)
+                    props.coroutineScope.launch {
+                        photoService.addPhoto(
+                            PhotoDTO(
+                                "address.png",
+                                props.selectedGallerySection
+                            )
+                        )
+                    }
+                }
+            +"Добавить изображение (потом тут будет загрузка фоток честно)"
         }
     }
 }

@@ -5,7 +5,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
+import kotlinx.html.js.onSubmitFunction
+import model.GameDTO
 import model.TeamDTO
+import pageComponents.FormViewComponent
+import pageComponents.Input
+import pageComponents.SmallNavigation
+import pageComponents.SmallNavigationProps
 import react.*
 import react.dom.td
 import react.dom.tr
@@ -14,8 +20,6 @@ import services.GameService
 import services.TeamService
 import styled.*
 import tableHeader
-import view.SmallNavigation
-import view.SmallNavigationProps
 
 data class GameNavigation(val year: String) {
     val header = "Первенство СПБ $year"
@@ -47,9 +51,33 @@ external interface GamesProps : RProps {
 class GamesState : RState {
     var error: Throwable? = null
     var allGamesWithTeams: List<GameWithTeams>? = null
+    var inputs: MutableList<Input> = mutableListOf(
+        Input("Дата", "date"),
+        Input("Время", "time"),
+        Input(
+            "Команда А",
+            "teamAId",
+            isSelect = true,
+            options = mapOf("1" to "Команда 2003", "2" to "Команда 2004"),
+            allowOtherOption = true
+        ),
+        Input(
+            "Команда Б",
+            "teamBId",
+            isSelect = true,
+            options = mapOf("1" to "Команда 2003", "2" to "Команда 2004"),
+            allowOtherOption = true
+        ),
+        Input("Стадион", "stadium"),
+        Input("Результат", "result"),
+    )
 }
 
 class Games : RComponent<GamesProps, GamesState>() {
+    init {
+        state = GamesState()
+    }
+
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
@@ -176,6 +204,47 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 +it.result!!
                             }
                         }
+                    }
+                }
+            }
+        }
+        styledForm {
+            attrs.onSubmitFunction = { event ->
+                event.preventDefault()
+                event.stopPropagation()
+                val gameService = GameService(coroutineContext)
+                props.coroutineScope.launch {
+                    var formIsCompleted = true
+                    state.inputs.forEach {
+                        if (it.inputValue == "") {
+                            setState {
+                                it.isRed = true
+                            }
+                            formIsCompleted = false
+                        }
+                    }
+                    if (formIsCompleted) {
+                        gameService.addGame(
+                            GameDTO(
+                                null,
+                                state.inputs[0].inputValue,
+                                state.inputs[1].inputValue,
+                                props.selectedChampionship,
+                                state.inputs[2].inputValue.toInt(),
+                                state.inputs[3].inputValue.toInt(),
+                                state.inputs[4].inputValue,
+                                state.inputs[5].inputValue,
+                            )
+                        )
+                    }
+                }
+            }
+            child(FormViewComponent::class) {
+                attrs.inputs = state.inputs
+                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
+                    setState {
+                        state.inputs[i].inputValue = value
+                        state.inputs[i].isRed = isRed
                     }
                 }
             }

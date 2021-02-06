@@ -1,4 +1,4 @@
-package view
+package pageComponents
 
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration

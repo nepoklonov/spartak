@@ -5,17 +5,22 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
+import kotlinx.html.js.onSubmitFunction
+import model.WorkoutDTO
+import pageComponents.FormViewComponent
+import pageComponents.Input
+import pageComponents.SmallNavigation
+import pageComponents.SmallNavigationProps
 import react.*
 import react.router.dom.route
 import services.TimetableService
 import styled.css
 import styled.styledDiv
+import styled.styledForm
 import tableHeader
-import view.SmallNavigation
-import view.SmallNavigationProps
 import kotlin.js.Date
 
-val monthes = mapOf(
+val months = mapOf(
     0 to " января",
     1 to " февраля",
     2 to " марта",
@@ -71,6 +76,13 @@ external interface WorkoutsProps : RProps {
 class WorkoutsState : RState {
     var error: Throwable? = null
     var workouts: List<WorkoutWithDate>? = null
+    var inputs: MutableList<Input> = mutableListOf(
+        Input("Дата","date"),
+        Input("Время","time"),
+        //должно пересчитываться в таймштамп
+        Input("Тип тренировки","type"),
+        Input("Место","place"),
+    )
 }
 
 const val msInDay = 1000 * 3600 * 24
@@ -96,6 +108,9 @@ val sunday = monday + 7 * msInDay
 
 
 class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
+    init {
+        state = WorkoutsState()
+    }
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
@@ -172,7 +187,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                     tableHeader {
                         +daysOfWeek.value
                         +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
-                        +(monthes[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
+                        +(months[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
                     }
                     styledDiv {
                         css {
@@ -190,6 +205,46 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                 }
             }
         }
+
+        styledForm {
+            attrs.onSubmitFunction = { event ->
+                event.preventDefault()
+                event.stopPropagation()
+                val timemtableService = TimetableService(coroutineContext)
+                props.coroutineScope.launch {
+                    var formIsCompleted = true
+                    state.inputs.forEach {
+                        if (it.inputValue == "") {
+                            setState {
+                                it.isRed = true
+                            }
+                            formIsCompleted = false
+                        }
+                    }
+                    if (formIsCompleted) {
+                        timemtableService.addWorkout(
+                            WorkoutDTO(
+                                null,
+                                state.inputs[0].inputValue.toDouble(),
+                                props.selectedWorkout.toInt(),
+                                state.inputs[2].inputValue,
+                                state.inputs[3].inputValue,
+                            )
+                        )
+                    }
+                }
+            }
+            child(FormViewComponent::class) {
+                attrs.inputs = state.inputs
+                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                    setState {
+                        state.inputs[i].inputValue = value
+                        state.inputs[i].isRed = isRed
+                    }
+                }
+            }
+        }
+
     }
 }
 

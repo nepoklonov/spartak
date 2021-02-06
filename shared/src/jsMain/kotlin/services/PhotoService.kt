@@ -13,10 +13,10 @@ actual class PhotoService(coroutineContext: CoroutineContext) {
     }
 
     actual suspend fun addPhoto(photo: PhotoDTO): Int {
-        TODO("Not yet implemented")
+        return transport.post("addPhoto", Int.serializer(), "photo" to photo)
     }
 
     actual suspend fun deletePhoto(id: Int): Boolean {
-        TODO("Not yet implemented")
+        return transport.post("deletePhoto", Boolean.serializer(), "id" to id)
     }
 }

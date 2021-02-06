@@ -6,7 +6,7 @@ import kotlinx.html.BUTTON
 import kotlinx.html.H1
 import react.RBuilder
 import styled.*
-import view.ColorSpartak
+import pageComponents.ColorSpartak
 
 object Styles : StyleSheet("main") {
     val header by css {

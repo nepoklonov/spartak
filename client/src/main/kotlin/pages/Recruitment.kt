@@ -4,29 +4,21 @@ import Styles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.html.InputType
-import kotlinx.html.js.onChangeFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onSubmitFunction
 import model.RecruitmentDTO
-import org.w3c.dom.HTMLInputElement
+import pageComponents.ColorSpartak
+import pageComponents.FormViewComponent
+import pageComponents.Input
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
 import services.RecruitmentService
 import styled.*
-import view.ColorSpartak
 
 external interface RecruitmentProps : RProps {
     var coroutineScope: CoroutineScope
 }
-
-data class Input(
-    val header: String,
-    val inputName: String,
-    var inputValue: String = "",
-    var isRed: Boolean = false
-)
 
 class RecruitmentState : RState {
     var error: Throwable? = null
@@ -36,7 +28,7 @@ class RecruitmentState : RState {
         Input("Предпочтительные даты участия в просмотровых сборах", "dates"),
         Input("Ф.И.О. хоккеиста", "name"),
         Input("Дата рождения(дд.мм.гг.)", "birthday"),
-        Input("Амплуа", "role"),
+        Input("Амплуа", "role", isSelect = true, options = mapOf("Защитник" to "Защитник","Вратарь" to "Вратарь","Нападающий" to "Нападающий",)),
         Input("Хват клюшки", "stickGrip"),
         Input("Рост - Вес", "params"),
         Input("Хоккейная школа в предыдущем сезоне", "previousSchool"),
@@ -53,32 +45,6 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
-
-    private fun RBuilder.addStyledInput(it: Input, i: Int) {
-        styledH3 {
-            css {
-                if (it.isRed) {
-                    color = ColorSpartak.Red.color
-                }
-            }
-            +it.header
-        }
-        styledInput(type = InputType.text) {
-            attrs {
-                name = it.inputName
-                value = it.inputValue
-                onChangeFunction = { event ->
-                    val target = event.target as HTMLInputElement
-                    setState {
-                        inputs[i].inputValue = target.value
-                        if (target.value != "") {
-                            inputs[i].isRed = false
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     override fun componentDidMount() {
         val htmlService = HtmlService(coroutineContext)
@@ -163,13 +129,15 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                     }
                 }
             }
-            var i = 0
-            state.inputs.forEach {
-                addStyledInput(it, i)
-                i++
-            }
-            styledInput(type = InputType.submit) {
-                attrs.value = "отправить"
+            child(FormViewComponent::class) {
+                attrs.inputs = state.inputs
+                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                    setState {
+                        state.inputs[i].inputValue = value
+                        state.inputs[i].isRed = isRed
+                    }
+                    console.log(state)
+                }
             }
         }
 
