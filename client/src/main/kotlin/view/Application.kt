@@ -3,10 +3,12 @@ package view
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.Check
+import model.NewsDTO
 import model.TeamMemberDTO
 import react.*
 import react.router.dom.navLink
 import services.CheckService
+import services.NewsService
 import services.TeamService
 import styled.styledDiv
 
@@ -27,9 +29,12 @@ class ApplicationComponent : RComponent<ApplicationProps, ApplicationState>() {
 
     override fun componentDidMount() {
         val checkService = CheckService(coroutineContext)
-        val teamService = TeamService(coroutineContext)
+        val newsService = NewsService(coroutineContext)
 
         props.coroutineScope.launch {
+//            newsService.addNews(NewsDTO("news/1.html"))
+//            newsService.addNews(NewsDTO("news/2.html"))
+//            newsService.addNews(NewsDTO("news/3.html"))
             val check = try {
                 checkService.getCheck()
             } catch (e: Throwable) {

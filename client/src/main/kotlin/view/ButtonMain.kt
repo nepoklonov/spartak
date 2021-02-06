@@ -26,3 +26,15 @@ class ButtonMain : RComponent<ButtonProps, RState>() {
     }
 
 }
+
+fun RBuilder.buttonMain(text:String) {
+    redButtonSpartak {
+        + text
+        css{
+            backgroundColor = Color("#9D0707")
+            hover {
+                backgroundColor = Color("#660c0c")
+            }
+        }
+    }
+}

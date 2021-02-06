@@ -62,6 +62,7 @@ fun Application.main() {
         SchemaUtils.create(Timetable)
         SchemaUtils.create(Admins)
         SchemaUtils.create(Recruitment)
+        SchemaUtils.create(News)
     }
 
     launch {
@@ -84,6 +85,13 @@ fun Application.main() {
                 Photos.insert {
                     it[url] = "logo.png"
                     it[gallerySection] = "trainingProcess"
+                }
+            }
+        }
+        for (i in 1 until 4) {
+            database {
+                News.insert {
+                    it[url] = "news/$i.html"
                 }
             }
         }
@@ -188,6 +196,7 @@ fun Application.main() {
         static("images") { files("images") }
         static("fonts") { files("fonts") }
         static("htmlPages") { files("htmlPages") }
+        static("news") { files("news") }
 
 
         route("/api") {
@@ -199,6 +208,7 @@ fun Application.main() {
             rpc(PhotoService::class)
             rpc(AdminService::class)
             rpc(RecruitmentService::class)
+            rpc(NewsService::class)
         }
     }
 }
