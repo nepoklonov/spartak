@@ -15,36 +15,29 @@ import styled.styledDiv
 import styled.styledH3
 import styled.styledP
 
-external interface MainNewsProps : RProps {
+external interface NewsLineProps : RProps {
     var coroutineScope: CoroutineScope
 }
 
-data class ShortNews(
-        val header: String?,
-        val imageSrc: String?,
-        val content: String?
-)
-
-class MainNewsState : RState {
+class NewsLineState: RState {
     var error: Throwable? = null
     val news: MutableList<ShortNews> = mutableListOf()
 }
-
-class MainNews : RComponent<MainNewsProps, MainNewsState>() {
+class NewsLine : RComponent<NewsLineProps, NewsLineState>() {
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
 
     init {
-        state = MainNewsState()
+        state = NewsLineState()
     }
 
     override fun componentDidMount() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
         props.coroutineScope.launch {
-            for (i in 1..4) {
+            for (i in 1..6) {
                 val newsHtml = try {
                     htmlService.getHtml(newsService.getNewsById(i))
                 } catch (e: Throwable) {
@@ -77,31 +70,26 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                         width = 20.pct
                         position = Position.relative
                     }
-                    styledDiv {
-                        css {
-                            height = 98.pct
-                            background = "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.71) 41.67%)"
-                        }
-                        styledDiv {
-                            styledH3 {
-                                css {
-                                    alignSelf = Align.center
-                                }
-                                +it.header!!
-                            }
-                            styledP {
-                                +it.content!!
-                            }
-                            css {
-                                position = Position.relative
-                                bottom = (-50).pct
-                                height = 280.px
-                                color = Color.white
-                                width = 90.pct
-                            }
-                        }
+                }
+                styledDiv {
+                    styledH3 {
+                        css { alignSelf = Align.center }
+                        +it.header!!
+                    }
+                    styledP {
+                        +it.content!!
+                    }
+                    css {
+                        position = Position.relative
+                        bottom = (-50).pct
+                        height = 280.px
+                        color = Color.white
+                        width = 90.pct
                     }
                 }
+
+
+
             }
             css{
                 display = Display.flex

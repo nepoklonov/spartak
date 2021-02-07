@@ -30,10 +30,8 @@ class News : RComponent<NewsProps, RState>() {
         }
 
         if (props.selectedNewsId == "feed") {
-            navLink<NewsProps>(to = "/news/1") {
-                greyButtonSpartak {
-                    +"новость 1"
-                }
+            child(NewsLine::class){
+                attrs.coroutineScope = props.coroutineScope
             }
 
         } else {

@@ -24,8 +24,7 @@ object Styles : StyleSheet("main") {
     val tableHeader by css {
         backgroundColor = ColorSpartak.LightGrey.color
         fontSize = 18.px
-        padding = 10.px.toString()
-
+        padding(10.px)
     }
 
     val button by css{
