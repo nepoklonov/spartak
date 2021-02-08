@@ -4,6 +4,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.router.dom.redirect
 import react.router.dom.route
 import react.router.dom.switch
 
@@ -14,7 +15,7 @@ external interface RouterProps : RProps {
 class Router : RComponent<RouterProps, RState>() {
     fun RBuilder.appWithRouter() {
         switch {
-//                                    redirect(from = "/", to = "/main")
+            redirect(from = "/", to = "/main", exact = true)
             route("/main") {
                 child(Main::class) {
                     attrs.coroutineScope = props.coroutineScope
@@ -46,19 +47,19 @@ class Router : RComponent<RouterProps, RState>() {
                 }
             }
 
-            route<TeamsProps>("/teams/:selectedTeam") {teamsProps ->
+            route<TeamsProps>("/teams/:selectedTeam") { teamsProps ->
                 child(Teams::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedTeam = teamsProps.match.params.selectedTeam
                 }
             }
-            route("/recruitment"){
-                child(Recruitment::class){
+            route("/recruitment") {
+                child(Recruitment::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route<WorkoutsProps>("/workouts/:selectedWorkout"){ workoutsProps ->
-                child(Workouts::class){
+            route<WorkoutsProps>("/workouts/:selectedWorkout") { workoutsProps ->
+                child(Workouts::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedWorkout = workoutsProps.match.params.selectedWorkout
                 }
@@ -69,8 +70,8 @@ class Router : RComponent<RouterProps, RState>() {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
-            route<GalleryProps>("/gallery/:selectedGallerySection"){ galleryProps ->
-                child(Gallery::class){
+            route<GalleryProps>("/gallery/:selectedGallerySection") { galleryProps ->
+                child(Gallery::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedGallerySection = galleryProps.match.params.selectedGallerySection
                 }
