@@ -6,14 +6,13 @@ import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import kotlinx.html.js.onSubmitFunction
+import model.NavigationDTO
 import model.WorkoutDTO
-import pageComponents.FormViewComponent
-import pageComponents.Input
-import pageComponents.SmallNavigation
-import pageComponents.SmallNavigationProps
+import pageComponents.*
 import react.*
 import react.router.dom.route
 import services.TimetableService
+import services.WorkoutsNavigationService
 import styled.css
 import styled.styledDiv
 import styled.styledForm
@@ -45,20 +44,6 @@ val daysOfWeek = mapOf(
     7 to "воскресенье, "
 )
 
-data class WorkoutsNavigation(val header: String, val link: String) {}
-
-val workoutsNavigationList = listOf(
-    WorkoutsNavigation("ШХМ", "shhm"),
-    WorkoutsNavigation("Спартак 2013", "2013"),
-    WorkoutsNavigation("Спартак 2003-2004", "2003"),
-    WorkoutsNavigation("Спартак 2005", "2005"),
-    WorkoutsNavigation("Вратарские Тренировки", "goalkeepers"),
-    WorkoutsNavigation("Группа набора", "recruitment"),
-    WorkoutsNavigation("Спартак 2006", "2006"),
-    WorkoutsNavigation("Спартак Красная Ракета", "red"),
-    WorkoutsNavigation("Спартак 2008", "20008"),
-)
-
 data class WorkoutWithDate(
     val dayOfWeek: Int,
     val date: String,
@@ -75,13 +60,14 @@ external interface WorkoutsProps : RProps {
 
 class WorkoutsState : RState {
     var error: Throwable? = null
+    var workoutsNavigationList: List<NavigationDTO>? = null
     var workouts: List<WorkoutWithDate>? = null
     var inputs: MutableList<Input> = mutableListOf(
-        Input("Дата","date"),
-        Input("Время","time"),
+        Input("Дата", "date"),
+        Input("Время", "time"),
         //должно пересчитываться в таймштамп
-        Input("Тип тренировки","type"),
-        Input("Место","place"),
+        Input("Тип тренировки", "type"),
+        Input("Место", "place"),
     )
 }
 
@@ -117,8 +103,17 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
     override fun componentDidMount() {
         val timetableService = TimetableService(coroutineContext)
+        val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
         props.coroutineScope.launch {
-            console.log(props.selectedWorkout)
+            val workoutsNavigationList = try {
+                workoutsNavigationService.getWorkoutsNavigationList()
+            } catch (e: Throwable) {
+                setState {
+                    error = e
+                }
+                return@launch
+            }
+
             val listOfWorkouts = try {
                 timetableService.getWeekTimetableByType(monday, sunday, props.selectedWorkout)
             } catch (e: Throwable) {
@@ -151,6 +146,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
             setState {
                 this.workouts = listOfWorkoutsWithDate
+                this.workoutsNavigationList = workoutsNavigationList
             }
         }
     }
@@ -170,14 +166,33 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                workoutsNavigationList.forEach { workoutsNavigationProps ->
-                    route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
-                        child(SmallNavigation::class) {
-                            attrs.string = workoutsNavigationProps.header
-                            attrs.link = workoutsNavigationProps.link
-                            attrs.selectedLink = linkProps.match.params.selectedLink
+                if (state.workoutsNavigationList != null) {
+                    state.workoutsNavigationList!!.forEach { workoutsNavigationProps ->
+                        route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
+                            child(SmallNavigation::class) {
+                                attrs.string = workoutsNavigationProps.header
+                                attrs.link = workoutsNavigationProps.link
+                                attrs.selectedLink = linkProps.match.params.selectedLink
+                            }
                         }
                     }
+                    child(SmallNavigationForm::class) {
+                        attrs.isTeam = false
+                        attrs.addSection = { listOfInputValues ->
+                            val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
+                            props.coroutineScope.launch {
+                                workoutsNavigationService.addWorkoutsSection(
+                                    NavigationDTO(
+                                        null,
+                                        listOfInputValues[0],
+                                        listOfInputValues[1]
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    +"Загрузка..."
                 }
             }
 
@@ -236,7 +251,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
             }
             child(FormViewComponent::class) {
                 attrs.inputs = state.inputs
-                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
                     setState {
                         state.inputs[i].inputValue = value
                         state.inputs[i].isRed = isRed

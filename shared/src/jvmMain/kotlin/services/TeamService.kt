@@ -42,9 +42,7 @@ actual class TeamService : RPCService {
             it[name],
             it[link],
             it[isOur],
-            it[type],
             it[year],
-            it[trainerId]
         )
     }
 
@@ -52,9 +50,7 @@ actual class TeamService : RPCService {
         it[name] = team.name
         it[link] = team.link
         it[isOur] = team.isOur
-        it[type] = team.type
         it[year] = team.year.toString()
-        it[trainerId] = team.trainerId
     }
 
     actual suspend fun addTeam(team: TeamDTO): Int {

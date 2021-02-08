@@ -10,10 +10,7 @@ import model.NavigationDTO
 import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
-import pageComponents.FormViewComponent
-import pageComponents.Input
-import pageComponents.SmallNavigation
-import pageComponents.SmallNavigationProps
+import pageComponents.*
 import react.*
 import react.router.dom.route
 import services.TeamService
@@ -46,12 +43,6 @@ class TeamsState : RState {
     var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
     var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
-    var teamInputs: MutableList<Input> = mutableListOf(
-        Input("Название", "name"),
-        Input("Ссылка", "link"),
-        Input("Тип ээ че ладно", "type"),
-        Input("id тренера", "trainerId"),
-    )
     var trainerInputs: MutableList<Input> = mutableListOf(
         Input("ФИО", "name"),
         Input("Дата рождения", "dateOfBirth"),
@@ -167,6 +158,24 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             }
                         }
                     }
+                    child(SmallNavigationForm::class) {
+                        attrs.isTeam = true
+                        attrs.addSection = { listOfInputValues ->
+                            val teamService = TeamService(coroutineContext)
+                            props.coroutineScope.launch {
+                                teamService.addTeam(
+                                    TeamDTO(
+                                        null,
+                                        listOfInputValues[0],
+                                        listOfInputValues[1],
+                                        true,
+                                        props.selectedTeam,
+                                    )
+                                )
+
+                            }
+                        }
+                    }
                 } else {
                     +"Загрузка..."
                 }
@@ -199,6 +208,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                         +(state.trainer?.info ?: "загрузка...")
                     }
 
+                }else {
+                    +"Загрузка..."
                 }
             }
             if (state.teamMembersWithRoles != null) {
@@ -210,47 +221,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                         styledImg(src = "/images/" + it.photo) { }
                     }
                 }
-            }
-        }
-
-        styledForm {
-            attrs.onSubmitFunction = { event ->
-                event.preventDefault()
-                event.stopPropagation()
-                val teamService = TeamService(coroutineContext)
-                props.coroutineScope.launch {
-                    var formIsCompleted = true
-                    state.teamInputs.forEach {
-                        if (it.inputValue == "") {
-                            setState {
-                                it.isRed = true
-                            }
-                            formIsCompleted = false
-                        }
-                    }
-                    if (formIsCompleted) {
-                        teamService.addTeam(
-                            TeamDTO(
-                                null,
-                                state.teamInputs[0].inputValue,
-                                state.teamInputs[1].inputValue,
-                                true,
-                                state.teamInputs[2].inputValue,
-                                props.selectedTeam,
-                                state.teamInputs[4].inputValue.toInt(),
-                            )
-                        )
-                    }
-                }
-            }
-            child(FormViewComponent::class) {
-                attrs.inputs = state.teamInputs
-                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
-                    setState {
-                        state.teamInputs[i].inputValue = value
-                        state.teamInputs[i].isRed = isRed
-                    }
-                }
+            }else {
+                +"Загрузка..."
             }
         }
 

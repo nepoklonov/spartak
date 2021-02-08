@@ -8,7 +8,5 @@ data class TeamDTO(
         val name: String,
         val link: String,
         val isOur: Boolean,
-        val type: String,
         val year: String?,
-        val trainerId: Int,
 )

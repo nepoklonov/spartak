@@ -6,7 +6,5 @@ object Teams : IntIdTable() {
     val name = text("name")
     val link = text("link")
     val isOur = bool("isOur")
-    val type = text("type")
     val year = text("year")
-    val trainerId = integer("trainerId")
 }

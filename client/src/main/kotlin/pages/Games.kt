@@ -7,30 +7,18 @@ import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import kotlinx.html.js.onSubmitFunction
 import model.GameDTO
+import model.NavigationDTO
 import model.TeamDTO
-import pageComponents.FormViewComponent
-import pageComponents.Input
-import pageComponents.SmallNavigation
-import pageComponents.SmallNavigationProps
+import pageComponents.*
 import react.*
 import react.dom.td
 import react.dom.tr
 import react.router.dom.route
 import services.GameService
+import services.GamesNavigationService
 import services.TeamService
 import styled.*
 import tableHeader
-
-data class GameNavigation(val year: String) {
-    val header = "Первенство СПБ $year"
-    val link = "championship$year"
-}
-
-val gameNavigationList = listOf(
-    GameNavigation("2003"),
-    GameNavigation("2004"),
-    GameNavigation("2006")
-)
 
 val tableHeaders = listOf("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
 
@@ -50,6 +38,7 @@ external interface GamesProps : RProps {
 
 class GamesState : RState {
     var error: Throwable? = null
+    var gamesNavigationList: List<NavigationDTO>? = null
     var allGamesWithTeams: List<GameWithTeams>? = null
     var inputs: MutableList<Input> = mutableListOf(
         Input("Дата", "date"),
@@ -84,8 +73,18 @@ class Games : RComponent<GamesProps, GamesState>() {
     private fun getState(year: String, coroutineScope: CoroutineScope) {
         val gameService = GameService(coroutineContext)
         val teamsService = TeamService(coroutineContext)
+        val gamesNavigationService = GamesNavigationService(coroutineContext)
 
         coroutineScope.launch {
+            val gamesNavigationList = try {
+                gamesNavigationService.getGamesNavigationList()
+            } catch (e: Throwable) {
+                console.log(e)
+                setState {
+                    error = e
+                }
+                return@launch
+            }
             val allGames = try {
                 gameService.getAllGamesByYear(year)
             } catch (e: Throwable) {
@@ -123,6 +122,7 @@ class Games : RComponent<GamesProps, GamesState>() {
 
             setState() {
                 this.allGamesWithTeams = allGamesWithTeams
+                this.gamesNavigationList = gamesNavigationList
             }
         }
     }
@@ -154,14 +154,33 @@ class Games : RComponent<GamesProps, GamesState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                gameNavigationList.forEach { gameNavigationProps ->
-                    route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
-                        child(SmallNavigation::class) {
-                            attrs.string = gameNavigationProps.header
-                            attrs.link = gameNavigationProps.link
-                            attrs.selectedLink = linkProps.match.params.selectedLink
+                if (state.gamesNavigationList != null) {
+                    state.gamesNavigationList!!.forEach { gameNavigationProps ->
+                        route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
+                            child(SmallNavigation::class) {
+                                attrs.string = gameNavigationProps.header
+                                attrs.link = gameNavigationProps.link
+                                attrs.selectedLink = linkProps.match.params.selectedLink
+                            }
                         }
                     }
+                    child(SmallNavigationForm::class) {
+                        attrs.isTeam = false
+                        attrs.addSection = { listOfInputValues ->
+                            val gamesNavigationService = GamesNavigationService(coroutineContext)
+                            props.coroutineScope.launch {
+                                gamesNavigationService.addGamesSection(
+                                    NavigationDTO(
+                                        null,
+                                        listOfInputValues[0],
+                                        listOfInputValues[1]
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    +"Загрузка..."
                 }
             }
             styledTable {

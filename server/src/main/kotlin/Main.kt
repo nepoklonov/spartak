@@ -143,9 +143,7 @@ fun Application.main() {
                 it[name] = "spartak"
                 it[link] = "2003"
                 it[isOur] = true
-                it[type] = ""
                 it[year] = "2003"
-                it[trainerId] = 1
             }
         }
         database {
@@ -153,9 +151,7 @@ fun Application.main() {
                 it[name] = "ne spartak"
                 it[link] = "2004"
                 it[isOur] = false
-                it[type] = ""
                 it[year] = "2003"
-                it[trainerId] = 1
             }
         }
         database {
@@ -188,6 +184,78 @@ fun Application.main() {
             GallerySections.insert {
                 it[header] = "Турнир 2011 г.р."
                 it[link] = "championship2011"
+            }
+        }
+        database {
+            GamesSections.insert {
+                it[header] = "Первенство СПБ 2003"
+                it[link] = "championship2003"
+            }
+        }
+        database {
+            GamesSections.insert {
+                it[header] = "Первенство СПБ 2004"
+                it[link] = "championship2004"
+            }
+        }
+        database {
+            GamesSections.insert {
+                it[header] = "Первенство СПБ 2006"
+                it[link] = "championship2006"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "ШХМ"
+                it[link] = "shhm"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак 2013"
+                it[link] = "2013"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак 2003-2004"
+                it[link] = "2003"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак 2005"
+                it[link] = "2005"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Вратарские Тренировки"
+                it[link] = "goalkeepers"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Группа набора"
+                it[link] = "recruitment"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак 2006"
+                it[link] = "2006"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак Красная Ракета"
+                it[link] = "red"
+            }
+        }
+        database {
+            WorkoutsSections.insert {
+                it[header] = "Спартак 2008"
+                it[link] = "2008"
             }
         }
     }
@@ -239,7 +307,8 @@ fun Application.main() {
             rpc(RecruitmentService::class)
             rpc(NewsService::class)
             rpc(GalleryNavigationService::class)
-
+            rpc(GamesNavigationService::class)
+            rpc(WorkoutsNavigationService::class)
         }
     }
 }

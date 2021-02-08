@@ -136,7 +136,6 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         state.inputs[i].inputValue = value
                         state.inputs[i].isRed = isRed
                     }
-                    console.log(state)
                 }
             }
         }

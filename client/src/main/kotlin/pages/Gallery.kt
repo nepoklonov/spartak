@@ -8,6 +8,7 @@ import kotlinx.html.js.onClickFunction
 import model.NavigationDTO
 import model.PhotoDTO
 import pageComponents.SmallNavigation
+import pageComponents.SmallNavigationForm
 import pageComponents.SmallNavigationProps
 import react.*
 import react.router.dom.route
@@ -92,6 +93,21 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.string = galleryNavigationList.header
                                 attrs.link = galleryNavigationList.link
                                 attrs.selectedLink = linkProps.match.params.selectedLink
+                            }
+                        }
+                    }
+                    child(SmallNavigationForm::class) {
+                        attrs.isTeam = false
+                        attrs.addSection = { listOfInputValues ->
+                            val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                            props.coroutineScope.launch {
+                                galleryNavigationService.addGallerySection(
+                                    NavigationDTO(
+                                        null,
+                                        listOfInputValues[0],
+                                        listOfInputValues[1]
+                                    )
+                                )
                             }
                         }
                     }
