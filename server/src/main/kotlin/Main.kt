@@ -63,6 +63,9 @@ fun Application.main() {
         SchemaUtils.create(Admins)
         SchemaUtils.create(Recruitment)
         SchemaUtils.create(News)
+        SchemaUtils.create(GallerySections)
+        SchemaUtils.create(GamesSections)
+        SchemaUtils.create(WorkoutsSections)
     }
 
     launch {
@@ -138,6 +141,7 @@ fun Application.main() {
         database {
             Teams.insert {
                 it[name] = "spartak"
+                it[link] = "2003"
                 it[isOur] = true
                 it[type] = ""
                 it[year] = "2003"
@@ -147,6 +151,7 @@ fun Application.main() {
         database {
             Teams.insert {
                 it[name] = "ne spartak"
+                it[link] = "2004"
                 it[isOur] = false
                 it[type] = ""
                 it[year] = "2003"
@@ -159,6 +164,30 @@ fun Application.main() {
                 it[teamId] = 1
                 it[type] = "shhm"
                 it[place] = "ура наконец-то я доделала это ебанное расписание"
+            }
+        }
+        database {
+            GallerySections.insert {
+                it[header] = "Тренировочный процесс"
+                it[link] = "trainingProcess"
+            }
+        }
+        database {
+            GallerySections.insert {
+                it[header] = "Кубок Ладоги 2019"
+                it[link] = "LadogaCup2019"
+            }
+        }
+        database {
+            GallerySections.insert {
+                it[header] = "Пекин"
+                it[link] = "Beijing"
+            }
+        }
+        database {
+            GallerySections.insert {
+                it[header] = "Турнир 2011 г.р."
+                it[link] = "championship2011"
             }
         }
     }
@@ -209,6 +238,8 @@ fun Application.main() {
             rpc(AdminService::class)
             rpc(RecruitmentService::class)
             rpc(NewsService::class)
+            rpc(GalleryNavigationService::class)
+
         }
     }
 }

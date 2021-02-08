@@ -14,7 +14,7 @@ enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
     News("Новости", "/news/feed"),
     Games("Игры", "/games/championship2003"),
-    Club("Команды", "/teams/2003"),
+    Teams("Команды", "/teams/2003"),
     Recruitment("Набор", "/recruitment"),
     Workouts("Тренировки", "/workouts/shhm"),
     SummerCamp("Летние Сборы", "/summerCamp"),

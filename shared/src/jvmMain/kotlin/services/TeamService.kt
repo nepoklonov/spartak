@@ -2,7 +2,10 @@ package services
 
 import database.TeamMembers
 import database.Teams
+import database.Teams.link
+import database.Teams.name
 import database.database
+import model.NavigationDTO
 import model.TeamDTO
 import model.TeamMemberDTO
 import org.jetbrains.exposed.sql.*
@@ -37,6 +40,7 @@ actual class TeamService : RPCService {
         return TeamDTO(
             it[Teams.id].value,
             it[name],
+            it[link],
             it[isOur],
             it[type],
             it[year],
@@ -46,6 +50,7 @@ actual class TeamService : RPCService {
 
     private fun Teams.insertTeamDtoToDatabase(it: UpdateBuilder<Int>, team: TeamDTO) {
         it[name] = team.name
+        it[link] = team.link
         it[isOur] = team.isOur
         it[type] = team.type
         it[year] = team.year.toString()
@@ -64,15 +69,25 @@ actual class TeamService : RPCService {
         }.value
     }
 
+    actual suspend fun getNavigationList(): List<NavigationDTO> {
+        val navigationList = mutableListOf<NavigationDTO>()
+        database {
+            Teams.selectAll().forEach() {
+                navigationList += NavigationDTO(it[Teams.id].value, it[name], it[link])
+            }
+        }
+        return navigationList
+    }
+
     actual suspend fun getTeamById(id: Int): TeamDTO {
         return database {
             Teams.select { Teams.id eq id }.first().let { Teams.getTeamDTO(it) }
         }
     }
 
-    actual suspend fun getTeamByYear(year: String): TeamDTO {
+    actual suspend fun getTeamByLink(link: String): TeamDTO {
         return database {
-            Teams.select { Teams.year eq year }.first().let {
+            Teams.select { Teams.link eq link }.first().let {
                 Teams.getTeamDTO(it)
             }
         }

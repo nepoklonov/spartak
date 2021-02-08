@@ -5,22 +5,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
+import model.NavigationDTO
 import model.PhotoDTO
 import pageComponents.SmallNavigation
 import pageComponents.SmallNavigationProps
 import react.*
 import react.router.dom.route
+import services.GalleryNavigationService
 import services.PhotoService
 import styled.*
-
-data class GalleryNavigation(val header: String, val link: String)
-
-val galleryNavigationList = listOf(
-    GalleryNavigation("Тренировочный процесс", "trainingProcess"),
-    GalleryNavigation("Кубок Ладоги 2019", "LadogaCup2019"),
-    GalleryNavigation("Пекин", "Beijing"),
-    GalleryNavigation("Турнир 2011 г.р.", "championship2011")
-)
 
 
 external interface GalleryProps : RProps {
@@ -31,6 +24,7 @@ external interface GalleryProps : RProps {
 class GalleryState : RState {
     var error: Throwable? = null
     var images: List<String>? = null
+    var galleryNavigationList: List<NavigationDTO>? = null
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
@@ -39,7 +33,16 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
     private fun getState(section: String, coroutineScope: CoroutineScope) {
         val photoService = PhotoService(coroutineContext)
+        val galleryNavigationService = GalleryNavigationService(coroutineContext)
         coroutineScope.launch {
+            val galleryNavigationList = try {
+                galleryNavigationService.getGalleryNavigationList()
+            } catch (e: Throwable) {
+                setState {
+                    error = e
+                }
+                return@launch
+            }
             val listOfPhotos = try {
                 photoService.getAllPhotosBySection(section)
             } catch (e: Throwable) {
@@ -51,6 +54,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
             setState {
                 this.images = listOfPhotos
+                this.galleryNavigationList = galleryNavigationList
             }
         }
     }
@@ -81,14 +85,18 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     float = Float.left
                     backgroundColor = Color.white
                 }
-                galleryNavigationList.forEach { galeryNavigationList ->
-                    route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
-                        child(SmallNavigation::class) {
-                            attrs.string = galeryNavigationList.header
-                            attrs.link = galeryNavigationList.link
-                            attrs.selectedLink = linkProps.match.params.selectedLink
+                if (state.galleryNavigationList != null) {
+                    state.galleryNavigationList!!.forEach { galleryNavigationList ->
+                        route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
+                            child(SmallNavigation::class) {
+                                attrs.string = galleryNavigationList.header
+                                attrs.link = galleryNavigationList.link
+                                attrs.selectedLink = linkProps.match.params.selectedLink
+                            }
                         }
                     }
+                } else {
+                    +"Загрузка..."
                 }
             }
 
@@ -113,17 +121,17 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
         }
 
         styledButton {
-                attrs.onClickFunction = {
-                    val photoService = PhotoService(coroutineContext)
-                    props.coroutineScope.launch {
-                        photoService.addPhoto(
-                            PhotoDTO(
-                                "address.png",
-                                props.selectedGallerySection
-                            )
+            attrs.onClickFunction = {
+                val photoService = PhotoService(coroutineContext)
+                props.coroutineScope.launch {
+                    photoService.addPhoto(
+                        PhotoDTO(
+                            "address.png",
+                            props.selectedGallerySection
                         )
-                    }
+                    )
                 }
+            }
             +"Добавить изображение (потом тут будет загрузка фоток честно)"
         }
     }

@@ -1,6 +1,7 @@
 package services
 
 import kotlinx.serialization.builtins.serializer
+import model.NavigationDTO
 import model.TeamDTO
 import model.TeamMemberDTO
 import rpc.Transport
@@ -17,12 +18,16 @@ actual class TeamService(coroutineContext: CoroutineContext) {
         return transport.post("addTeamMember", Int.serializer(), "newTeamMember" to newTeamMember)
     }
 
+    actual suspend fun getNavigationList(): List<NavigationDTO> {
+        return transport.getList("getNavigationList", NavigationDTO.serializer())
+    }
+
     actual suspend fun getTeamById(id: Int): TeamDTO {
         return transport.get("getTeamById", TeamDTO.serializer(), "id" to id)
     }
 
-    actual suspend fun getTeamByYear(year: String): TeamDTO {
-        return transport.get("getTeamByYear", TeamDTO.serializer(), "year" to year)
+    actual suspend fun getTeamByLink(link: String): TeamDTO {
+        return transport.get("getTeamByLink", TeamDTO.serializer(), "link" to link)
     }
 
     actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {

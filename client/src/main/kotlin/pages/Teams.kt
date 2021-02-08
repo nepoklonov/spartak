@@ -6,6 +6,7 @@ import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import kotlinx.html.js.onSubmitFunction
+import model.NavigationDTO
 import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
@@ -20,16 +21,16 @@ import services.TrainerService
 import smallHeaderText
 import styled.*
 
-data class TeamsNavigation(val year: String) {
-    val header = "Команда $year"
-    val link = year
-}
-
-val teamsNavigationList = listOf(
-    TeamsNavigation("2003"),
-    TeamsNavigation("2004"),
-    TeamsNavigation("2006")
-)
+//data class TeamsNavigation(val year: String) {
+//    val header = "Команда $year"
+//    val link = year
+//}
+//
+//val teamsNavigationList = listOf(
+//    TeamsNavigation("2003"),
+//    TeamsNavigation("2004"),
+//    TeamsNavigation("2006")
+//)
 
 val roleList = listOf("Защитники", "Вратари", "Нападающие")
 
@@ -41,11 +42,13 @@ external interface TeamsProps : RProps {
 
 class TeamsState : RState {
     var error: Throwable? = null
+    var navigationList: List<NavigationDTO>? = null
     var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
     var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
     var teamInputs: MutableList<Input> = mutableListOf(
         Input("Название", "name"),
+        Input("Ссылка", "link"),
         Input("Тип ээ че ладно", "type"),
         Input("id тренера", "trainerId"),
     )
@@ -76,8 +79,16 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
         val teamService = TeamService(coroutineContext)
 
         coroutineScope.launch {
+            val navigationList = try {
+                teamService.getNavigationList()
+            } catch (e: Throwable) {
+                setState {
+                    error = e
+                }
+                return@launch
+            }
             val team = try {
-                teamService.getTeamByYear(selectedTeam)
+                teamService.getTeamByLink(selectedTeam)
             } catch (e: Throwable) {
                 setState {
                     error = e
@@ -112,6 +123,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
 
                 setState {
                     this.team = team
+                    this.navigationList = navigationList
                     this.teamMembersWithRoles = teamMembersWithRoles
                     this.trainer = trainer
                 }
@@ -145,14 +157,18 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                     backgroundColor = Color.white
                     textDecoration = TextDecoration.none
                 }
-                teamsNavigationList.forEach { teamsNavigationProps ->
-                    route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
-                        child(SmallNavigation::class) {
-                            attrs.string = teamsNavigationProps.header
-                            attrs.link = teamsNavigationProps.link
-                            attrs.selectedLink = linkProps.match.params.selectedLink
+                if (state.navigationList != null) {
+                    state.navigationList!!.forEach { teamsNavigationProps ->
+                        route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
+                            child(SmallNavigation::class) {
+                                attrs.string = teamsNavigationProps.header
+                                attrs.link = teamsNavigationProps.link
+                                attrs.selectedLink = linkProps.match.params.selectedLink
+                            }
                         }
                     }
+                } else {
+                    +"Загрузка..."
                 }
             }
 
@@ -201,7 +217,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             attrs.onSubmitFunction = { event ->
                 event.preventDefault()
                 event.stopPropagation()
-                val teamService =TeamService(coroutineContext)
+                val teamService = TeamService(coroutineContext)
                 props.coroutineScope.launch {
                     var formIsCompleted = true
                     state.teamInputs.forEach {
@@ -217,6 +233,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             TeamDTO(
                                 null,
                                 state.teamInputs[0].inputValue,
+                                state.teamInputs[1].inputValue,
                                 true,
                                 state.teamInputs[2].inputValue,
                                 props.selectedTeam,
@@ -228,7 +245,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             }
             child(FormViewComponent::class) {
                 attrs.inputs = state.teamInputs
-                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
                     setState {
                         state.teamInputs[i].inputValue = value
                         state.teamInputs[i].isRed = isRed
@@ -268,7 +285,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             }
             child(FormViewComponent::class) {
                 attrs.inputs = state.trainerInputs
-                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
                     setState {
                         state.trainerInputs[i].inputValue = value
                         state.trainerInputs[i].isRed = isRed
@@ -310,7 +327,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             }
             child(FormViewComponent::class) {
                 attrs.inputs = state.teamMemberInputs
-                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
+                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
                     setState {
                         state.teamMemberInputs[i].inputValue = value
                         state.teamMemberInputs[i].isRed = isRed
