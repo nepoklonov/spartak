@@ -94,7 +94,7 @@ fun Application.main() {
         for (i in 1 until 4) {
             database {
                 News.insert {
-                    it[url] = "news/$i.html"
+                    it[url] = "/news/$i.html"
                 }
             }
         }
