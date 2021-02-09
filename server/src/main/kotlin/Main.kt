@@ -5,6 +5,7 @@ import io.ktor.html.*
 import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.lh
@@ -50,6 +51,11 @@ private val globalCss = CSSBuilder().apply {
 fun Application.main() {
     install(ContentNegotiation) {
         jackson {}
+    }
+    install(Sessions) {
+        cookie<UserSession> ("user-session", SessionStorageMemory()) {
+            cookie.path = "/"
+        }
     }
 
     database {
