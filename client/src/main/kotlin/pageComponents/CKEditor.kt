@@ -6,11 +6,6 @@ import kotlinx.html.id
 import react.*
 import react.dom.div
 
-@JsModule("@ckeditor/ckeditor5-react")
-external val CKEditor: RClass<CKEditorProps>
-
-@JsModule("@ckeditor/ckeditor5-build-decoupled-document")
-external val DecoupledEditor: RClass<CKEditorProps>
 
 external interface CKEditorProps: RProps{
     var editor: dynamic
@@ -18,20 +13,21 @@ external interface CKEditorProps: RProps{
     var config: dynamic
     var onInit: (dynamic) -> Unit
     var onChange: (dynamic, dynamic) -> Unit
-    var title: String
-    var author: String
-    var text: String
 }
 
 class CKEditorComponent: RComponent<RProps, RState>() {
     override fun RBuilder.render() {
+        console.log(1)
+        console.log(CKEditor)
+        console.log(DecoupledEditor)
         div {
             div {
                 attrs.id = "editor-toolbar"
             }
             div {
                 attrs.id = "editor-content"
-                CKEditor {
+                child (CKEditor::class) {
+                    console.log(3)
                     attrs.editor = DecoupledEditor
                     attrs.data = "однажды тут будет props.text"
                     attrs.config = js(
