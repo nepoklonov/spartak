@@ -30,7 +30,7 @@ class News : RComponent<NewsProps, RState>() {
         }
 
         if (props.selectedNewsId == "feed") {
-            child(NewsLine::class){
+            child(Feed::class){
                 attrs.coroutineScope = props.coroutineScope
             }
 

@@ -44,23 +44,23 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
         props.coroutineScope.launch {
-            for (i in 1..4) {
-                val newsHtml = try {
-                    htmlService.getHtml(newsService.getNewsById(i))
+                val newsHtml : MutableList<String> = mutableListOf()
+                try {
+                    newsService.getLastNews(4).forEach { newsHtml.add(htmlService.getHtml(it)) }
                 } catch (e: Throwable) {
                     setState {
                         error = e
                     }
                     return@launch
                 }
-                console.log(newsHtml)
+            for (new in newsHtml) {
                 val e = document.createElement("div")
-                e.innerHTML = newsHtml
+                e.innerHTML = new
                 val img = e.getElementsByTagName("img")[0]
                 val h3 = e.getElementsByTagName("h3")[0]
                 val p = e.getElementsByTagName("p")[0]
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p?.innerHTML))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p?.innerHTML?.substring(0, 200)))
                 }
             }
         }
@@ -98,6 +98,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                                 height = 280.px
                                 color = Color.white
                                 width = 90.pct
+                                margin = 5.px.toString()
                             }
                         }
                     }

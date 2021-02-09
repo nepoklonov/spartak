@@ -10,6 +10,9 @@ actual class NewsService (coroutineContext: CoroutineContext){
     actual suspend fun getNewsById(id: Int): String{
         return transport.get("getNewsById", String.serializer(), "id" to id)
     }
+    actual suspend fun getLastNews(number: Int): List<String>{
+        return transport.getList("getLastNews", String.serializer(), "number" to number)
+    }
 
     actual suspend fun deleteNews(id: Int): Boolean {
         transport.post("deleteNews", Boolean.serializer(), "id" to id)

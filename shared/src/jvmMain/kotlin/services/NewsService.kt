@@ -7,8 +7,10 @@ import database.Teams
 import database.database
 import model.GameDTO
 import model.NewsDTO
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import rpc.RPCService
 
@@ -23,6 +25,13 @@ actual class NewsService : RPCService {
           }
         }
     }
+    actual suspend fun getLastNews(number: Int): List<String> {
+        return database {
+            News.selectAll().orderBy(News.id, SortOrder.DESC).limit(number).toList().map{
+            it[url]
+            }
+        }
+    }
 
     actual suspend fun deleteNews(id: Int): Boolean {
         TODO("Not yet implemented")
@@ -35,4 +44,5 @@ actual class NewsService : RPCService {
             }
         }.value
     }
+
 }
