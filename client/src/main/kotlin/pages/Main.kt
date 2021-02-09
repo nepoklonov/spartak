@@ -2,13 +2,30 @@ package pages
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.css.*
 import react.*
 import react.dom.InnerHTML
+import react.dom.div
 import services.HtmlService
 import styled.styledDiv
 
+
+@JsModule("@ckeditor/ckeditor5-react")
+external val CKEditor: RClass<MainProps>
+
+@JsModule("@ckeditor/ckeditor5-build-decoupled-document")
+external val DecoupledEditor: RClass<MainProps>
+
 external interface MainProps : RProps {
     var coroutineScope: CoroutineScope
+    var editor: dynamic
+    var data: String
+    var config: dynamic
+    var onInit: (dynamic) -> Unit
+    var onChange: (dynamic, dynamic) -> Unit
+    var title: String
+    var author: String
+    var text: String
 }
 
 class MainState : RState {
@@ -42,6 +59,38 @@ class Main : RComponent<MainProps, MainState>() {
     }
 
     override fun RBuilder.render() {
+        div{
+            CKEditor{
+                attrs.editor = DecoupledEditor
+                attrs.data = "а почему ниче не работает("
+            }
+        }
+//        div {
+//            div {
+//                attrs.id = "editor-toolbar"
+//            }
+//            div {
+//                attrs.id = "editor-content"
+//                CKEditor {
+//                    attrs.editor = DecoupledEditor
+//                    attrs.data = props.text
+//                    attrs.config = js(
+//                        """{
+//                        placeholder: 'Your text..',
+//                        toolbar: [ 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ]
+//                    }"""
+//                    )
+//                    attrs.onInit = {
+//                        val toolbar = it.ui.view.toolbar.element
+//                        document.getElementById("editor-toolbar")!!.appendChild(toolbar)
+//                    }
+//                    attrs.onChange = fun(_, editor) {
+//                        localStorage.setItem("draftText", editor.getData())
+//                    }
+//                }
+//            }
+//        }
+
         styledDiv {
             if (state.mainHtml != null) {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.mainHtml!!)
@@ -49,7 +98,7 @@ class Main : RComponent<MainProps, MainState>() {
                 +"загрузка..."
             }
         }
-        child(MainNews::class){
+        child(MainNews::class) {
             attrs.coroutineScope = props.coroutineScope
         }
     }

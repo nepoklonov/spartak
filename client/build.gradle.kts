@@ -39,6 +39,8 @@ dependencies {
     implementation(npm("styled-components", "4.3.2"))
     implementation(npm("@jetbrains/logos", "1.1.6"))
     implementation(npm("@jetbrains/ring-ui", "3.0.4"))
+    implementation(npm("@ckeditor/ckeditor5-react", "3.0.0"))
+    implementation(npm("@ckeditor/ckeditor5-build-decoupled-document", "25.0.0"))
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-js")
     testImplementation(npm("enzyme", "3.9.0"))
