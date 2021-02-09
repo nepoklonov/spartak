@@ -1,34 +1,36 @@
 package services
 
-import database.GameCalendar
-import database.News
+import database.*
 import database.News.url
-import database.Teams
-import database.database
 import model.GameDTO
 import model.NewsDTO
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import model.TeamDTO
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import rpc.RPCService
 
+
 actual class NewsService : RPCService {
+    private fun News.getNewsDTO(it: ResultRow): NewsDTO {
+        return NewsDTO(
+                it[News.id].value,
+                it[url]
+        )
+    }
     private fun News.insertNewsToDatabase(it: UpdateBuilder<Int>, news: NewsDTO){
         it[url] = news.url
     }
-    actual suspend fun getNewsById(id: Int): String {
+    actual suspend fun getNewsById(id: Int): NewsDTO {
         return database {
           News.select { News.id eq id }.first().let{
-              it[url]
+              News.getNewsDTO(it)
           }
         }
     }
-    actual suspend fun getLastNews(number: Int): List<String> {
+    actual suspend fun getLastNews(number: Int): List<NewsDTO> {
         return database {
             News.selectAll().orderBy(News.id, SortOrder.DESC).limit(number).toList().map{
-            it[url]
+            News.getNewsDTO(it)
             }
         }
     }

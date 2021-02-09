@@ -41,7 +41,7 @@ class Feed : RComponent<FeedProps, FeedState>() {
         props.coroutineScope.launch {
             val newsHtml : MutableList<String> = mutableListOf()
             try {
-                newsService.getLastNews(6).forEach { newsHtml.add(htmlService.getHtml(it)) }
+                newsService.getLastNews(6).forEach { newsHtml.add(htmlService.getHtml(it.url)) }
             } catch (e: Throwable) {
                 setState {
                     error = e
