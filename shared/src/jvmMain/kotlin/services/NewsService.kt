@@ -4,6 +4,7 @@ import database.*
 import database.News.url
 import model.GameDTO
 import model.NewsDTO
+import model.NewsTripleDTO
 import model.TeamDTO
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
@@ -17,6 +18,14 @@ actual class NewsService : RPCService {
                 it[url]
         )
     }
+//    private fun News.getNewsTripleDTO(it: ResultRow): NewsTripleDTO {
+//        return NewsTripleDTO(
+//                it[News.id].value,
+//                it[url],
+//                it[prevId],
+//                it[nextId]
+//        )
+//    }
     private fun News.insertNewsToDatabase(it: UpdateBuilder<Int>, news: NewsDTO){
         it[url] = news.url
     }
@@ -26,6 +35,21 @@ actual class NewsService : RPCService {
               News.getNewsDTO(it)
           }
         }
+    }
+    actual suspend fun getNewsTripleById(id: Int): NewsTripleDTO {
+        var news = NewsDTO(0, "")
+        database {
+            News.select { News.id eq id }.first().let{
+                news = News.getNewsDTO(it)
+            }
+        }
+        var next = database {
+            News.select {News.id greater id}.orderBy(News.id).first().let { it[News.id].value }
+        }
+        var prev = database {
+            News.select {News.id less id}.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
+        }
+        return NewsTripleDTO(news.id, news.url, prev, next)
     }
     actual suspend fun getLastNews(number: Int): List<NewsDTO> {
         return database {

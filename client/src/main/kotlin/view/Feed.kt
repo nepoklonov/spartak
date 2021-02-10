@@ -55,7 +55,7 @@ class Feed : RComponent<FeedProps, FeedState>() {
                 val h3 = e.getElementsByTagName("h3")[0]
                 val p = e.getElementsByTagName("p")[0]?.innerHTML + e.getElementsByTagName("p")[1]?.innerHTML
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p))
+//                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p))
                 }
             }
         }
