@@ -20,8 +20,8 @@ data class Input(
 )
 
 external interface FormViewComponentProps : RProps {
-    var inputs: MutableList<Input>
-    var updateState: (Int, String, Boolean) -> Unit
+    var inputs: MutableMap<String, Input>
+    var updateState: (String, String, Boolean) -> Unit
 }
 
 class FormViewComponentState : RState{
@@ -29,7 +29,7 @@ class FormViewComponentState : RState{
 }
 
 class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentState>() {
-    private fun RBuilder.addStyledInput( it: Input, i: Int) {
+    private fun RBuilder.addStyledInput(it: Input, key: String) {
         styledH3 {
             css {
                 if (it.isRed) {
@@ -54,7 +54,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                                 otherOption = true
                             }
                         }
-                        props.updateState(i, target.value, isRed)
+                        props.updateState(key, target.value, isRed)
                     }
                 }
                 styledOption {
@@ -94,7 +94,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                             if (target.value == "") {
                                 isRed = true
                             }
-                            props.updateState(i, target.value, isRed)
+                            props.updateState(key, target.value, isRed)
                         }
                     }
                 }
@@ -110,7 +110,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                         if (target.value == "") {
                             isRed = true
                         }
-                        props.updateState(i, target.value, isRed)
+                        props.updateState(key, target.value, isRed)
                     }
                 }
             }
@@ -118,10 +118,8 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
     }
 
     override fun RBuilder.render() {
-        var i = 0
         props.inputs.forEach {
-            addStyledInput(it, i)
-            i++
+            addStyledInput(it.value, it.key)
         }
         styledInput(type = InputType.submit) {
             attrs.value = "отправить"

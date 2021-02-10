@@ -3,7 +3,7 @@ package database
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object TeamMembers : IntIdTable() {
-    val teamId = integer("teamId")
+    val teamLink = text("teamLink")
     val photo = text("photo")
     val firstName = text("firstName")
     val lastName = text("lastName")

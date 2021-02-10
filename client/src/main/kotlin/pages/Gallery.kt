@@ -7,9 +7,7 @@ import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
 import model.NavigationDTO
 import model.PhotoDTO
-import pageComponents.SmallNavigation
-import pageComponents.SmallNavigationForm
-import pageComponents.SmallNavigationProps
+import pageComponents.*
 import react.*
 import react.router.dom.route
 import services.GalleryNavigationService
@@ -24,8 +22,11 @@ external interface GalleryProps : RProps {
 
 class GalleryState : RState {
     var error: Throwable? = null
-    var images: List<String>? = null
+    var images: List<PhotoDTO>? = null
     var galleryNavigationList: List<NavigationDTO>? = null
+    var photoForm: Boolean = false
+    var smallNavigationForm: Boolean = false
+    var editSmallNavigationForm: NavigationDTO? = null
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
@@ -87,27 +88,70 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     backgroundColor = Color.white
                 }
                 if (state.galleryNavigationList != null) {
-                    state.galleryNavigationList!!.forEach { galleryNavigationList ->
+                    state.galleryNavigationList!!.forEach { galleryNavigation ->
                         route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
                             child(SmallNavigation::class) {
-                                attrs.string = galleryNavigationList.header
-                                attrs.link = galleryNavigationList.link
+                                attrs.string = galleryNavigation.header
+                                attrs.link = galleryNavigation.link
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
+                        child(DeleteButtonComponent::class) {
+                            attrs.updateState = {
+                                val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    galleryNavigationService.deleteGallerySection(galleryNavigation.id!!)
+                                }
+                            }
+                        }
+                        if (state.editSmallNavigationForm != galleryNavigation) {
+                            child(EditButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        editSmallNavigationForm = galleryNavigation
+                                    }
+                                }
+                            }
+                        } else {
+                            child(SmallNavigationForm::class) {
+                                attrs.inputValues = listOf(galleryNavigation.header, galleryNavigation.link)
+                                attrs.addSection = { listOfInputValues ->
+                                    val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        galleryNavigationService.editGallerySection(
+                                            NavigationDTO(
+                                                galleryNavigation.id,
+                                                listOfInputValues[0],
+                                                listOfInputValues[1]
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
-                    child(SmallNavigationForm::class) {
-                        attrs.isTeam = false
-                        attrs.addSection = { listOfInputValues ->
-                            val galleryNavigationService = GalleryNavigationService(coroutineContext)
-                            props.coroutineScope.launch {
-                                galleryNavigationService.addGallerySection(
-                                    NavigationDTO(
-                                        null,
-                                        listOfInputValues[0],
-                                        listOfInputValues[1]
+                    if (!state.smallNavigationForm) {
+                        child(AddButtonComponent::class) {
+                            attrs.updateState = {
+                                setState {
+                                    smallNavigationForm = true
+                                }
+                            }
+                        }
+                    } else {
+                        child(SmallNavigationForm::class) {
+                            attrs.inputValues = listOf("", "")
+                            attrs.addSection = { listOfInputValues ->
+                                val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    galleryNavigationService.addGallerySection(
+                                        NavigationDTO(
+                                            null,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1]
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }
@@ -123,12 +167,21 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     state.images!!.forEach {
                         styledDiv {
                             css {
-                                backgroundImage = Image("url(/images/$it)")
+                                backgroundImage = Image("url(/images/${it.url})")
                                 backgroundSize = 230.px.toString()
                                 width = 230.px
                                 height = 230.px
                                 margin = 10.px.toString()
                                 float = Float.left
+                            }
+
+                            child(DeleteButtonComponent::class) {
+                                attrs.updateState = {
+                                    val photoService = PhotoService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        photoService.deletePhoto(it.id!!)
+                                    }
+                                }
                             }
                         }
                     }
@@ -136,19 +189,30 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
             }
         }
 
-        styledButton {
-            attrs.onClickFunction = {
-                val photoService = PhotoService(coroutineContext)
-                props.coroutineScope.launch {
-                    photoService.addPhoto(
-                        PhotoDTO(
-                            "address.png",
-                            props.selectedGallerySection
-                        )
-                    )
+        if (!state.photoForm) {
+            child(AddButtonComponent::class) {
+                attrs.updateState = {
+                    setState {
+                        photoForm = true
+                    }
                 }
             }
-            +"Добавить изображение (потом тут будет загрузка фоток честно)"
+        } else {
+            styledButton {
+                attrs.onClickFunction = {
+                    val photoService = PhotoService(coroutineContext)
+                    props.coroutineScope.launch {
+                        photoService.addPhoto(
+                            PhotoDTO(
+                                null,
+                                "address.png",
+                                props.selectedGallerySection
+                            )
+                        )
+                    }
+                }
+                +"Добавить изображение (потом тут будет загрузка фоток честно)"
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ actual class TeamService : RPCService {
     private fun TeamMembers.getTeamMemberDtoFromDatabase(it: ResultRow): TeamMemberDTO {
         return TeamMemberDTO(
             it[TeamMembers.id].value,
-            it[teamId],
+            it[teamLink],
             it[photo],
             it[firstName],
             it[lastName],
@@ -27,7 +27,7 @@ actual class TeamService : RPCService {
     }
 
     private fun TeamMembers.insertTeamMemberDtoToDatabase(it: UpdateBuilder<Int>, newTeamMember: TeamMemberDTO) {
-        it[teamId] = newTeamMember.teamId
+        it[teamLink] = newTeamMember.teamLink
         it[photo] = newTeamMember.photo
         it[firstName] = newTeamMember.firstName
         it[lastName] = newTeamMember.lastName
@@ -89,20 +89,10 @@ actual class TeamService : RPCService {
         }
     }
 
-    actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
-        val listOfTeamMembers: MutableList<TeamMemberDTO> = mutableListOf()
-        database {
-            TeamMembers.select { TeamMembers.teamId eq teamId }.forEach {
-                listOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
-            }
-        }
-        return listOfTeamMembers
-    }
-
-    actual suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO> {
+    actual suspend fun getTeamMemberByRoleAndTeam(role: String, teamLink: String): List<TeamMemberDTO> {
         val liftOfTeamMembers = mutableListOf<TeamMemberDTO>()
         database {
-            TeamMembers.select { (TeamMembers.teamId eq teamId) and (TeamMembers.role eq role) }.forEach {
+            TeamMembers.select { (TeamMembers.teamLink eq teamLink) and (TeamMembers.role eq role) }.forEach {
                 liftOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }

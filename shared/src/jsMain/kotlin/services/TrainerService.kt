@@ -7,8 +7,8 @@ import kotlin.coroutines.CoroutineContext
 
 actual class TrainerService(coroutineContext: CoroutineContext) {
     private val transport = Transport(coroutineContext)
-    actual suspend fun getTrainerById(teamId: Int): TrainerDTO {
-        return transport.get("getTrainerById", TrainerDTO.serializer(), "teamId" to teamId)
+    actual suspend fun getTrainerByLink(teamLink: String): TrainerDTO {
+        return transport.get("getTrainerByLink", TrainerDTO.serializer(), "teamLink" to teamLink)
     }
     actual suspend fun editTrainer(trainer: TrainerDTO): Boolean {
         return transport.post("editTrainer", Boolean.serializer(), "trainer" to trainer)

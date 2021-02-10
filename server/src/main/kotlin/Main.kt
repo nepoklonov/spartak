@@ -108,11 +108,11 @@ fun Application.main() {
         }
         database {
             TeamMembers.insert {
-                it[teamId] = 1
+                it[teamLink] = "2003"
                 it[photo] = "logo.png"
                 it[firstName] = "Змейка"
                 it[lastName] = "Гитарова"
-                it[role] = "НП"
+                it[role] = "defenders"
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
             }
@@ -131,7 +131,7 @@ fun Application.main() {
         }
         database {
             Trainers.insert {
-                it[teamId] = 1
+                it[teamLink] = "2003"
                 it[name] = "2003"
                 it[photo] = "logo.png"
                 it[dateOfBirth] = "2003"
