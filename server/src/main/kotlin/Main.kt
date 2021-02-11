@@ -16,6 +16,7 @@ import rpc.rpc
 import services.*
 
 
+
 private val globalCss = CSSBuilder().apply {
     fontFace {
         fontFamily = "Russo"
@@ -53,7 +54,7 @@ fun Application.main() {
         jackson {}
     }
     install(Sessions) {
-        cookie<UserSession> ("user-session", SessionStorageMemory()) {
+        cookie<LoginSession> ("login-session", SessionStorageMemory()) {
             cookie.path = "/"
         }
     }
@@ -212,7 +213,11 @@ fun Application.main() {
             rpc(TimetableService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
-            rpc(AdminService::class)
+            rpc(AdminService::class, AdminService::checkAdmin to { call, result ->
+                if (result as Boolean) {
+                    call.sessions.set(LoginSession(username = "admin", role = Role.Admin))
+                }
+            })
             rpc(RecruitmentService::class)
             rpc(NewsService::class)
         }
