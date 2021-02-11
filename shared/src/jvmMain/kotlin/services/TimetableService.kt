@@ -17,7 +17,7 @@ actual class TimetableService: RPCService {
                 listOfWorkoutDTO += WorkoutDTO(
                         it[Timetable.id].value,
                         it[Timetable.datetime],
-                        it[Timetable.teamId],
+                        it[Timetable.teamLink],
                         it[Timetable.type],
                         it[Timetable.place]
                 )
@@ -28,7 +28,7 @@ actual class TimetableService: RPCService {
 
     private fun Timetable.insertWorkoutDtoToDatabase(it: UpdateBuilder<Int>, workout: WorkoutDTO) {
         it[datetime] = workout.datetime
-        it[teamId] = workout.teamId
+        it[teamLink] = workout.teamLink
         it[type] = workout.type
         it[place] = workout.place
     }

@@ -40,26 +40,28 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 height = 230.px
                 display = Display.flex
                 justifyContent = JustifyContent.spaceEvenly
+                alignItems = Align.center
+                padding = 40.px.toString()
             }
             styledDiv {
                 css {
-                    padding = 0.px.toString()
                     overflow = Overflow.hidden
                     float = Float.left
                     width = 880.px
+                    alignItems = Align.center
                 }
                 styledImg(src = "/images/logo.png") {
                     css {
-                        height = 200.px
+                        width = 200.px
+                        height = 231.px
                         float = Float.left
-                        border = 20.px.toString()
                     }
                 }
 
                 styledH1 {
                     css {
                         alignSelf = Align.center
-                        fontSize = 36.pt
+                        fontSize = 60.px
                         lineHeight = LineHeight.normal
                     }
                     +"Молодежный хоккейный клуб «Спартак»"
@@ -70,13 +72,13 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 css {
                     fontSize = 16.pt
                     alignItems = Align.center
-                    border = 20.px.toString()
+                    width = 320.px
                 }
 
                 styledDiv {
                     css{
                         lineHeight = LineHeight.normal
-                        width = 320.px
+                        marginBottom = 30.px
                     }
                     TextWithIcon.Address.let {
                         addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.left)

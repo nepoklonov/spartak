@@ -4,7 +4,7 @@ import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.TextDecoration
+import kotlinx.css.properties.boxShadow
 import kotlinx.html.js.onSubmitFunction
 import model.NavigationDTO
 import model.TeamDTO
@@ -152,18 +152,17 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
-                overflow = Overflow.hidden
-            }
-
-            headerText {
-                +"Команды"
+                css {
+                    display = Display.flex
+                    justifyContent = JustifyContent.spaceBetween
+                }
             }
 
             styledDiv {
                 css {
-                    float = Float.left
+                    marginTop = 115.px
                     backgroundColor = Color.white
-                    textDecoration = TextDecoration.none
+                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
                 }
                 if (state.navigationList != null) {
                     state.navigationList!!.forEach { teamsNavigation ->
@@ -242,89 +241,175 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 }
             }
 
-            val error = state.error
-            if (error != null) {
-                throw error
-            }
             styledDiv {
-                css {
-                    overflow = Overflow.hidden
+                css{
+                    width = 100.pct
+                    marginLeft = 50.px
+                    marginRight = 50.px
                 }
-                smallHeaderText {
-                    +"Тренер"
-                }
-                if (state.trainer != null) {
-                    state.trainer.let { trainer ->
-                        styledImg(src = "/images/" + trainer!!.photo) {
-                            css {
-                                float = Float.left
-                            }
-                        }
-                        styledDiv {
-                            css {
-                                textAlign = TextAlign.center
-                            }
-                            smallHeaderText {
-                                +trainer.name
-                            }
-                            +trainer.info
-                        }
 
-                        child(DeleteButtonComponent::class) {
-                            attrs.updateState = {
-                                val trainerService = TrainerService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    trainerService.deleteTrainer(trainer.id!!)
+                val error = state.error
+                if (error != null) {
+                    throw error
+                }
+                styledDiv {
+                    css {
+                        overflow = Overflow.hidden
+                    }
+                    headerText {
+                        +"Команды"
+                    }
+                    if (state.trainer != null) {
+                        state.trainer.let { trainer ->
+                            styledDiv {
+                                css {
+                                    textAlign = TextAlign.center
                                 }
+                                child(RedFrameComponent::class) {
+                                    attrs.isTrainer = true
+                                    attrs.trainer = trainer
+                                }
+                                +trainer?.info!!
                             }
-                        }
-                        if (state.editTrainerForm != trainer) {
-                            child(EditButtonComponent::class) {
+
+                            child(DeleteButtonComponent::class) {
                                 attrs.updateState = {
-                                    setState {
-                                        editTrainerForm = trainer
-                                        state.trainerInputs["name"]!!.inputValue = trainer.name
-                                        state.trainerInputs["dateOfBirth"]!!.inputValue = trainer.dateOfBirth
-                                        state.trainerInputs["info"]!!.inputValue = trainer.info
-                                    }
-                                }
-                            }
-                        } else {
-                            styledForm {
-                                attrs.onSubmitFunction = { event ->
-                                    event.preventDefault()
-                                    event.stopPropagation()
                                     val trainerService = TrainerService(coroutineContext)
                                     props.coroutineScope.launch {
-                                        var formIsCompleted = true
-                                        state.trainerInputs.values.forEach {
-                                            if (it.inputValue == "") {
-                                                setState {
-                                                    it.isRed = true
-                                                }
-                                                formIsCompleted = false
-                                            }
-                                        }
-                                        if (formIsCompleted) {
-                                            trainerService.editTrainer(
-                                                TrainerDTO(
-                                                    trainer.id,
-                                                    props.selectedTeam,
-                                                    "address.png",
-                                                    state.trainerInputs["name"]!!.inputValue,
-                                                    state.trainerInputs["dateOfBirth"]!!.inputValue,
-                                                    state.trainerInputs["info"]!!.inputValue,
-                                                )
-                                            )
+                                        trainerService.deleteTrainer(trainer!!.id!!)
+                                    }
+                                }
+                            }
+                            if (state.editTrainerForm != trainer) {
+                                child(EditButtonComponent::class) {
+                                    attrs.updateState = {
+                                        setState {
+                                            editTrainerForm = trainer
+                                            state.trainerInputs["name"]!!.inputValue = trainer!!.name
+                                            state.trainerInputs["dateOfBirth"]!!.inputValue = trainer.dateOfBirth
+                                            state.trainerInputs["info"]!!.inputValue = trainer.info
                                         }
                                     }
                                 }
-                                child(FormViewComponent::class) {
-                                    attrs.inputs = state.trainerInputs
-                                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                            } else {
+                                styledForm {
+                                    attrs.onSubmitFunction = { event ->
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                        val trainerService = TrainerService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            var formIsCompleted = true
+                                            state.trainerInputs.values.forEach {
+                                                if (it.inputValue == "") {
+                                                    setState {
+                                                        it.isRed = true
+                                                    }
+                                                    formIsCompleted = false
+                                                }
+                                            }
+                                            if (formIsCompleted) {
+                                                trainerService.editTrainer(
+                                                    TrainerDTO(
+                                                        trainer!!.id,
+                                                        props.selectedTeam,
+                                                        "address.png",
+                                                        state.trainerInputs["name"]!!.inputValue,
+                                                        state.trainerInputs["dateOfBirth"]!!.inputValue,
+                                                        state.trainerInputs["info"]!!.inputValue,
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                    child(FormViewComponent::class) {
+                                        attrs.inputs = state.trainerInputs
+                                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                            setState {
+                                                state.trainerInputs[key]!!.inputValue = value
+                                                state.trainerInputs[key]!!.isRed = isRed
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        +"Загрузка..."
+                    }
+                }
+                if (state.teamMembersWithRoles != null) {
+                    state.teamMembersWithRoles!!.forEach() { teamMembers ->
+                        smallHeaderText {
+                            +teamMembers.key
+                        }
+                        teamMembers.value.forEach { teamMember ->
+                            child(RedFrameComponent::class) {
+                                attrs.isTrainer = false
+                                attrs.teamMember = teamMember
+                            }
+
+                            child(DeleteButtonComponent::class) {
+                                attrs.updateState = {
+                                    val teamService = TeamService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        teamService.deleteTeamMember(teamMember.id!!)
+                                    }
+                                }
+                            }
+
+                            if (state.editTeamMemberForm != teamMember) {
+                                child(EditButtonComponent::class) {
+                                    attrs.updateState = {
                                         setState {
-                                            state.trainerInputs[key]!!.inputValue = value
-                                            state.trainerInputs[key]!!.isRed = isRed
+                                            editTeamMemberForm = teamMember
+                                            teamMemberInputs["firstName"]!!.inputValue = teamMember.firstName
+                                            teamMemberInputs["lastName"]!!.inputValue = teamMember.lastName
+                                            teamMemberInputs["role"]!!.inputValue = teamMember.role
+                                            teamMemberInputs["birthday"]!!.inputValue = teamMember.birthday
+                                            teamMemberInputs["city"]!!.inputValue = teamMember.city
+                                        }
+                                    }
+                                }
+                            } else {
+                                styledForm {
+                                    attrs.onSubmitFunction = { event ->
+                                        console.log(state.teamMemberInputs)
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                        val teamService = TeamService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            var formIsCompleted = true
+                                            state.teamMemberInputs.values.forEach {
+                                                if (it.inputValue == "") {
+                                                    setState {
+                                                        it.isRed = true
+                                                    }
+                                                    formIsCompleted = false
+                                                }
+                                            }
+                                            if (formIsCompleted) {
+                                                teamService.editTeamMember(
+                                                    TeamMemberDTO(
+                                                        teamMember.id,
+                                                        props.selectedTeam,
+                                                        "address.png",
+                                                        state.teamMemberInputs["firstName"]!!.inputValue,
+                                                        state.teamMemberInputs["lastName"]!!.inputValue,
+                                                        state.teamMemberInputs["role"]!!.inputValue,
+                                                        state.teamMemberInputs["birthday"]!!.inputValue,
+                                                        state.teamMemberInputs["city"]!!.inputValue,
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                                    child(FormViewComponent::class) {
+                                        attrs.inputs = state.teamMemberInputs
+                                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                            setState {
+                                                state.teamMemberInputs[key]!!.inputValue = value
+                                                state.teamMemberInputs[key]!!.isRed = isRed
+                                            }
                                         }
                                     }
                                 }
@@ -334,189 +419,110 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 } else {
                     +"Загрузка..."
                 }
-            }
-            if (state.teamMembersWithRoles != null) {
-                state.teamMembersWithRoles!!.forEach() { teamMembers ->
-                    smallHeaderText {
-                        +teamMembers.key
-                    }
-                    teamMembers.value.forEach { teamMember ->
-                        styledImg(src = "/images/" + teamMember.photo) { }
-
-                        child(DeleteButtonComponent::class) {
-                            attrs.updateState = {
-                                val teamService = TeamService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    teamService.deleteTeamMember(teamMember.id!!)
-                                }
+                if (!state.addTrainerForm) {
+                    child(AddButtonComponent::class) {
+                        attrs.updateState = {
+                            setState {
+                                addTrainerForm = true
                             }
                         }
+                    }
+                } else {
 
-                        if (state.editTeamMemberForm != teamMember) {
-                            child(EditButtonComponent::class) {
-                                attrs.updateState = {
-                                    setState {
-                                        editTeamMemberForm = teamMember
-                                        teamMemberInputs["firstName"]!!.inputValue = teamMember.firstName
-                                        teamMemberInputs["lastName"]!!.inputValue = teamMember.lastName
-                                        teamMemberInputs["role"]!!.inputValue = teamMember.role
-                                        teamMemberInputs["birthday"]!!.inputValue = teamMember.birthday
-                                        teamMemberInputs["city"]!!.inputValue = teamMember.city
-                                    }
-                                }
-                            }
-                        } else {
-                            styledForm {
-                                attrs.onSubmitFunction = { event ->
-                                    console.log(state.teamMemberInputs)
-                                    event.preventDefault()
-                                    event.stopPropagation()
-                                    val teamService = TeamService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        var formIsCompleted = true
-                                        state.teamMemberInputs.values.forEach {
-                                            if (it.inputValue == "") {
-                                                setState {
-                                                    it.isRed = true
-                                                }
-                                                formIsCompleted = false
-                                            }
-                                        }
-                                        if (formIsCompleted) {
-                                            teamService.editTeamMember(
-                                                TeamMemberDTO(
-                                                    teamMember.id,
-                                                    props.selectedTeam,
-                                                    "address.png",
-                                                    state.teamMemberInputs["firstName"]!!.inputValue,
-                                                    state.teamMemberInputs["lastName"]!!.inputValue,
-                                                    state.teamMemberInputs["role"]!!.inputValue,
-                                                    state.teamMemberInputs["birthday"]!!.inputValue,
-                                                    state.teamMemberInputs["city"]!!.inputValue,
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                                child(FormViewComponent::class) {
-                                    attrs.inputs = state.teamMemberInputs
-                                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                    styledForm {
+                        attrs.onSubmitFunction = { event ->
+                            event.preventDefault()
+                            event.stopPropagation()
+                            val trainerService = TrainerService(coroutineContext)
+                            props.coroutineScope.launch {
+                                var formIsCompleted = true
+                                state.trainerInputs.values.forEach {
+                                    if (it.inputValue == "") {
                                         setState {
-                                            state.teamMemberInputs[key]!!.inputValue = value
-                                            state.teamMemberInputs[key]!!.isRed = isRed
+                                            it.isRed = true
                                         }
+                                        formIsCompleted = false
                                     }
                                 }
-                            }
-                        }
-                    }
-                }
-            } else {
-                +"Загрузка..."
-            }
-        }
-
-        if (!state.addTrainerForm) {
-            child(AddButtonComponent::class) {
-                attrs.updateState = {
-                    setState {
-                        addTrainerForm = true
-                    }
-                }
-            }
-        } else {
-
-            styledForm {
-                attrs.onSubmitFunction = { event ->
-                    event.preventDefault()
-                    event.stopPropagation()
-                    val trainerService = TrainerService(coroutineContext)
-                    props.coroutineScope.launch {
-                        var formIsCompleted = true
-                        state.trainerInputs.values.forEach {
-                            if (it.inputValue == "") {
-                                setState {
-                                    it.isRed = true
+                                if (formIsCompleted) {
+                                    trainerService.addTrainer(
+                                        TrainerDTO(
+                                            null,
+                                            props.selectedTeam,
+                                            "address.png",
+                                            state.trainerInputs["name"]!!.inputValue,
+                                            state.trainerInputs["dateOfBirth"]!!.inputValue,
+                                            state.trainerInputs["info"]!!.inputValue,
+                                        )
+                                    )
                                 }
-                                formIsCompleted = false
                             }
                         }
-                        if (formIsCompleted) {
-                            trainerService.addTrainer(
-                                TrainerDTO(
-                                    null,
-                                    props.selectedTeam,
-                                    "address.png",
-                                    state.trainerInputs["name"]!!.inputValue,
-                                    state.trainerInputs["dateOfBirth"]!!.inputValue,
-                                    state.trainerInputs["info"]!!.inputValue,
-                                )
-                            )
-                        }
-                    }
-                }
-                child(FormViewComponent::class) {
-                    attrs.inputs = state.trainerInputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.trainerInputs[key]!!.inputValue = value
-                            state.trainerInputs[key]!!.isRed = isRed
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!state.addTeamMemberForm) {
-            child(AddButtonComponent::class) {
-                attrs.updateState = {
-                    setState {
-                        addTeamMemberForm = true
-                    }
-                }
-            }
-        } else {
-            styledForm {
-                attrs.onSubmitFunction = { event ->
-                    console.log(state.teamMemberInputs)
-                    event.preventDefault()
-                    event.stopPropagation()
-                    val teamService = TeamService(coroutineContext)
-                    props.coroutineScope.launch {
-                        var formIsCompleted = true
-                        state.teamMemberInputs.values.forEach {
-                            if (it.inputValue == "") {
+                        child(FormViewComponent::class) {
+                            attrs.inputs = state.trainerInputs
+                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                 setState {
-                                    it.isRed = true
+                                    state.trainerInputs[key]!!.inputValue = value
+                                    state.trainerInputs[key]!!.isRed = isRed
                                 }
-                                formIsCompleted = false
                             }
                         }
-                        if (formIsCompleted) {
-                            teamService.addTeamMember(
-                                TeamMemberDTO(
-                                    null,
-                                    props.selectedTeam,
-                                    "address.png",
-                                    state.teamMemberInputs["firstName"]!!.inputValue,
-                                    state.teamMemberInputs["lastName"]!!.inputValue,
-                                    state.teamMemberInputs["role"]!!.inputValue,
-                                    state.teamMemberInputs["birthday"]!!.inputValue,
-                                    state.teamMemberInputs["city"]!!.inputValue,
-                                )
-                            )
+                    }
+                }
+
+                if (!state.addTeamMemberForm) {
+                    child(AddButtonComponent::class) {
+                        attrs.updateState = {
+                            setState {
+                                addTeamMemberForm = true
+                            }
+                        }
+                    }
+                } else {
+                    styledForm {
+                        attrs.onSubmitFunction = { event ->
+                            console.log(state.teamMemberInputs)
+                            event.preventDefault()
+                            event.stopPropagation()
+                            val teamService = TeamService(coroutineContext)
+                            props.coroutineScope.launch {
+                                var formIsCompleted = true
+                                state.teamMemberInputs.values.forEach {
+                                    if (it.inputValue == "") {
+                                        setState {
+                                            it.isRed = true
+                                        }
+                                        formIsCompleted = false
+                                    }
+                                }
+                                if (formIsCompleted) {
+                                    teamService.addTeamMember(
+                                        TeamMemberDTO(
+                                            null,
+                                            props.selectedTeam,
+                                            "address.png",
+                                            state.teamMemberInputs["firstName"]!!.inputValue,
+                                            state.teamMemberInputs["lastName"]!!.inputValue,
+                                            state.teamMemberInputs["role"]!!.inputValue,
+                                            state.teamMemberInputs["birthday"]!!.inputValue,
+                                            state.teamMemberInputs["city"]!!.inputValue,
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                        child(FormViewComponent::class) {
+                            attrs.inputs = state.teamMemberInputs
+                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                setState {
+                                    state.teamMemberInputs[key]!!.inputValue = value
+                                    state.teamMemberInputs[key]!!.isRed = isRed
+                                }
+                            }
                         }
                     }
                 }
-                child(FormViewComponent::class) {
-                    attrs.inputs = state.teamMemberInputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.teamMemberInputs[key]!!.inputValue = value
-                            state.teamMemberInputs[key]!!.isRed = isRed
-                        }
-                    }
-                }
+
             }
         }
     }

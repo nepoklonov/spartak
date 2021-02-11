@@ -157,7 +157,7 @@ fun Application.main() {
         database {
             Timetable.insert {
                 it[datetime] = 1612020600000.0
-                it[teamId] = 1
+                it[teamLink] = "shhm"
                 it[type] = "shhm"
                 it[place] = "ура наконец-то я доделала это ебанное расписание"
             }

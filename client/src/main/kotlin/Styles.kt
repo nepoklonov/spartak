@@ -2,15 +2,15 @@
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
+import kotlinx.css.properties.boxShadow
 import kotlinx.html.BUTTON
 import kotlinx.html.H1
+import pageComponents.ColorSpartak
 import react.RBuilder
 import styled.*
-import pageComponents.ColorSpartak
 
 object Styles : StyleSheet("main") {
     val header by css {
-        textAlign = TextAlign.center
         fontSize = 32.pt
         lineHeight = LineHeight.normal
     }
@@ -25,6 +25,8 @@ object Styles : StyleSheet("main") {
         backgroundColor = ColorSpartak.LightGrey.color
         fontSize = 18.px
         padding(10.px)
+        margin(3.px)
+        boxShadow(color = rgba(0,0,0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
     }
 
     val button by css{

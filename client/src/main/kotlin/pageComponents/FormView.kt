@@ -7,6 +7,7 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import react.*
 import styled.*
+import kotlin.js.Date
 
 data class Input(
     val header: String,
@@ -16,7 +17,8 @@ data class Input(
     val isSelect: Boolean = false,
     val options: Map<String, String> = mapOf(),
     val allowOtherOption: Boolean = false,
-    var otherOption: Boolean = false
+    var otherOption: Boolean = false,
+    val isDateTime: Boolean = false,
 )
 
 external interface FormViewComponentProps : RProps {
@@ -24,7 +26,7 @@ external interface FormViewComponentProps : RProps {
     var updateState: (String, String, Boolean) -> Unit
 }
 
-class FormViewComponentState : RState{
+class FormViewComponentState : RState {
     var otherOption: Boolean = false
 }
 
@@ -38,7 +40,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
             }
             +it.header
         }
-        if(it.isSelect){
+        if (it.isSelect) {
             styledSelect {
                 attrs {
                     name = it.inputName
@@ -48,7 +50,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                         if (target.value == "nothing") {
                             isRed = true
                         }
-                        if (target.value == ""){
+                        if (target.value == "") {
                             it.otherOption = true
                             setState {
                                 otherOption = true
@@ -58,20 +60,20 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                     }
                 }
                 styledOption {
-                    attrs{
+                    attrs {
                         value = "nothing"
                     }
-                    + it.header
+                    +it.header
                 }
                 it.options.forEach {
                     styledOption {
-                        attrs{
+                        attrs {
                             value = it.key
                         }
-                        + it.value
+                        +it.value
                     }
                 }
-                if (it.allowOtherOption){
+                if (it.allowOtherOption) {
                     styledOption {
                         attrs {
                             value = ""
@@ -80,7 +82,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                     }
                 }
             }
-            if(it.otherOption){
+            if (it.otherOption) {
                 styledH3 {
                     +"Название команды"
                 }
@@ -99,7 +101,22 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                     }
                 }
             }
-        }else{
+        } else if (it.isDateTime) {
+            styledInput(type = InputType.dateTimeLocal) {
+                attrs {
+                    name = it.inputName
+                    value = it.inputValue
+                    onChangeFunction = { event ->
+                        val target = event.target as HTMLInputElement
+                        var isRed = false
+                        if (target.value == "") {
+                            isRed = true
+                        }
+                        props.updateState(key, target.value, isRed)
+                    }
+                }
+            }
+        } else {
             styledInput(type = InputType.text) {
                 attrs {
                     name = it.inputName

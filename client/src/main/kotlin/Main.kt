@@ -1,18 +1,19 @@
+
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.css.*
 import kotlinx.html.id
+import pageComponents.FooterComponent
+import pageComponents.HeaderComponent
+import pageComponents.MainNavigationComponent
+import pageComponents.MainNavigationProps
 import react.buildElements
 import react.dom.render
 import react.router.dom.browserRouter
 import react.router.dom.route
 import styled.css
 import styled.styledDiv
-import pageComponents.FooterComponent
-import pageComponents.HeaderComponent
-import pageComponents.MainNavigationComponent
-import pageComponents.MainNavigationProps
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {

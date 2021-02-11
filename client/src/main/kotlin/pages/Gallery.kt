@@ -4,6 +4,7 @@ import headerText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.css.properties.boxShadow
 import kotlinx.html.js.onClickFunction
 import model.NavigationDTO
 import model.PhotoDTO
@@ -27,6 +28,7 @@ class GalleryState : RState {
     var photoForm: Boolean = false
     var smallNavigationForm: Boolean = false
     var editSmallNavigationForm: NavigationDTO? = null
+    var selectedPhotoIndex: Int? = null
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
@@ -75,17 +77,14 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
         styledDiv {
             css {
-                overflow = Overflow.hidden
+                display = Display.flex
+                justifyContent = JustifyContent.spaceBetween
             }
-
-            headerText {
-                +"Галерея"
-            }
-
             styledDiv {
                 css {
-                    float = Float.left
+                    marginTop = 115.px
                     backgroundColor = Color.white
+                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
                 }
                 if (state.galleryNavigationList != null) {
                     state.galleryNavigationList!!.forEach { galleryNavigation ->
@@ -161,57 +160,126 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
             }
 
             styledDiv {
-                if (state.images == null) {
-                    +"загрузка..."
-                } else {
-                    state.images!!.forEach {
-                        styledDiv {
-                            css {
-                                backgroundImage = Image("url(/images/${it.url})")
-                                backgroundSize = 230.px.toString()
-                                width = 230.px
-                                height = 230.px
-                                margin = 10.px.toString()
-                                float = Float.left
-                            }
+                css {
+                    width = 100.pct
+                    paddingLeft = 50.px
+                    paddingRight = 50.px
+                }
+                headerText {
+                    +"Галерея"
+                }
+                styledDiv {
+                    if (state.images == null) {
+                        +"загрузка..."
+                    } else {
+                        state.images!!.forEachIndexed { index, photo ->
+                            styledDiv {
+                                attrs.onClickFunction = {
+                                    setState {
+                                        selectedPhotoIndex = index
+                                    }
+                                }
+                                css {
+                                    backgroundImage = Image("url(/images/${photo.url})")
+                                    backgroundSize = 230.px.toString()
+                                    width = 230.px
+                                    height = 230.px
+                                    margin = 10.px.toString()
+                                    float = Float.left
+                                }
 
-                            child(DeleteButtonComponent::class) {
-                                attrs.updateState = {
-                                    val photoService = PhotoService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        photoService.deletePhoto(it.id!!)
+                                child(DeleteButtonComponent::class) {
+                                    attrs.updateState = {
+                                        val photoService = PhotoService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            photoService.deletePhoto(photo.id!!)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-        }
+                styledDiv {
+                    if (!state.photoForm) {
+                        child(AddButtonComponent::class) {
+                            attrs.updateState = {
+                                setState {
+                                    photoForm = true
+                                }
+                            }
+                        }
+                    } else {
+                        styledButton {
+                            attrs.onClickFunction = {
+                                val photoService = PhotoService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    photoService.addPhoto(
+                                        PhotoDTO(
+                                            null,
+                                            "address.png",
+                                            props.selectedGallerySection
+                                        )
+                                    )
+                                }
+                            }
+                            +"Добавить изображение (потом тут будет загрузка фоток честно)"
+                        }
 
-        if (!state.photoForm) {
-            child(AddButtonComponent::class) {
-                attrs.updateState = {
-                    setState {
-                        photoForm = true
+                    }
+
+                    if (state.selectedPhotoIndex != null) {
+                        styledDiv {
+//                attrs.onClickFunction = {
+//                    setState {
+//                        selectedPhotoIndex = null
+//                    }
+//                }
+                            css {
+                                top = 0.px
+                                left = 0.px
+                                position = Position.fixed
+                                width = 100.pct
+                                height = 100.pct
+                                backgroundColor = rgba(0, 0, 0, 0.5)
+                                display = Display.flex
+                                justifyContent = JustifyContent.center
+                                alignItems = Align.center
+                            }
+                            styledImg(src = "/images/left-arrow.png") {
+                                attrs.onClickFunction = {
+                                    if (state.selectedPhotoIndex!! > 0) {
+                                        setState {
+                                            selectedPhotoIndex = selectedPhotoIndex!! - 1
+                                        }
+                                    }
+                                }
+                                css {
+                                    width = 55.px
+                                    margin = 100.px.toString()
+                                }
+                            }
+                            styledImg(src = "/images/" + state.images?.get(state.selectedPhotoIndex!!)!!.url) {
+                                css {
+                                    height = 254.px
+                                }
+                            }
+                            styledImg(src = "/images/right-arrow.png") {
+                                attrs.onClickFunction = {
+                                    if (state.selectedPhotoIndex!! < state.images!!.size) {
+                                        setState {
+                                            selectedPhotoIndex = selectedPhotoIndex!! + 1
+                                        }
+                                    }
+                                }
+                                css {
+                                    width = 55.px
+                                    margin = 100.px.toString()
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        } else {
-            styledButton {
-                attrs.onClickFunction = {
-                    val photoService = PhotoService(coroutineContext)
-                    props.coroutineScope.launch {
-                        photoService.addPhoto(
-                            PhotoDTO(
-                                null,
-                                "address.png",
-                                props.selectedGallerySection
-                            )
-                        )
-                    }
-                }
-                +"Добавить изображение (потом тут будет загрузка фоток честно)"
             }
         }
     }

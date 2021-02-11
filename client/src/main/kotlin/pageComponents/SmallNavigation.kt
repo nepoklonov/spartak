@@ -24,19 +24,24 @@ class SmallNavigation : RComponent<SmallNavigationProps, RState>() {
             css {
                 fontFamily = "Russo"
                 textAlign = TextAlign.center
-                width = 250.px
+                width = 325.px
             }
             styledH2 {
                 css {
-                    margin = 40.px.toString()
+                    paddingTop = 20.px
+                    paddingBottom = 20.px
+                    fontSize = 25.px
+                    if (props.selectedLink == props.link) {
+                        borderLeftColor = ColorSpartak.Red.color
+                        borderLeftWidth = 5.px
+                        borderLeftStyle = BorderStyle.solid
+                    }
                     child("a") {
                         textDecoration = TextDecoration.none
                         color = Color.black
                         if (props.selectedLink == props.link) {
                             color = ColorSpartak.Red.color
-                            borderBottomColor = ColorSpartak.Red.color
-                            borderBottomWidth = 3.px
-                            borderBottomStyle = BorderStyle.solid
+
                         }
                     }
                 }
