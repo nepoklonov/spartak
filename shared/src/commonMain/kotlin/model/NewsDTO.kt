@@ -3,5 +3,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class NewsDTO (
-    val url: String
+        var id: Int?,
+        val url: String
 )

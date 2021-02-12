@@ -63,9 +63,6 @@ fun Application.main() {
         SchemaUtils.create(Admins)
         SchemaUtils.create(Recruitment)
         SchemaUtils.create(News)
-        SchemaUtils.create(GallerySections)
-        SchemaUtils.create(GamesSections)
-        SchemaUtils.create(WorkoutsSections)
     }
 
     launch {
@@ -94,7 +91,7 @@ fun Application.main() {
         for (i in 1 until 4) {
             database {
                 News.insert {
-                    it[url] = "/news/$i.html"
+                    it[url] = "/newsHtml/$i.html"
                 }
             }
         }
@@ -293,7 +290,7 @@ fun Application.main() {
         static("images") { files("images") }
         static("fonts") { files("fonts") }
         static("htmlPages") { files("htmlPages") }
-        static("news") { files("news") }
+        static("newsHtml") { files("newsHtml") }
 
 
         route("/api") {
