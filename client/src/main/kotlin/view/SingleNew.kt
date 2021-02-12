@@ -35,27 +35,33 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
         init {
             state = NewsState()
         }
-        override fun componentDidMount() {
-            props.coroutineScope.launch {
-                val htmlService = HtmlService(coroutineContext)
-                val newsService = NewsService(coroutineContext)
-                var newsHtml: LongNews
-                try {
-                    newsHtml = newsService.getNewsTripleById(props.selectedNewsId.toInt()).let{
-                        LongNews(htmlService.getHtml(it.url), it.prevId, it.nextId)
-                    }
-                } catch (e: Throwable) {
-                    setState {
-                        error = e
-                    }
-                    return@launch
+    fun setHTML(){
+        props.coroutineScope.launch {
+            val htmlService = HtmlService(coroutineContext)
+            val newsService = NewsService(coroutineContext)
+            var newsHtml: LongNews
+            try {
+                newsHtml = newsService.getNewsTripleById(props.selectedNewsId.toInt()).let{
+                    LongNews(htmlService.getHtml(it.url), it.prevId, it.nextId)
                 }
+            } catch (e: Throwable) {
                 setState {
-                    longNews = newsHtml
+                    error = e
                 }
+                return@launch
             }
-
+            setState {
+                longNews = newsHtml
+            }
         }
+    }
+    override fun componentDidMount() {
+        setHTML()
+    }
+
+    override fun componentDidUpdate(prevProps: NewsProps, prevState: NewsState, snapshot: Any) {
+        if (prevProps != props) setHTML()
+    }
 
 
 
@@ -71,31 +77,36 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
             props.selectedNewsId
         }
         styledDiv {
-            if (state.longNews?.news != null) {
-                attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
-            } else {
-                +"загрузка..."
+            styledDiv {
+                css{
+                    overflow = Overflow.hidden
+                }
+                if (state.longNews?.news != null) {
+                    attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
+                } else {
+                    +"загрузка..."
+                }
             }
-        }
-        styledDiv {
-            css{
-                display = Display.flex
-                justifyContent = JustifyContent.spaceAround
-            }
+            styledDiv {
+                css {
+                    display = Display.flex
+                    justifyContent = JustifyContent.spaceAround
+                }
 
-            navLink<pages.NewsProps>(to = "/news/$previousNewsId") {
-                child(ButtonSecondary::class)  {
-                    attrs.text = "Предыдущая новость"
+                navLink<pages.NewsProps>(to = "/news/$previousNewsId") {
+                    child(ButtonSecondary::class) {
+                        attrs.text = "Предыдущая новость"
+                    }
                 }
-            }
-            navLink<pages.NewsProps>(to = "/news/feed") {
-                child(ButtonSecondary::class)  {
-                    attrs.text = "Вернуться к ленте"
+                navLink<pages.NewsProps>(to = "/news/feed") {
+                    child(ButtonSecondary::class) {
+                        attrs.text = "Вернуться к ленте"
+                    }
                 }
-            }
-            navLink<pages.NewsProps>(to = "/news/$nextNewsId") {
-                child(ButtonSecondary::class) {
-                    attrs.text = "Следующая новость"
+                navLink<pages.NewsProps>(to = "/news/$nextNewsId") {
+                    child(ButtonSecondary::class) {
+                        attrs.text = "Следующая новость"
+                    }
                 }
             }
         }

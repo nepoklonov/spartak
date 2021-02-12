@@ -43,10 +43,10 @@ actual class NewsService : RPCService {
                 news = News.getNewsDTO(it)
             }
         }
-        var next = database {
+        var next :Int? = database {
             News.select {News.id greater id}.orderBy(News.id).first().let { it[News.id].value }
         }
-        var prev = database {
+        var prev :Int? = database {
             News.select {News.id less id}.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
         }
         return NewsTripleDTO(news.id, news.url, prev, next)
