@@ -12,7 +12,6 @@ import model.TeamDTO
 import pageComponents.*
 import react.*
 import react.dom.td
-import react.dom.tr
 import react.router.dom.route
 import services.GameService
 import services.GamesNavigationService
@@ -149,6 +148,7 @@ class Games : RComponent<GamesProps, GamesState>() {
             css {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceBetween
+                alignItems = Align.flexStart
             }
 
 
@@ -167,21 +167,23 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        child(DeleteButtonComponent::class) {
+                        child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 val gameNavigationService = GamesNavigationService(coroutineContext)
                                 props.coroutineScope.launch {
                                     gameNavigationService.deleteGamesSection(gameNavigation.id!!)
                                 }
                             }
+                            attrs.type = "delete"
                         }
                         if (state.editSmallNavigationForm != gameNavigation) {
-                            child(EditButtonComponent::class) {
+                            child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     setState {
                                         editSmallNavigationForm = gameNavigation
                                     }
                                 }
+                                attrs.type = "edit"
                             }
                         } else {
                             child(SmallNavigationForm::class) {
@@ -202,11 +204,12 @@ class Games : RComponent<GamesProps, GamesState>() {
                         }
                     }
                     if (!state.smallNavigationForm) {
-                        child(AddButtonComponent::class) {
+                        child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 setState {
                                     smallNavigationForm = true
                                 }
+                                attrs.type = "add"
                             }
                         }
                     } else {
@@ -245,12 +248,16 @@ class Games : RComponent<GamesProps, GamesState>() {
                     css {
                         textAlign = TextAlign.center
                         width = 100.pct
+                        borderCollapse = BorderCollapse.collapse
                     }
-                    tableHeader {
-                        styledThead {
-                            tableHeaders.forEach {
 
-                                styledTh() {
+                    styledThead {
+                        css{
+                            borderCollapse = BorderCollapse.collapse
+                        }
+                        tableHeaders.forEach {
+                            styledTh() {
+                                tableHeader {
                                     +it
                                 }
                             }
@@ -259,11 +266,14 @@ class Games : RComponent<GamesProps, GamesState>() {
                     styledTbody {
                         css {
                             backgroundColor = Color.white
-                            borderCollapse = BorderCollapse.collapse
                         }
 
                         state.allGamesWithTeams?.forEach { game ->
-                            tr {
+                            styledTr {
+                                css{
+                                    borderCollapse = BorderCollapse.collapse
+                                    margin = 3.px.toString()
+                                }
                                 td {
                                     +game.date
                                 }
@@ -283,16 +293,17 @@ class Games : RComponent<GamesProps, GamesState>() {
                                     +game.result!!
                                 }
                             }
-                            child(DeleteButtonComponent::class) {
+                            child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val gameService = GameService(coroutineContext)
                                     props.coroutineScope.launch {
                                         gameService.deleteGame(game.id)
                                     }
                                 }
+                                attrs.type = "delete"
                             }
                             if (state.editGameForm != game) {
-                                child(EditButtonComponent::class) {
+                                child(AdminButtonComponent::class) {
                                     attrs.updateState = {
                                         setState {
                                             editGameForm = game
@@ -304,6 +315,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                             inputs["result"]!!.inputValue = game.result ?: ""
                                         }
                                     }
+                                    attrs.type = "edit"
                                 }
                             } else {
                                 styledDiv {
@@ -356,12 +368,13 @@ class Games : RComponent<GamesProps, GamesState>() {
                 }
 
                 if (!state.addGameForm) {
-                    child(AddButtonComponent::class) {
+                    child(AdminButtonComponent::class) {
                         attrs.updateState = {
                             setState {
                                 addGameForm = true
                             }
                         }
+                        attrs.type = "add"
                     }
                 } else {
                     styledForm {

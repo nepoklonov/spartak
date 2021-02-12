@@ -15,7 +15,6 @@ import services.HtmlService
 import services.NewsService
 import styled.css
 import styled.styledDiv
-import view.ButtonSecondary
 import view.SingleNew
 
 external interface NewsProps : RProps {

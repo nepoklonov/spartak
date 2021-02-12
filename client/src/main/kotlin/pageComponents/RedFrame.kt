@@ -22,7 +22,8 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
         styledDiv {
             css {
                 backgroundColor = ColorSpartak.Red.color
-                alignItems = Align.center
+                color = Color.white
+                margin(25.px)
                 if (props.isTrainer) {
                     height = 515.px
                     width = 335.px
@@ -32,6 +33,11 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                 }
             }
             styledH2 {
+                css {
+                    width = 100.pct
+                    display = Display.flex
+                    justifyContent = JustifyContent.center
+                }
                 if (props.isTrainer) {
                     +"Тренер"
                 } else {
@@ -40,32 +46,54 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
             }
             styledDiv {
                 css {
+                    backgroundRepeat = BackgroundRepeat.noRepeat
+                    backgroundSize = "contain"
+                    backgroundPosition = "center"
+
                     if (props.isTrainer) {
-//                        backgroundImage = Image("url = /images/${props.trainer!!.photo}")
-                        backgroundImage = Image("url = /images/map.jpg")
-                        backgroundSize = 390.px.toString()
+                        backgroundImage = Image("url(/images/${props.trainer!!.photo})")
                         height = 390.px
                         width = 310.px
                     } else {
-//                        backgroundImage = Image("url = /images/${props.teamMember!!.photo}")
-                        backgroundImage = Image("url = /images/map.jpg")
-                        backgroundSize = 250.px.toString()
+                        backgroundImage = Image("url(/images/${props.teamMember!!.photo})")
                         height = 250.px
                         width = 200.px
                     }
                 }
             }
-            if (props.isTrainer){
-                + props.trainer!!.name
-            }else{
+            if (props.isTrainer) {
                 styledDiv {
-                    + props.teamMember!!.firstName
-                    + props.teamMember!!.lastName
+                    css {
+                        width = 100.pct
+                        display = Display.flex
+                        justifyContent = JustifyContent.center
+                    }
+                    +props.trainer!!.name
+                }
+            } else {
+                styledDiv {
+                    css{
+                        width = 100.pct
+                        display = Display.flex
+                        justifyContent = JustifyContent.center
+                    }
+                    +props.teamMember!!.firstName
+                    +props.teamMember!!.lastName
                 }
                 styledDiv {
-                    + props.teamMember!!.birthday
+                    css{
+                        width = 100.pct
+                        display = Display.flex
+                        justifyContent = JustifyContent.center
+                    }
+                    +props.teamMember!!.birthday
                 }
                 styledDiv {
+                    css{
+                        width = 100.pct
+                        display = Display.flex
+                        justifyContent = JustifyContent.center
+                    }
                     +props.teamMember!!.city
                 }
             }

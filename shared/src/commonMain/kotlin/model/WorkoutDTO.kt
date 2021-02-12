@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 data class WorkoutDTO(
         var id: Int?,
         val datetime: Double,
-        val teamLink: String,
-        val type: String,
-        val place: String,
+        val sectionLink: String,
+        val text: String,
 )

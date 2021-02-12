@@ -1,11 +1,9 @@
 package view
 
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.TextDecoration
-import org.w3c.dom.get
+import pageComponents.ButtonSecondary
 import react.*
 import react.dom.InnerHTML
 import react.router.dom.navLink

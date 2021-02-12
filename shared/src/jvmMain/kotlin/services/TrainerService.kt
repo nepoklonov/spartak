@@ -19,7 +19,6 @@ actual class TrainerService : RPCService {
                     it[Trainers.teamLink],
                     it[Trainers.photo],
                     it[Trainers.name],
-                    it[Trainers.dateOfBirth],
                     it[Trainers.info]
                 )
             }
@@ -30,7 +29,6 @@ actual class TrainerService : RPCService {
         it[teamLink] = trainer.teamLink
         it[name] = trainer.name
         it[photo] = trainer.photo
-        it[dateOfBirth] = trainer.dateOfBirth
         it[info] = trainer.info
     }
 

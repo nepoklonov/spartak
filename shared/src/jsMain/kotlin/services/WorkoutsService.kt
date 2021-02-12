@@ -1,17 +1,18 @@
 package services
 
 import Annotations.RequireRole
+import Role
 import kotlinx.serialization.builtins.serializer
 import model.WorkoutDTO
 import rpc.Transport
 import kotlin.coroutines.CoroutineContext
 
-actual class TimetableService(coroutineContext: CoroutineContext) {
+actual class WorkoutsService(coroutineContext: CoroutineContext) {
     private val transport = Transport(coroutineContext)
 
-    actual suspend fun getWeekTimetableByType(beginningOfTheWeek: Double, endOfTheWeek: Double, type: String): List<WorkoutDTO> {
-        return transport.getList("getWeekTimetableByType", WorkoutDTO.serializer(),
-                "beginningOfTheWeek" to beginningOfTheWeek, "endOfTheWeek" to endOfTheWeek, "type" to type)
+    actual suspend fun getWeekWorkoutsBySection(beginningOfTheWeek: Double, endOfTheWeek: Double, sectionLink: String): List<WorkoutDTO> {
+        return transport.getList("getWeekWorkoutsBySection", WorkoutDTO.serializer(),
+                "beginningOfTheWeek" to beginningOfTheWeek, "endOfTheWeek" to endOfTheWeek, "sectionLink" to sectionLink)
     }
 
     @RequireRole(Role.Admin)

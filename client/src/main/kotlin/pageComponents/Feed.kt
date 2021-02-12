@@ -1,18 +1,15 @@
 package pages
 
-import greyButtonSpartak
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.border
 import org.w3c.dom.get
+import pageComponents.ButtonSecondary
 import react.*
-import react.dom.InnerHTML
 import services.HtmlService
 import services.NewsService
 import styled.*
-import view.ButtonSecondary
 
 external interface FeedProps : RProps {
     var coroutineScope: CoroutineScope

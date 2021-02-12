@@ -4,10 +4,12 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object TeamMembers : IntIdTable() {
     val teamLink = text("teamLink")
+    val number = text("number")
     val photo = text("photo")
     val firstName = text("firstName")
     val lastName = text("lastName")
     val role = text("role")
     val birthday = text("birthday")
     val city = text("city")
+    val teamRole = text("teamRole")
 }

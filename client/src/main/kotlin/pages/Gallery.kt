@@ -79,6 +79,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
             css {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceBetween
+                alignItems = Align.flexStart
             }
             styledDiv {
                 css {
@@ -95,21 +96,23 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        child(DeleteButtonComponent::class) {
+                        child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 val galleryNavigationService = GalleryNavigationService(coroutineContext)
                                 props.coroutineScope.launch {
                                     galleryNavigationService.deleteGallerySection(galleryNavigation.id!!)
                                 }
                             }
+                            attrs.type = "delete"
                         }
                         if (state.editSmallNavigationForm != galleryNavigation) {
-                            child(EditButtonComponent::class) {
+                            child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     setState {
                                         editSmallNavigationForm = galleryNavigation
                                     }
                                 }
+                                attrs.type = "edit"
                             }
                         } else {
                             child(SmallNavigationForm::class) {
@@ -130,12 +133,13 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                         }
                     }
                     if (!state.smallNavigationForm) {
-                        child(AddButtonComponent::class) {
+                        child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 setState {
                                     smallNavigationForm = true
                                 }
                             }
+                            attrs.type = "add"
                         }
                     } else {
                         child(SmallNavigationForm::class) {
@@ -188,13 +192,14 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                     float = Float.left
                                 }
 
-                                child(DeleteButtonComponent::class) {
+                                child(AdminButtonComponent::class) {
                                     attrs.updateState = {
                                         val photoService = PhotoService(coroutineContext)
                                         props.coroutineScope.launch {
                                             photoService.deletePhoto(photo.id!!)
                                         }
                                     }
+                                    attrs.type = "delete"
                                 }
                             }
                         }
@@ -202,12 +207,13 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                 }
                 styledDiv {
                     if (!state.photoForm) {
-                        child(AddButtonComponent::class) {
+                        child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 setState {
                                     photoForm = true
                                 }
                             }
+                            attrs.type = "add"
                         }
                     } else {
                         styledButton {
@@ -230,11 +236,11 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
                     if (state.selectedPhotoIndex != null) {
                         styledDiv {
-//                attrs.onClickFunction = {
-//                    setState {
-//                        selectedPhotoIndex = null
-//                    }
-//                }
+                            attrs.onClickFunction = {
+                                setState {
+                                    selectedPhotoIndex = null
+                                }
+                            }
                             css {
                                 top = 0.px
                                 left = 0.px
@@ -248,6 +254,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                             styledImg(src = "/images/left-arrow.png") {
                                 attrs.onClickFunction = {
+                                    it.stopPropagation()
                                     if (state.selectedPhotoIndex!! > 0) {
                                         setState {
                                             selectedPhotoIndex = selectedPhotoIndex!! - 1
@@ -266,6 +273,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                             styledImg(src = "/images/right-arrow.png") {
                                 attrs.onClickFunction = {
+                                    it.stopPropagation()
                                     if (state.selectedPhotoIndex!! < state.images!!.size) {
                                         setState {
                                             selectedPhotoIndex = selectedPhotoIndex!! + 1

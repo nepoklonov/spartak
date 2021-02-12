@@ -13,7 +13,7 @@ import styled.styledH1
 import styled.styledImg
 
 class HeaderComponent : RComponent<RProps, RState>() {
-    private fun RBuilder.addIcon(src: String, floatDirection: Float) {
+    private fun RBuilder.addIcon(src: String) {
         styledImg(src = src) {
             css {
                 height = 20.px
@@ -22,14 +22,14 @@ class HeaderComponent : RComponent<RProps, RState>() {
         }
     }
 
-    private fun RBuilder.addIconOnPage(src: String, text: String, isLinked: Boolean, floatDirection: Float) {
+    private fun RBuilder.addIconOnPage(src: String, text: String, isLinked: Boolean) {
 
         if (isLinked) {
             a(href = text) {
-                addIcon(src, floatDirection)
+                addIcon(src)
             }
         } else {
-            addIcon(src, floatDirection)
+            addIcon(src)
             +text
         }
     }
@@ -37,35 +37,26 @@ class HeaderComponent : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
-                height = 230.px
+                minHeight = 300.px
                 display = Display.flex
-                justifyContent = JustifyContent.spaceEvenly
+                justifyContent = JustifyContent.spaceAround
                 alignItems = Align.center
-                padding = 40.px.toString()
             }
-            styledDiv {
-                css {
-                    overflow = Overflow.hidden
-                    float = Float.left
-                    width = 880.px
-                    alignItems = Align.center
-                }
-                styledImg(src = "/images/logo.png") {
-                    css {
-                        width = 200.px
-                        height = 231.px
-                        float = Float.left
-                    }
-                }
 
-                styledH1 {
-                    css {
-                        alignSelf = Align.center
-                        fontSize = 60.px
-                        lineHeight = LineHeight.normal
-                    }
-                    +"Молодежный хоккейный клуб «Спартак»"
+            styledImg(src = "/images/logo.png") {
+                css {
+                    width = 200.px
+                    height = 231.px
                 }
+            }
+
+            styledH1 {
+                css {
+                    alignSelf = Align.center
+                    fontSize = 60.px
+                    lineHeight = LineHeight.normal
+                }
+                +"Молодежный хоккейный клуб «Спартак»"
             }
 
             styledDiv {
@@ -76,28 +67,28 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 }
 
                 styledDiv {
-                    css{
+                    css {
                         lineHeight = LineHeight.normal
                         marginBottom = 30.px
                     }
                     TextWithIcon.Address.let {
-                        addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.left)
+                        addIconOnPage(it.iconSrc, it.text, it.isLinked)
                     }
                 }
                 styledDiv {
-                    css{
+                    css {
                         display = Display.flex
                         alignItems = Align.center
                         justifyContent = JustifyContent.spaceBetween
                     }
                     TextWithIcon.Phone.let {
-                        addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.left)
+                        addIconOnPage(it.iconSrc, it.text, it.isLinked)
                     }
                     TextWithIcon.Vk.let {
-                        addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.right)
+                        addIconOnPage(it.iconSrc, it.text, it.isLinked)
                     }
                     TextWithIcon.Inst.let {
-                        addIconOnPage(it.iconSrc, it.text, it.isLinked, Float.right)
+                        addIconOnPage(it.iconSrc, it.text, it.isLinked)
                     }
                 }
 

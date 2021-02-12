@@ -100,46 +100,60 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
             }
         }
 
-        styledForm {
-            attrs.onSubmitFunction = { event ->
-                event.preventDefault()
-                event.stopPropagation()
-                val recruitmentService = RecruitmentService(coroutineContext)
-                props.coroutineScope.launch {
-                    var formIsCompleted = true
-                    state.inputs.values.forEach {
-                        if (it.inputValue == "") {
-                            setState {
-                                it.isRed = true
-                            }
-                            formIsCompleted = false
-                        }
-                    }
-                    if (formIsCompleted) {
-                        recruitmentService.addRecruitment(
-                            RecruitmentDTO(
-                                null,
-                                state.inputs["dates"]!!.inputValue,
-                                state.inputs["name"]!!.inputValue,
-                                state.inputs["birthday"]!!.inputValue,
-                                state.inputs["role"]!!.inputValue,
-                                state.inputs["stickGrip"]!!.inputValue,
-                                state.inputs["params"]!!.inputValue,
-                                state.inputs["previousSchool"]!!.inputValue,
-                                state.inputs["city"]!!.inputValue,
-                                state.inputs["phone"]!!.inputValue,
-                                state.inputs["email"]!!.inputValue,
-                            )
-                        )
+        styledDiv {
+            css {
+                backgroundColor = Color("#F5F5F5")
+            }
+            styledForm {
+                css{
+                    width = 100.pct
+                    display = Display.flex
+                    flexWrap = FlexWrap.wrap
+                    child("div"){
+                        float = Float.left
+                        width = 50.pct
                     }
                 }
-            }
-            child(FormViewComponent::class) {
-                attrs.inputs = state.inputs
-                attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                    setState {
-                        state.inputs[key]!!.inputValue = value
-                        state.inputs[key]!!.isRed = isRed
+                attrs.onSubmitFunction = { event ->
+                    event.preventDefault()
+                    event.stopPropagation()
+                    val recruitmentService = RecruitmentService(coroutineContext)
+                    props.coroutineScope.launch {
+                        var formIsCompleted = true
+                        state.inputs.values.forEach {
+                            if (it.inputValue == "") {
+                                setState {
+                                    it.isRed = true
+                                }
+                                formIsCompleted = false
+                            }
+                        }
+                        if (formIsCompleted) {
+                            recruitmentService.addRecruitment(
+                                RecruitmentDTO(
+                                    null,
+                                    state.inputs["dates"]!!.inputValue,
+                                    state.inputs["name"]!!.inputValue,
+                                    state.inputs["birthday"]!!.inputValue,
+                                    state.inputs["role"]!!.inputValue,
+                                    state.inputs["stickGrip"]!!.inputValue,
+                                    state.inputs["params"]!!.inputValue,
+                                    state.inputs["previousSchool"]!!.inputValue,
+                                    state.inputs["city"]!!.inputValue,
+                                    state.inputs["phone"]!!.inputValue,
+                                    state.inputs["email"]!!.inputValue,
+                                )
+                            )
+                        }
+                    }
+                }
+                child(FormViewComponent::class) {
+                    attrs.inputs = state.inputs
+                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                        setState {
+                            state.inputs[key]!!.inputValue = value
+                            state.inputs[key]!!.isRed = isRed
+                        }
                     }
                 }
             }

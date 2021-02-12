@@ -17,23 +17,27 @@ actual class TeamService : RPCService {
         return TeamMemberDTO(
             it[TeamMembers.id].value,
             it[teamLink],
+            it[number],
             it[photo],
             it[firstName],
             it[lastName],
             it[role],
             it[birthday],
-            it[city]
+            it[city],
+            it[teamRole]
         )
     }
 
     private fun TeamMembers.insertTeamMemberDtoToDatabase(it: UpdateBuilder<Int>, newTeamMember: TeamMemberDTO) {
         it[teamLink] = newTeamMember.teamLink
+        it[number] = newTeamMember.number
         it[photo] = newTeamMember.photo
         it[firstName] = newTeamMember.firstName
         it[lastName] = newTeamMember.lastName
         it[role] = newTeamMember.role
         it[birthday] = newTeamMember.birthday
         it[city] = newTeamMember.city
+        it[teamRole] = newTeamMember.teamRole
     }
 
     private fun Teams.getTeamDTO(it: ResultRow): TeamDTO {

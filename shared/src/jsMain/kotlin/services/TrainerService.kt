@@ -1,5 +1,7 @@
 package services
 
+import Annotations.RequireRole
+import Role
 import kotlinx.serialization.builtins.serializer
 import model.TrainerDTO
 import rpc.Transport

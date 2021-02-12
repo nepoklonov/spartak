@@ -8,6 +8,5 @@ data class TrainerDTO(
         val teamLink: String,
         val photo: String,
         val name: String,
-        val dateOfBirth: String,
         val info: String,
 )

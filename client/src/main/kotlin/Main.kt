@@ -1,4 +1,3 @@
-
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -26,15 +25,19 @@ private class Application : CoroutineScope {
                 browserRouter {
                     styledDiv {
                         css {
+                            position = Position.fixed
                             backgroundImage = Image("url(/images/background.jpg)")
                             width = 100.pct
-                            child("div"){
+                            height = 100.pct
+                            child("div") {
                                 fontFamily = "PT"
                             }
                         }
+                    }
                         styledDiv {
                             attrs.id = "root"
                             css {
+                                position = Position.relative
                                 marginLeft = 100.px
                                 marginRight = 100.px
                                 backgroundColor = rgba(255, 255, 255, 0.5)
@@ -51,7 +54,6 @@ private class Application : CoroutineScope {
                             child(FooterComponent::class) {}
                         }
                     }
-                }
             }, it)
         }
     }

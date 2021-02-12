@@ -1,13 +1,13 @@
 package pageComponents
 
-import kotlinx.css.color
+import kotlinx.css.*
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import react.*
+import redButtonSpartak
 import styled.*
-import kotlin.js.Date
 
 data class Input(
     val header: String,
@@ -32,60 +32,92 @@ class FormViewComponentState : RState {
 
 class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentState>() {
     private fun RBuilder.addStyledInput(it: Input, key: String) {
-        styledH3 {
-            css {
-                if (it.isRed) {
-                    color = ColorSpartak.Red.color
+        styledDiv {
+            styledH3 {
+                css {
+                    if (it.isRed) {
+                        color = ColorSpartak.Red.color
+                    }
                 }
+                +it.header
             }
-            +it.header
-        }
-        if (it.isSelect) {
-            styledSelect {
-                attrs {
-                    name = it.inputName
-                    onChangeFunction = { event ->
-                        val target = event.target as HTMLSelectElement
-                        var isRed = false
-                        if (target.value == "nothing") {
-                            isRed = true
+            if (it.isSelect) {
+                styledSelect {
+                    attrs {
+                        name = it.inputName
+                        onChangeFunction = { event ->
+                            val target = event.target as HTMLSelectElement
+                            var isRed = false
+                            if (target.value == "nothing") {
+                                isRed = true
+                            }
+                            if (target.value == "") {
+                                it.otherOption = true
+                                setState {
+                                    otherOption = true
+                                }
+                            }
+                            props.updateState(key, target.value, isRed)
                         }
-                        if (target.value == "") {
-                            it.otherOption = true
-                            setState {
-                                otherOption = true
+                    }
+                    styledOption {
+                        attrs {
+                            value = "nothing"
+                        }
+                        +it.header
+                    }
+                    it.options.forEach {
+                        styledOption {
+                            attrs {
+                                value = it.key
+                            }
+                            +it.value
+                        }
+                    }
+                    if (it.allowOtherOption) {
+                        styledOption {
+                            attrs {
+                                value = ""
+                            }
+                            +"Другая команда"
+                        }
+                    }
+                }
+                if (it.otherOption) {
+                    styledH3 {
+                        +"Название команды"
+                    }
+                    styledInput(type = InputType.text) {
+                        attrs {
+                            name = it.inputName
+                            value = it.inputValue
+                            onChangeFunction = { event ->
+                                val target = event.target as HTMLInputElement
+                                var isRed = false
+                                if (target.value == "") {
+                                    isRed = true
+                                }
+                                props.updateState(key, target.value, isRed)
                             }
                         }
-                        props.updateState(key, target.value, isRed)
                     }
                 }
-                styledOption {
+            } else if (it.isDateTime) {
+                styledInput(type = InputType.dateTimeLocal) {
                     attrs {
-                        value = "nothing"
-                    }
-                    +it.header
-                }
-                it.options.forEach {
-                    styledOption {
-                        attrs {
-                            value = it.key
+                        name = it.inputName
+                        value = it.inputValue
+                        onChangeFunction = { event ->
+                            val target = event.target as HTMLInputElement
+                            var isRed = false
+                            if (target.value == "") {
+                                isRed = true
+                            }
+                            props.updateState(key, target.value, isRed)
                         }
-                        +it.value
                     }
                 }
-                if (it.allowOtherOption) {
-                    styledOption {
-                        attrs {
-                            value = ""
-                        }
-                        +"Другая команда"
-                    }
-                }
-            }
-            if (it.otherOption) {
-                styledH3 {
-                    +"Название команды"
-                }
+            } else {
                 styledInput(type = InputType.text) {
                     attrs {
                         name = it.inputName
@@ -101,36 +133,6 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                     }
                 }
             }
-        } else if (it.isDateTime) {
-            styledInput(type = InputType.dateTimeLocal) {
-                attrs {
-                    name = it.inputName
-                    value = it.inputValue
-                    onChangeFunction = { event ->
-                        val target = event.target as HTMLInputElement
-                        var isRed = false
-                        if (target.value == "") {
-                            isRed = true
-                        }
-                        props.updateState(key, target.value, isRed)
-                    }
-                }
-            }
-        } else {
-            styledInput(type = InputType.text) {
-                attrs {
-                    name = it.inputName
-                    value = it.inputValue
-                    onChangeFunction = { event ->
-                        val target = event.target as HTMLInputElement
-                        var isRed = false
-                        if (target.value == "") {
-                            isRed = true
-                        }
-                        props.updateState(key, target.value, isRed)
-                    }
-                }
-            }
         }
     }
 
@@ -138,8 +140,14 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
         props.inputs.forEach {
             addStyledInput(it.value, it.key)
         }
-        styledInput(type = InputType.submit) {
-            attrs.value = "отправить"
+        redButtonSpartak {
+            styledInput(type = InputType.submit) {
+                css {
+                    display = Display.flex
+                    justifyContent = JustifyContent.center
+                }
+                attrs.value = "отправить"
+            }
         }
     }
 }

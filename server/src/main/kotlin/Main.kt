@@ -66,10 +66,13 @@ fun Application.main() {
         SchemaUtils.create(Trainers)
         SchemaUtils.create(Photos)
         SchemaUtils.create(Teams)
-        SchemaUtils.create(Timetable)
+        SchemaUtils.create(Workouts)
         SchemaUtils.create(Admins)
         SchemaUtils.create(Recruitment)
         SchemaUtils.create(News)
+        SchemaUtils.create(GallerySections)
+        SchemaUtils.create(GamesSections)
+        SchemaUtils.create(WorkoutsSections)
     }
 
     launch {
@@ -119,6 +122,7 @@ fun Application.main() {
                 it[role] = "defenders"
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
+                it[teamRole] = "к"
             }
         }
 
@@ -138,7 +142,6 @@ fun Application.main() {
                 it[teamLink] = "2003"
                 it[name] = "2003"
                 it[photo] = "logo.png"
-                it[dateOfBirth] = "2003"
                 it[info] = "drfghygtfrdesdrftgyhujhygtfrdesrftgyhujiuhygtrfeddrftgyhukjiuhygtrfedswredrftgyhu"
             }
         }
@@ -159,11 +162,10 @@ fun Application.main() {
             }
         }
         database {
-            Timetable.insert {
+            Workouts.insert {
                 it[datetime] = 1612020600000.0
-                it[teamLink] = "shhm"
-                it[type] = "shhm"
-                it[place] = "ура наконец-то я доделала это ебанное расписание"
+                it[sectionLink] = "shhm"
+                it[text] = "ура наконец-то я доделала это ебанное расписание"
             }
         }
         database {
@@ -304,7 +306,7 @@ fun Application.main() {
             rpc(CheckService::class)
             rpc(GameService::class)
             rpc(TeamService::class)
-            rpc(TimetableService::class)
+            rpc(WorkoutsService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
             rpc(AdminService::class, AdminService::checkAdmin to { call, result ->

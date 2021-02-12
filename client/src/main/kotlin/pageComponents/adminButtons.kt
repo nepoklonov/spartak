@@ -10,46 +10,17 @@ import react.RState
 import styled.css
 import styled.styledImg
 
-external interface AddButtonComponentProps: RProps{
+val Images = mapOf("add" to "/images/add.png", "edit" to "/images/edit.png", "delete" to "/images/delete.png")
+
+external interface AdminButtonComponentProps: RProps{
     var updateState: () -> Unit
+    var type: String
 }
 
 
-class AddButtonComponent: RComponent<AddButtonComponentProps, RState>() {
+class AdminButtonComponent: RComponent<AdminButtonComponentProps, RState>() {
     override fun RBuilder.render(){
-        styledImg(src = "/images/add.png"){
-            attrs.onClickFunction = { props.updateState() }
-            css{
-                width = 30.px
-            }
-        }
-    }
-}
-
-external interface EditButtonComponentProps: RProps{
-    var updateState: () -> Unit
-}
-
-
-class EditButtonComponent: RComponent<EditButtonComponentProps, RState>() {
-    override fun RBuilder.render(){
-        styledImg(src = "/images/edit.png"){
-            attrs.onClickFunction = { props.updateState() }
-            css{
-                width = 30.px
-            }
-        }
-    }
-}
-
-external interface DeleteButtonComponentProps: RProps{
-    var updateState: () -> Unit
-}
-
-
-class DeleteButtonComponent: RComponent<DeleteButtonComponentProps, RState>() {
-    override fun RBuilder.render(){
-        styledImg(src = "/images/delete.png"){
+        styledImg(src = Images[props.type]){
             attrs.onClickFunction = { props.updateState() }
             css{
                 width = 30.px
