@@ -5,6 +5,7 @@ import io.ktor.html.*
 import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.lh
@@ -13,6 +14,7 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
+
 
 
 private val globalCss = CSSBuilder().apply {
@@ -50,6 +52,11 @@ private val globalCss = CSSBuilder().apply {
 fun Application.main() {
     install(ContentNegotiation) {
         jackson {}
+    }
+    install(Sessions) {
+        cookie<LoginSession> ("login-session", SessionStorageMemory()) {
+            cookie.path = "/"
+        }
     }
 
     database {
@@ -300,7 +307,11 @@ fun Application.main() {
             rpc(TimetableService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
-            rpc(AdminService::class)
+            rpc(AdminService::class, AdminService::checkAdmin to { call, result ->
+                if (result as Boolean) {
+                    call.sessions.set(LoginSession(username = "admin", role = Role.Admin))
+                }
+            })
             rpc(RecruitmentService::class)
             rpc(NewsService::class)
             rpc(GalleryNavigationService::class)

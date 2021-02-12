@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.select
 import rpc.RPCService
 
 actual class AdminService : RPCService {
+
     actual suspend fun checkAdmin(login: String, password: String): Boolean {
         return database {
             Admins.select {
