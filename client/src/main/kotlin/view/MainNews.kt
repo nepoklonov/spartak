@@ -97,7 +97,16 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                                     +it.header!!
                                 }
                                 styledP {
-                                    +it.content!!
+                                    +it.content!!.let { it.substring(0, it.length-40) }
+                                    it.content!!.let { it.substring(it.length-40, it.length) }.forEachIndexed { index, c ->
+                                        styledSpan {
+                                            +c.toString()
+                                            css {
+                                                opacity = 1 - 0.025 * index
+                                            }
+                                        }
+                                    }
+
                                 }
                                 css {
                                     position = Position.relative

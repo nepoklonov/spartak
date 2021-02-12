@@ -11,10 +11,7 @@ import react.*
 import react.dom.InnerHTML
 import services.HtmlService
 import services.NewsService
-import styled.css
-import styled.styledDiv
-import styled.styledH3
-import styled.styledP
+import styled.*
 import view.ButtonSecondary
 
 external interface FeedProps : RProps {
@@ -39,9 +36,9 @@ class Feed : RComponent<FeedProps, FeedState>() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
         props.coroutineScope.launch {
-            val newsHtml : MutableList<String> = mutableListOf()
+            val newsHtml : MutableMap<String, Int?> = mutableMapOf()
             try {
-                newsService.getLastNews(6).forEach { newsHtml.add(htmlService.getHtml(it.url)) }
+                newsService.getLastNews().forEach { newsHtml.put(htmlService.getHtml(it.url), it.id) }
             } catch (e: Throwable) {
                 setState {
                     error = e
@@ -50,12 +47,12 @@ class Feed : RComponent<FeedProps, FeedState>() {
             }
             for (new in newsHtml) {
                 val e = document.createElement("div")
-                e.innerHTML = new
+                e.innerHTML = new.key
                 val img = e.getElementsByTagName("img")[0]
                 val h3 = e.getElementsByTagName("h3")[0]
                 val p = e.getElementsByTagName("p")[0]?.innerHTML + e.getElementsByTagName("p")[1]?.innerHTML
                 setState {
-//                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p, new.value))
                 }
             }
         }
@@ -91,8 +88,10 @@ class Feed : RComponent<FeedProps, FeedState>() {
                             height = 400.px
                             margin = 30.px.toString()
                         }
-                        child(ButtonSecondary::class) {
-                            attrs.text = "Читать далее"
+                        styledA(href = "/news/${it.id}"){
+                            child(ButtonSecondary::class) {
+                                attrs.text = "Читать далее"
+                            }
                         }
                     }
                     css {

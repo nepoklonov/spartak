@@ -58,7 +58,13 @@ actual class NewsService : RPCService {
             }
         }
     }
-
+    actual suspend fun getLastNews(): List<NewsDTO> {
+        return database {
+            News.selectAll().orderBy(News.id, SortOrder.DESC).toList().map{
+                News.getNewsDTO(it)
+            }
+        }
+    }
     actual suspend fun deleteNews(id: Int): Boolean {
         TODO("Not yet implemented")
     }

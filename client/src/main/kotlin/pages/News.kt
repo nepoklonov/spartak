@@ -3,17 +3,20 @@ package pages
 import greyButtonSpartak
 import headerText
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.css.Display
 import kotlinx.css.JustifyContent
 import kotlinx.css.display
 import kotlinx.css.justifyContent
-import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
+import react.*
+import react.dom.InnerHTML
 import react.router.dom.navLink
+import services.HtmlService
+import services.NewsService
 import styled.css
 import styled.styledDiv
+import view.ButtonSecondary
+import view.SingleNew
 
 external interface NewsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -21,50 +24,33 @@ external interface NewsProps : RProps {
 }
 
 class News : RComponent<NewsProps, RState>() {
+    private val coroutineContext
+        get() = props.coroutineScope.coroutineContext
+
+
     override fun RBuilder.render() {
 
         headerText { +"Новости" }
 
         styledDiv {
             +props.selectedNewsId
+
         }
 
         if (props.selectedNewsId == "feed") {
             child(Feed::class){
                 attrs.coroutineScope = props.coroutineScope
             }
-
         } else {
-
-            val previousNewsId = if (props.selectedNewsId.toInt() > 0) {
-                props.selectedNewsId.toInt() - 1
-            } else {
-                props.selectedNewsId.toInt()
+            child(SingleNew::class){
+                attrs.coroutineScope = props.coroutineScope
+                attrs.selectedNewsId = props.selectedNewsId.toInt()
             }
-            val nextNewsId = props.selectedNewsId.toInt() + 1
 
-            styledDiv {
-                css{
-                    display = Display.flex
-                    justifyContent = JustifyContent.spaceAround
-                }
 
-                navLink<NewsProps>(to = "/news/$previousNewsId") {
-                    greyButtonSpartak {
-                        +"Предыдущая новость"
-                    }
-                }
-                navLink<NewsProps>(to = "/news/feed") {
-                    greyButtonSpartak {
-                        +"Вернуться к ленте"
-                    }
-                }
-                navLink<NewsProps>(to = "/news/$nextNewsId") {
-                    greyButtonSpartak {
-                        +"Следующая новость"
-                    }
-                }
-            }
         }
     }
 }
+
+
+
