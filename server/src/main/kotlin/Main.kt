@@ -2,8 +2,10 @@ import database.*
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.html.*
+import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.jackson.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
 import kotlinx.coroutines.launch
@@ -269,6 +271,10 @@ fun Application.main() {
 
     routing {
         get("{...}") {
+            val role = call.sessions.get<LoginSession>()?.role ?: Role.Basic
+            if (role == Role.Admin) {
+                call.response.cookies.append("role", "admin")
+            }
             call.respondHtml {
                 head {
                     meta {
