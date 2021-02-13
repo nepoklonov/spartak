@@ -123,6 +123,7 @@ fun Application.main() {
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
                 it[teamRole] = "к"
+                it[number] = "1"
             }
         }
 

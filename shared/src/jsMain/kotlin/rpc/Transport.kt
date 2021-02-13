@@ -45,7 +45,7 @@ class Transport(private val coroutineContext: CoroutineContext) {
     internal suspend fun <T> getList(
         url: String,
         deserializationStrategy: KSerializer<T>,
-        vararg args: Pair<String, Any>,
+        vararg args: Pair<String, Any?>,
         isJson: Boolean = true
     ): List<T> {
         return parse(ListSerializer(deserializationStrategy), fetch("GET", url, isJson, *args), isJson)
@@ -55,7 +55,7 @@ class Transport(private val coroutineContext: CoroutineContext) {
         method: String,
         shortUrl: String,
         isJson: Boolean,
-        vararg args: Pair<String, Any>,
+        vararg args: Pair<String, Any?>,
     ): String {
         var url = if (isJson) {
             "/api/$shortUrl"

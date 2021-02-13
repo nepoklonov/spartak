@@ -22,14 +22,14 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
-//                Json.decodeFromString(param.type.jvmErasure.serializer(), call.request.queryParameters[it].toString())
+// Json.decodeFromString(param.type.jvmErasure.serializer(), call.request.queryParameters[it].toString())
 @OptIn(InternalSerializationApi::class)
 @Suppress("UNCHECKED_CAST")
 
 fun Route.rpc(serviceClass: KClass<out RPCService>, vararg blocks: Pair<KFunction<*>, (ApplicationCall, Any) -> Unit>) {
     val instance = serviceClass.createInstance()
 
-    suspend fun queryBody(function: KFunction<*>, call: ApplicationCall, args: MutableList<Any>) {
+    suspend fun queryBody(function: KFunction<*>, call: ApplicationCall, args: MutableList<Any?>) {
 
         // check rights
         function.findAnnotation<RequireRole>()?.let {
@@ -65,12 +65,16 @@ fun Route.rpc(serviceClass: KClass<out RPCService>, vararg blocks: Pair<KFunctio
     serviceClass.declaredMemberFunctions.map { function ->
         if (function.name.startsWith("get")) {
             get(function.name) {
-                val args = mutableListOf<Any>(instance)
+                val args = mutableListOf<Any?>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json { isLenient = true }.decodeFromString(
-                        param.type.jvmErasure.serializer(),
-                        call.request.queryParameters[param.name.toString()].toString()
-                    )
+                    call.request.queryParameters[param.name.toString()]
+                        ?.takeIf { it != null.toString() }
+                        ?.let { strValue ->
+                            Json { isLenient = true }.decodeFromString(
+                                param.type.jvmErasure.serializer(),
+                                strValue
+                            )
+                        }
                 }
                 queryBody(function, call, args)
             }
@@ -80,7 +84,7 @@ fun Route.rpc(serviceClass: KClass<out RPCService>, vararg blocks: Pair<KFunctio
                     MapSerializer(String.serializer(), String.serializer()),
                     call.receiveText()
                 )
-                val args = mutableListOf<Any>(instance)
+                val args = mutableListOf<Any?>(instance)
                 function.valueParameters.mapTo(args) { param ->
                     Json { isLenient = true }.decodeFromString(
                         param.type.jvmErasure.serializer(),

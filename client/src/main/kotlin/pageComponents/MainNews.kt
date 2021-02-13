@@ -5,7 +5,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
-import kotlinx.css.properties.border
 import org.w3c.dom.get
 import react.*
 import react.dom.InnerHTML
