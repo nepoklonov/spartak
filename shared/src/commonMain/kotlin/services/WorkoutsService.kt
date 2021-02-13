@@ -7,4 +7,5 @@ expect class WorkoutsService {
     suspend fun addWorkout(newWorkout: WorkoutDTO): Int
     suspend fun editWorkout(workout: WorkoutDTO): Boolean
     suspend fun deleteWorkout(id: Int): Boolean
+    suspend fun makeNotActual(id: Int, actualToDate: Double): Boolean
 }

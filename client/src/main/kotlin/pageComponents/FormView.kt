@@ -15,7 +15,7 @@ data class Input(
     var inputValue: String = "",
     var isRed: Boolean = false,
     val isSelect: Boolean = false,
-    val options: Map<String, String> = mapOf(),
+    var options: Map<String, String> = mapOf(),
     val allowOtherOption: Boolean = false,
     var otherOption: Boolean = false,
     val isDateTime: Boolean = false,
@@ -24,6 +24,7 @@ data class Input(
 external interface FormViewComponentProps : RProps {
     var inputs: MutableMap<String, Input>
     var updateState: (String, String, Boolean) -> Unit
+    var addOtherOption: (Boolean, String) -> Unit
 }
 
 class FormViewComponentState : RState {
@@ -97,7 +98,13 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                                 if (target.value == "") {
                                     isRed = true
                                 }
+                                val isItTeamA = if (it.inputName == "teamA") {
+                                    true
+                                } else {
+                                    false
+                                }
                                 props.updateState(key, target.value, isRed)
+                                props.addOtherOption(isItTeamA, target.value)
                             }
                         }
                     }

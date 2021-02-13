@@ -1,5 +1,7 @@
 package pageComponents
 
+import kotlinx.css.Cursor
+import kotlinx.css.cursor
 import kotlinx.css.px
 import kotlinx.css.width
 import kotlinx.html.js.onClickFunction
@@ -23,7 +25,8 @@ class AdminButtonComponent: RComponent<AdminButtonComponentProps, RState>() {
         styledImg(src = Images[props.type]){
             attrs.onClickFunction = { props.updateState() }
             css{
-                width = 30.px
+                width = 20.px
+                cursor = Cursor.pointer
             }
         }
     }

@@ -16,7 +16,6 @@ import rpc.rpc
 import services.*
 
 
-
 private val globalCss = CSSBuilder().apply {
     fontFace {
         fontFamily = "Russo"
@@ -46,6 +45,10 @@ private val globalCss = CSSBuilder().apply {
     h3 {
         fontFamily = "Russo"
     }
+    "*" {
+        fontFamily = "PT"
+        fontSize = 20.px
+    }
 }
 
 
@@ -54,7 +57,7 @@ fun Application.main() {
         jackson {}
     }
     install(Sessions) {
-        cookie<LoginSession> ("login-session", SessionStorageMemory()) {
+        cookie<LoginSession>("login-session", SessionStorageMemory()) {
             cookie.path = "/"
         }
     }
@@ -62,7 +65,7 @@ fun Application.main() {
     database {
         SchemaUtils.create(Checks)
         SchemaUtils.create(TeamMembers)
-        SchemaUtils.create(GameCalendar)
+        SchemaUtils.create(Games)
         SchemaUtils.create(Trainers)
         SchemaUtils.create(Photos)
         SchemaUtils.create(Teams)
@@ -116,6 +119,7 @@ fun Application.main() {
         database {
             TeamMembers.insert {
                 it[teamLink] = "2003"
+                it[number] = "1"
                 it[photo] = "logo.png"
                 it[firstName] = "Змейка"
                 it[lastName] = "Гитарова"
@@ -123,17 +127,16 @@ fun Application.main() {
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
                 it[teamRole] = "к"
-                it[number] = "1"
             }
         }
 
         database {
-            GameCalendar.insert {
+            Games.insert {
                 it[date] = "dhzkjfh"
                 it[time] = "Змейка"
                 it[year] = "championship2003"
                 it[teamAId] = 1
-                it[teamBId] = 2
+                it[teamBId] = 1
                 it[stadium] = "28.08.2019"
                 it[result] = "г.Ейск"
             }
@@ -164,9 +167,13 @@ fun Application.main() {
         }
         database {
             Workouts.insert {
-                it[datetime] = 1612020600000.0
+                it[startTime] = "10:15"
+                it[endTime] = "10:30"
+                it[dayOfWeek] = 1
                 it[sectionLink] = "shhm"
                 it[text] = "ура наконец-то я доделала это ебанное расписание"
+                it[actualFromDate] = 1612020600000.0
+                it[actualToDate] = 1612020600000.0
             }
         }
         database {

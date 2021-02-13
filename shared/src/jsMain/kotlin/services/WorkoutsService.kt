@@ -1,7 +1,5 @@
 package services
 
-import Annotations.RequireRole
-import Role
 import kotlinx.serialization.builtins.serializer
 import model.WorkoutDTO
 import rpc.Transport
@@ -26,4 +24,9 @@ actual class WorkoutsService(coroutineContext: CoroutineContext) {
     actual suspend fun deleteWorkout(id: Int): Boolean {
         return transport.post("deleteWorkout", Boolean.serializer(), "id" to id)
     }
+
+    actual suspend fun makeNotActual(id: Int, actualToDate: Double): Boolean{
+        return transport.post("makeNotActual", Boolean.serializer(), "id" to id, "actualToDate" to actualToDate)
+    }
+
 }

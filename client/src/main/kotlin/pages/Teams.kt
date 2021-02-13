@@ -18,19 +18,7 @@ import services.TrainerService
 import smallHeaderText
 import styled.*
 
-//data class TeamsNavigation(val year: String) {
-//    val header = "Команда $year"
-//    val link = year
-//}
-//
-//val teamsNavigationList = listOf(
-//    TeamsNavigation("2003"),
-//    TeamsNavigation("2004"),
-//    TeamsNavigation("2006")
-//)
-
 val roleMap = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари")
-
 
 external interface TeamsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -115,7 +103,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
 
                 roleMap.forEach { role ->
                     val teamMembers = try {
-                        teamService.getTeamMemberByRoleAndTeam(role.key, team.link)
+                        teamService.getTeamMemberByRoleAndTeam(role.key, team.link!!)
                     } catch (e: Throwable) {
                         console.log(e)
                         setState {

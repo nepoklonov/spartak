@@ -76,6 +76,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                         width = 100.pct
                         display = Display.flex
                         justifyContent = JustifyContent.center
+                        margin(5.px)
                     }
                     +props.teamMember!!.firstName
                     +props.teamMember!!.lastName
@@ -85,6 +86,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                         width = 100.pct
                         display = Display.flex
                         justifyContent = JustifyContent.center
+                        margin(5.px)
                     }
                     +props.teamMember!!.birthday
                 }
@@ -93,6 +95,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                         width = 100.pct
                         display = Display.flex
                         justifyContent = JustifyContent.center
+                        margin(5.px)
                     }
                     +props.teamMember!!.city
                 }

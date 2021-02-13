@@ -7,6 +7,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.dom.h2
 import react.router.dom.navLink
 import styled.css
 import styled.styledDiv
@@ -46,7 +47,9 @@ class SmallNavigation : RComponent<SmallNavigationProps, RState>() {
                     }
                 }
                 navLink<GalleryProps>(to = props.link) {
-                    +props.string
+                    h2 {
+                        +props.string
+                    }
                 }
             }
         }

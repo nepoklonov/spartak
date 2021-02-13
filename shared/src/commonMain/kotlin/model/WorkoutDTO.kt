@@ -5,7 +5,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WorkoutDTO(
         var id: Int?,
-        val datetime: Double,
+        val startTime: String,
+        val endTime: String,
+        val dayOfWeek: Int,
         val sectionLink: String,
         val text: String,
+        val actualFromDate: Double,
+        val actualToDate: Double,
 )

@@ -2,7 +2,7 @@ package database
 
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object GameCalendar : IntIdTable() {
+object Games : IntIdTable() {
     val date = text("date")
     val time = text("time")
     val year = text("year")

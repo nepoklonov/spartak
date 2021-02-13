@@ -21,14 +21,10 @@ object Styles : StyleSheet("main") {
     }
 
     val tableHeader by css {
-
-        borderCollapse = BorderCollapse.collapse
-        borderSpacing = 0.px
-
+        height = 60.px
         backgroundColor = ColorSpartak.LightGrey.color
         fontSize = 18.px
         padding(10.px)
-        margin(3.px)
         boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
     }
 
