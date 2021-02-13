@@ -17,7 +17,7 @@ actual class NewsService : RPCService {
         )
     }
 
-    //    private fun News.getNewsTripleDTO(it: ResultRow): NewsTripleDTO {
+//    private fun News.getNewsTripleDTO(it: ResultRow): NewsTripleDTO {
 //        return NewsTripleDTO(
 //                it[News.id].value,
 //                it[url],
@@ -45,11 +45,11 @@ actual class NewsService : RPCService {
                 news = News.getNewsDTO(it)
             }
         }
-        var next = database {
-            News.select { News.id greater id }.orderBy(News.id).first().let { it[News.id].value }
+        val next :Int? = database {
+            News.select { News.id greater id}.orderBy(News.id).first().let { it[News.id].value }
         }
-        var prev = database {
-            News.select { News.id less id }.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
+        val prev :Int? = database {
+            News.select { News.id less id}.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
         }
         return NewsTripleDTO(news.id, news.url, prev, next)
     }

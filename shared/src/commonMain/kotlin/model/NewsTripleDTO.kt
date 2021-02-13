@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 data class NewsTripleDTO (
     var id: Int?,
     val url: String,
-    val prevId: Int,
-    val nextId: Int
+    val prevId: Int?,
+    val nextId: Int?
 )
