@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.TeamMembers
 import database.Teams
 import database.Teams.link
@@ -57,12 +58,14 @@ actual class TeamService : RPCService {
         it[year] = team.year.toString()
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addTeam(team: TeamDTO): Int {
         return database {
             Teams.insertAndGetId { insertTeamDtoToDatabase(it, team) }
         }.value
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addTeamMember(newTeamMember: TeamMemberDTO): Int {
         return database {
             TeamMembers.insertAndGetId { insertTeamMemberDtoToDatabase(it, newTeamMember) }
@@ -103,6 +106,7 @@ actual class TeamService : RPCService {
         return liftOfTeamMembers
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun editTeam(team: TeamDTO): Boolean {
         database {
             Teams.update({ Teams.id eq team.id }) { insertTeamDtoToDatabase(it, team) }
@@ -110,6 +114,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean {
         database {
             TeamMembers.update({ TeamMembers.id eq teamMember.id }) { insertTeamMemberDtoToDatabase(it, teamMember) }
@@ -117,6 +122,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteTeam(teamId: Int): Boolean {
         database {
             Teams.deleteWhere { Teams.id eq teamId }
@@ -124,6 +130,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteTeamMember(id: Int): Boolean {
         database {
             TeamMembers.deleteWhere { TeamMembers.id eq id }

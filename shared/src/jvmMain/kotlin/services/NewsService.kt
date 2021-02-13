@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.*
 import model.NewsDTO
 import model.NewsTripleDTO
@@ -24,6 +25,7 @@ actual class NewsService : RPCService {
 //                it[nextId]
 //        )
 //    }
+
     private fun News.insertNewsToDatabase(it: UpdateBuilder<Int>, news: NewsDTO) {
         it[url] = news.url
     }
@@ -70,10 +72,12 @@ actual class NewsService : RPCService {
 //        }
 //    }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
         TODO("Not yet implemented")
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addNews(news: NewsDTO): Int {
         return database {
             News.insertAndGetId {

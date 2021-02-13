@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.Photos
 import database.database
 import model.PhotoDTO
@@ -23,6 +24,7 @@ actual class PhotoService: RPCService {
         return listOfPhotosUrl
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addPhoto(photo: PhotoDTO): Int {
         return database{
             Photos.insertAndGetId {
@@ -32,6 +34,7 @@ actual class PhotoService: RPCService {
         }.value
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deletePhoto(id: Int): Boolean {
         database{
             Photos.deleteWhere { Photos.id eq id }
