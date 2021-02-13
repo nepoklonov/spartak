@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.Timetable
 import database.database
 import model.WorkoutDTO
@@ -33,12 +34,14 @@ actual class TimetableService: RPCService {
         it[place] = workout.place
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addWorkout(newWorkout: WorkoutDTO): Int {
         return database {
             Timetable.insertAndGetId { insertWorkoutDtoToDatabase(it, newWorkout) }
         }.value
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun editWorkout(workout: WorkoutDTO): Boolean {
         database {
             Timetable.update({ Timetable.id eq workout.id }) { insertWorkoutDtoToDatabase(it, workout) }
@@ -46,6 +49,7 @@ actual class TimetableService: RPCService {
         return true
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteWorkout(id: Int): Boolean {
         database {
             Timetable.deleteWhere { Timetable.id eq id }

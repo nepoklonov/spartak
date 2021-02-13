@@ -9,7 +9,6 @@ import kotlin.coroutines.CoroutineContext
 actual class RecruitmentService(coroutineContext: CoroutineContext) {
         private val transport = Transport(coroutineContext)
 
-        @RequireRole(Role.Admin)
         actual suspend fun addRecruitment(recruitmentDTO: RecruitmentDTO): Boolean {
                 return transport.post("addRecruitment", Boolean.serializer(), "recruitmentDTO"  to recruitmentDTO)
         }
@@ -18,7 +17,6 @@ actual class RecruitmentService(coroutineContext: CoroutineContext) {
                 return transport.getList("getAllRecruitments", RecruitmentDTO.serializer())
         }
 
-        @RequireRole(Role.Admin)
         actual suspend fun deleteRecruitment(id: Int): Boolean {
                 return transport.post("deleteRecruitment", Boolean.serializer(), "id" to id)
         }

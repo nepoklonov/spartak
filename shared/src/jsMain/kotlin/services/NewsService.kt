@@ -17,13 +17,11 @@ actual class NewsService (coroutineContext: CoroutineContext){
         return transport.getList("getLastNews", NewsDTO.serializer(), "number" to number)
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
         transport.post("deleteNews", Boolean.serializer(), "id" to id)
         return true
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun addNews(news: NewsDTO): Int {
         return transport.post("addNews", Int.serializer(), "news" to news)
     }

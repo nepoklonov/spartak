@@ -13,12 +13,10 @@ actual class PhotoService(coroutineContext: CoroutineContext) {
         return transport.getList("getAllPhotosBySection", String.serializer(), "section" to section)
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun addPhoto(photo: PhotoDTO): Int {
         TODO("Not yet implemented")
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun deletePhoto(id: Int): Boolean {
         TODO("Not yet implemented")
     }

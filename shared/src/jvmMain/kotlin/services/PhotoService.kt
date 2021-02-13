@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.Photos
 import database.database
 import model.PhotoDTO
@@ -17,10 +18,12 @@ actual class PhotoService: RPCService {
         return listOfPhotosUrl
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addPhoto(photo: PhotoDTO): Int {
         TODO("Not yet implemented")
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deletePhoto(id: Int): Boolean {
         TODO("Not yet implemented")
     }

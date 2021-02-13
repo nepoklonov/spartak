@@ -14,17 +14,14 @@ actual class TimetableService(coroutineContext: CoroutineContext) {
                 "beginningOfTheWeek" to beginningOfTheWeek, "endOfTheWeek" to endOfTheWeek, "type" to type)
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun addWorkout(newWorkout: WorkoutDTO): Int {
         return transport.post("addWorkout", Int.serializer(), "newWorkout" to newWorkout)
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun editWorkout(workout: WorkoutDTO): Boolean {
         return transport.post("editWorkout", Boolean.serializer(), "workout" to workout)
     }
 
-    @RequireRole(Role.Admin)
     actual suspend fun deleteWorkout(id: Int): Boolean {
         return transport.post("deleteWorkout", Boolean.serializer(), "id" to id)
     }

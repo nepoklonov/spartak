@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.*
 import database.News.url
 import model.GameDTO
@@ -35,10 +36,12 @@ actual class NewsService : RPCService {
         }
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
         TODO("Not yet implemented")
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addNews(news: NewsDTO): Int {
         return database {
             News.insertAndGetId{

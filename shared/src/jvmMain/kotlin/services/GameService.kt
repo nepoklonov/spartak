@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import database.GameCalendar
 import database.database
 import model.GameDTO
@@ -39,6 +40,7 @@ actual class GameService: RPCService {
         it[result] = newGame.result.toString()
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun addGame(newGame: GameDTO): Int {
         return database {
             GameCalendar.insertAndGetId {
@@ -47,6 +49,7 @@ actual class GameService: RPCService {
         }.value
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun editGame(game: GameDTO): Boolean {
         database {
             GameCalendar.update({ GameCalendar.id eq game.id }) {
@@ -56,6 +59,7 @@ actual class GameService: RPCService {
         return true
     }
 
+    @RequireRole(Role.Admin)
     actual suspend fun deleteGame(id: Int): Boolean {
         database {
             GameCalendar.deleteWhere{ GameCalendar.id eq id }
