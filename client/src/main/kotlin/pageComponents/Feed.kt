@@ -4,12 +4,14 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import model.NewsDTO
 import org.w3c.dom.get
 import pageComponents.ButtonSecondary
 import react.*
 import services.HtmlService
 import services.NewsService
 import styled.*
+import kotlin.js.Date
 
 external interface FeedProps : RProps {
     var coroutineScope: CoroutineScope
@@ -33,9 +35,9 @@ class Feed : RComponent<FeedProps, FeedState>() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
         props.coroutineScope.launch {
-            val newsHtml : MutableMap<String, Int?> = mutableMapOf()
+            val newsHtml : MutableList<NewsDTO> = mutableListOf()
             try {
-                newsService.getLastNews().forEach { newsHtml.put(htmlService.getHtml(it.url), it.id) }
+                newsService.getLastNews().forEach { newsHtml.add(NewsDTO(it.id, htmlService.getHtml(it.url), it.date)) }
             } catch (e: Throwable) {
                 setState {
                     error = e
@@ -44,12 +46,12 @@ class Feed : RComponent<FeedProps, FeedState>() {
             }
             for (new in newsHtml) {
                 val e = document.createElement("div")
-                e.innerHTML = new.key
+                e.innerHTML = new.url
                 val img = e.getElementsByTagName("img")[0]
                 val h3 = e.getElementsByTagName("h3")[0]
                 val p = e.getElementsByTagName("p")[0]?.innerHTML + e.getElementsByTagName("p")[1]?.innerHTML
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p, new.value))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p, new.id, new.date))
                 }
             }
         }
@@ -66,14 +68,22 @@ class Feed : RComponent<FeedProps, FeedState>() {
                             backgroundSize = "cover"
                             if (i%2 == 0) float = Float.left
                             else float = Float.right
-                            width = 500.px
-                            height = 400.px
-                            margin = 30.px.toString()
+                            height = 90.pct
+                            width = 40.pct
+                            display = Display.flex
+                            margin = 1.pct.toString()
                         }
                     }
                     styledDiv {
                         styledH3 {
                             +it.header!!
+                        }
+                        styledH5 {
+                            +Date(it.date).getDate().toString()
+                            +"."
+                            +(Date(it.date).getMonth()+1).toString()
+                            +"."
+                            +Date(it.date).getFullYear().toString()
                         }
                         styledP {
                             +it.content!!
@@ -81,9 +91,9 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         css {
                             if (i % 2 == 0) float = Float.right
                             else float = Float.left
-                            width = 40.pct
-                            height = 400.px
-                            margin = 30.px.toString()
+                            width = 50.pct
+                            height = 450.px
+                            margin = 1.pct.toString()
                         }
                         styledA(href = "/news/${it.id}"){
                             child(ButtonSecondary::class) {
@@ -92,8 +102,8 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         }
                     }
                     css {
-                        marginBottom = 40.px
-                        height = 40.pct
+                        marginBottom = 20.px
+                        height = 450.px
                         display = Display.inlineBlock
                         justifyContent = JustifyContent.spaceBetween
 

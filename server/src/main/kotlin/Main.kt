@@ -6,6 +6,7 @@ import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
+import jdk.nashorn.internal.objects.Global.getDate
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.css.properties.lh
@@ -14,7 +15,8 @@ import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
-
+import java.time.LocalDate
+import java.util.*
 
 private val globalCss = CSSBuilder().apply {
     fontFace {
@@ -105,6 +107,7 @@ fun Application.main() {
             database {
                 News.insert {
                     it[url] = "/newsHtml/$i.html"
+                    it[date] = (Date()).getTime()
                 }
             }
         }

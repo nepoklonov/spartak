@@ -10,6 +10,8 @@ import react.router.dom.navLink
 import services.HtmlService
 import services.NewsService
 import styled.*
+import kotlin.js.Date
+
 external interface NewsProps : RProps {
     var coroutineScope: CoroutineScope
     var selectedNewsId: Int
@@ -21,6 +23,7 @@ class NewsState: RState {
 }
 data class LongNews(
         var news: String?,
+        var date: Long,
         var prevId: Int?,
         var nextId: Int?
 )
@@ -33,14 +36,14 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
         init {
             state = NewsState()
         }
-    fun setHTML(){
+    private fun setHTML(){
         props.coroutineScope.launch {
             val htmlService = HtmlService(coroutineContext)
             val newsService = NewsService(coroutineContext)
             var newsHtml: LongNews
             try {
                 newsHtml = newsService.getNewsTripleById(props.selectedNewsId.toInt()).let{
-                    LongNews(htmlService.getHtml(it.url), it.prevId, it.nextId)
+                    LongNews(htmlService.getHtml(it.url), it.date, it.prevId, it.nextId)
                 }
             } catch (e: Throwable) {
                 setState {
@@ -81,6 +84,13 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
                 }
                 if (state.longNews?.news != null) {
                     attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
+//                    styledH5 {
+//                        +Date(state.longNews?.date!!).getDate().toString()
+//                          +"."
+//                        +(Date(state.longNews?.date!!).getMonth()+1).toString()
+//                          +"."
+//                        +Date(state.longNews?.date!!).getFullYear().toString()
+//                     }
                 } else {
                     +"загрузка..."
                 }

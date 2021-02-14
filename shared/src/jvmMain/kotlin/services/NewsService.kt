@@ -13,21 +13,15 @@ actual class NewsService : RPCService {
     private fun News.getNewsDTO(it: ResultRow): NewsDTO {
         return NewsDTO(
             it[News.id].value,
-            it[url]
+            it[url],
+            it[date]
         )
     }
 
-//    private fun News.getNewsTripleDTO(it: ResultRow): NewsTripleDTO {
-//        return NewsTripleDTO(
-//                it[News.id].value,
-//                it[url],
-//                it[prevId],
-//                it[nextId]
-//        )
-//    }
 
     private fun News.insertNewsToDatabase(it: UpdateBuilder<Int>, news: NewsDTO) {
         it[url] = news.url
+        it[date] = news.date
     }
 
     actual suspend fun getNewsById(id: Int): NewsDTO {
@@ -39,19 +33,18 @@ actual class NewsService : RPCService {
     }
 
     actual suspend fun getNewsTripleById(id: Int): NewsTripleDTO {
-        var news = NewsDTO(0, "")
+        var news = NewsDTO(0, "", 0L)
+        var next :Int? = null
+        var prev :Int? = null
         database {
             News.select { News.id eq id }.first().let {
                 news = News.getNewsDTO(it)
             }
+            if (id!= News.selectAll().orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value })
+                next = News.select { News.id greater id}.orderBy(News.id).first().let { it[News.id].value }
+            if (id!= 1) prev = News.select { News.id less id}.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
         }
-        val next :Int? = database {
-            News.select { News.id greater id}.orderBy(News.id).first().let { it[News.id].value }
-        }
-        val prev :Int? = database {
-            News.select { News.id less id}.orderBy(News.id, SortOrder.DESC).first().let { it[News.id].value }
-        }
-        return NewsTripleDTO(news.id, news.url, prev, next)
+        return NewsTripleDTO(news.id, news.url, news.date, prev, next)
     }
 
     actual suspend fun getLastNews(number: Int?): List<NewsDTO> {
@@ -64,17 +57,11 @@ actual class NewsService : RPCService {
         }
     }
 
-//    actual suspend fun getLastNews(): List<NewsDTO> {
-//        return database {
-//            News.selectAll().orderBy(News.id, SortOrder.DESC).map {
-//                News.getNewsDTO(it)
-//            }
-//        }
-//    }
-
     @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
-        TODO("Not yet implemented")
+        database { News.deleteWhere { News.id eq id }
+        }
+        return true
     }
 
     @RequireRole(Role.Admin)
