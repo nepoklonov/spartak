@@ -172,7 +172,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie == "role=Admin") {
+                        if (document.cookie == "role=admin") {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val teamService = TeamService(coroutineContext)
@@ -212,7 +212,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             }
                         }
                     }
-                    if (document.cookie == "role=Admin") {
+                    if (document.cookie == "role=admin") {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -316,7 +316,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 }
 
                             }
-                            if (document.cookie == "role=Admin") {
+                            if (document.cookie == "role=admin") {
                                 child(AdminButtonComponent::class) {
                                     attrs.updateState = {
                                         val trainerService = TrainerService(coroutineContext)
@@ -474,7 +474,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 } else {
                     +"Загрузка..."
                 }
-                if (document.cookie == "role=Admin") {
+                if (document.cookie == "role=admin") {
                     if (!state.addTeamMemberForm) {
                         child(AdminButtonComponent::class) {
                             attrs.updateState = {

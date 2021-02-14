@@ -144,7 +144,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie == "role=Admin") {
+                        if (document.cookie == "role=admin") {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
@@ -182,7 +182,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                             }
                         }
                     }
-                    if (document.cookie == "role=Admin") {
+                    if (document.cookie == "role=admin") {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -290,7 +290,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                 +workout.text
                                             }
                                             styledTd {
-                                                if (document.cookie == "role=Admin") {
+                                                if (document.cookie == "role=admin") {
                                                     child(AdminButtonComponent::class) {
                                                         attrs.updateState = {
                                                             val timetableService = WorkoutsService(coroutineContext)
@@ -371,7 +371,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                         }
                     }
                 }
-                if (document.cookie == "role=Admin") {
+                if (document.cookie == "role=admin") {
 
                     styledDiv {
                         if (!state.addWorkoutForm) {

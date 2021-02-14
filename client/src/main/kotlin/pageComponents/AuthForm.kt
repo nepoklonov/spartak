@@ -37,7 +37,8 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
         props.coroutineScope.launch {
             if (adminService.checkAdmin(state.inputs["login"].toString(), state.inputs["password"].toString())) {
                 console.log("LOGGED IN")
-                document.cookie = "role=Admin"
+                document.cookie = "role=admin"
+                console.log(document.cookie)
             } else {
                 console.log("FAILED")
             }
