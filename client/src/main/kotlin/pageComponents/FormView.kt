@@ -147,14 +147,17 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
         props.inputs.forEach {
             addStyledInput(it.value, it.key)
         }
-        redButtonSpartak {
-            styledInput(type = InputType.submit) {
-                css {
-                    display = Display.flex
-                    justifyContent = JustifyContent.center
-                }
-                attrs.value = "отправить"
-            }
+        child(ButtonMain::class){
+            attrs.text = "отправить"
         }
+//        redButtonSpartak {
+//            styledInput(type = InputType.submit) {
+//                css {
+//                    display = Display.flex
+//                    justifyContent = JustifyContent.center
+//                }
+//                attrs.value = "отправить"
+//            }
+//        }
     }
 }

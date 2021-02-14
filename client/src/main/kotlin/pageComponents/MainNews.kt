@@ -74,6 +74,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                     console.log(index)
                     css{
                         textDecoration = TextDecoration.none
+                        minWidth = 300.px
                         width = 20.pct
                     }
                     styledDiv {
@@ -134,7 +135,8 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
             }
             css{
                 display = Display.flex
-                justifyContent = JustifyContent.spaceBetween
+                flexWrap = FlexWrap.wrap
+                justifyContent = JustifyContent.spaceAround
                 margin = 20.px.toString()
             }
         }
