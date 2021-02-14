@@ -1,9 +1,11 @@
 package view
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import pageComponents.ButtonSecondary
+import pageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import react.router.dom.navLink
@@ -67,6 +69,11 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
 
 
     override fun RBuilder.render() {
+        if ((document.cookie == "role=admin") && (state.longNews?.news != null)) {
+            child(CKEditorComponent::class) {
+                attrs.text = state.longNews?.news!!
+            }
+        }
         val previousNewsId = if (state.longNews?.prevId != null) {
             state.longNews?.prevId
         } else {

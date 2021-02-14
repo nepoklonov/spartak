@@ -7,10 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import model.RecruitmentDTO
-import pageComponents.AdminButtonComponent
-import pageComponents.ColorSpartak
-import pageComponents.FormViewComponent
-import pageComponents.Input
+import pageComponents.*
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -82,6 +79,11 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     }
 
     override fun RBuilder.render() {
+        if ((document.cookie == "role=admin") && (state.recruitmentHtml != null)) {
+            child(CKEditorComponent::class) {
+                attrs.text = state.recruitmentHtml!!
+            }
+        }
         styledDiv {
             css {
                 textAlign = TextAlign.center

@@ -78,10 +78,42 @@ CREATE TABLE workoutssections (
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2003 г.р.', '2003', true, '2003');
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2005 г.р.', '2005', true, '2005');
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2006 г.р.', '2006', true, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('МКМ', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Невский', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-ХКД', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Северсталь', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо-Форвард', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо Юниор', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СШОР №1', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('ХКД', '', false, '2003');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо-Светлогорец', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Северсталь', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Невский', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Олимпийские Надежды', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-Варяги', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-ХКД', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо СПб', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СШОР №1', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо Юниор', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('МКМ', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Красная Звезда-2', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Йети', '', false, '2005');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СШОР №1', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('МКМ', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо Юниор', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-ХКД', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-Стрельна', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Северсталь', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-Серебряные Львы', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('Динамо СПб', '', false, '2006');
+INSERT INTO teams (name, link, "isOur", year) VALUES ('СКА-Варяги', '', false, '2006');
 
-INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2003', 'gridin.jpg', 'Гридин Андрей Викторович', 'Тренер высшей категории. Тренер команды МХК «Спартак» 2003 г.р. Неоднократный победитель первенства и кубка Санкт-Петербурга по 2003 г.р. Тренер сборной команды Санкт-Петербурга 2003 г.р. в сезонах 2016/17, 2017/18 и 2018/19.');
-INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2005', 'koraykin.jpg', 'Корайкин Артем Викторович', 'Тренер команды МХК «Спартак» 2005 г.р. Чемпион России среди юношей 1998 г.р. Бронзовый призер Первенства России среди молодежных команд');
-INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2006', 'chesnov.jpg', 'Чеснов Владислав Евгеньевич', 'Тренер первой категории. Тренер команды МХК «Спартак» 2006 г.р. Бронзовый призем ОПМ по 2003 г.р. Тренер сборной команды Ярославской области 2003 г.р. в сезоне 2017/18.');
+
+INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2003', 'trainer2003.jpg', 'Гридин Андрей Викторович', 'Тренер высшей категории. Тренер команды МХК «Спартак» 2003 г.р. Неоднократный победитель первенства и кубка Санкт-Петербурга по 2003 г.р. Тренер сборной команды Санкт-Петербурга 2003 г.р. в сезонах 2016/17, 2017/18 и 2018/19.');
+INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2005', 'trainer2005.jpg', 'Корайкин Артем Викторович', 'Тренер команды МХК «Спартак» 2005 г.р. Чемпион России среди юношей 1998 г.р. Бронзовый призер Первенства России среди молодежных команд');
+INSERT INTO trainers ("teamLink", photo, "name", info) VALUES ('2006', 'trainer2006.jpg', 'Чеснов Владислав Евгеньевич', 'Тренер первой категории. Тренер команды МХК «Спартак» 2006 г.р. Бронзовый призем ОПМ по 2003 г.р. Тренер сборной команды Ярославской области 2003 г.р. в сезоне 2017/18.');
 
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '1', '2003_1.jpg', 'Александр', 'Жирнов', 'goalkeepers', '21.01.2003', 'г. Москва','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '20', '2003_20.jpg', 'Илья', 'Чубенко', 'goalkeepers', '14.04.2003', 'г. Хабаровск','');
@@ -101,7 +133,7 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '22', '2003_22.jpg', 'Владимир', 'Андреев', 'strikers', '16.11.2003', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '23', '2003_23.jpg', 'Валерий', 'Асратян', 'strikers', '23.09.2003', 'г. Нижневартовск','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '27', '2003_27.jpg', 'Максим', 'Белов', 'strikers', '30.09.2003', 'г. Санкт-Петербург','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '28', '2003_28.jpg', 'Всеволод', 'Гайдамак', 'strikers', '09.04.2003', 'г. Хабаровск','К');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '28', '2003_28.jpg', 'Всеволод', 'Гайдамак', 'strikers', '09.04.2003', 'г. Хабаровск','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '43', '2003_43.jpg', 'Сергей', 'Пурдышов', 'strikers', '20.10.2003', 'г. Хабаровск','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '71', '2003_71.jpg', 'Александр', 'Клюшниченко', 'strikers', '12.05.2003', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '73', '2003_73.jpg', 'Григорий', 'Зоринов', 'strikers', '07.02.2003', 'г. Череповец','');
@@ -118,7 +150,7 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '27', '2005_27.jpg', 'Георгий', 'Елиеев', 'defenders', '03.08.2005', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '55', '2005_55.jpg', 'Игорь', 'Репка', 'defenders', '15.03.2005', 'г. Якутск','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '8', '2005_8.jpg', 'Роман', 'Логунов', 'strikers', '21.02.2005', 'г. Санкт-Петербург','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '11', '2005_11.jpg', 'Тимур', 'Насибуллин', 'strikers', '11.03.2005', 'г. Санкт-Петербург','А');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '11', '2005_11.jpg', 'Тимур', 'Насибуллин', 'strikers', '11.03.2005', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '12', '2005_12.jpg', 'Егор', 'Обухов', 'strikers', '2005_12.jpg', 'г. Владивосток','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '16', '2005_16.jpg', 'Алексей', 'Лазовский', 'strikers', '31.01.2005', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '17', '2005_17.jpg', 'Максим', 'Медведев', 'strikers', '12.08.2005', 'г. Санкт-Петербург','');
@@ -132,8 +164,8 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '63', '2005_63.jpg', 'Михаил', 'Серов', 'strikers', '26.09.2005', '','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '74', '2005_74.jpg', 'Йонг', 'Парк', 'strikers', '17.06.2005', '','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '87', '2005_87.jpg', 'Савелий', 'Лифшиц', 'strikers', '04.03.2005', 'г. Санкт-Петербург','','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '96', '2005_96.jpg', 'Игорь', 'Иванов', 'strikers', '22.01.2005', 'г. Санкт-Петербург','А');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '97', '2005_97.jpg', 'Иван', 'Королев', 'strikers', '09.07.2005', 'г. Санкт-Петербург','К');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '96', '2005_96.jpg', 'Игорь', 'Иванов', 'strikers', '22.01.2005', 'г. Санкт-Петербург','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '97', '2005_97.jpg', 'Иван', 'Королев', 'strikers', '09.07.2005', 'г. Санкт-Петербург','');
 
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '1', '', 'Даниил', 'Климин', 'goalkeepers', '03.04.2006', '','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '41', '', 'Егор', 'Шпак', 'goalkeepers', '24.07.2006', '','');
@@ -155,6 +187,8 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '88', '', 'Иван', 'Дерягин', 'strikers', '18.05.2006', '','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '98', '', 'Симеон', 'Дмитриев', 'strikers', '08.02.2007', '','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '99', '', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '','');
+
+
 
 INSERT INTO news (url, "date") VALUES ('1.html', 1566501170000);
 INSERT INTO news (url, "date") VALUES ('2.html', 1566587570000);
@@ -245,6 +279,10 @@ INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") 
 
 INSERT INTO admins ("login", "password") VALUES ('admin', 'admin');
 
+INSERT INTO gallerysections ("name", "link") VALUES ('Пекин', 'Beijing');
+INSERT INTO gallerysections ("name", "link") VALUES ('Тренировочный процесс', 'trainingProcess');
+INSERT INTO gallerysections ("name", "link") VALUES ('Турнир 2011 г.р.', 'championship2011');
+INSERT INTO gallerysections ("name", "link") VALUES ('Кубок Ладоги 2019', 'LadogaCup2019');
 
 INSERT INTO photos ("url", "gallerySection") VALUES ('Beijing_0.jpg', 'Beijing');
 INSERT INTO photos ("url", "gallerySection") VALUES ('Beijing_1.jpg', 'Beijing');

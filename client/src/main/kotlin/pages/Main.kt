@@ -1,13 +1,19 @@
 package pages
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.html.InputType
+import kotlinx.html.js.onSubmitFunction
+import org.w3c.dom.events.Event
 import pageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
 import styled.styledDiv
+import styled.styledForm
+import styled.styledInput
 
 external interface MainProps : RProps {
     var coroutineScope: CoroutineScope
@@ -44,7 +50,13 @@ class Main : RComponent<MainProps, MainState>() {
     }
 
     override fun RBuilder.render() {
-        child(CKEditorComponent::class) { }
+        if ( (state.mainHtml != null)) {
+            child(CKEditorComponent::class) {
+                attrs.text = state.mainHtml!!
+                attrs.url = "htmlPages/Main.html"
+                attrs.coroutineScope = props.coroutineScope
+            }
+        }
 
         styledDiv {
             if (state.mainHtml != null) {
@@ -53,9 +65,9 @@ class Main : RComponent<MainProps, MainState>() {
                 +"загрузка..."
             }
         }
-        child(MainNews::class) {
-            attrs.coroutineScope = props.coroutineScope
+            child(MainNews::class) {
+                attrs.coroutineScope = props.coroutineScope
+            }
         }
-    }
 }
 
