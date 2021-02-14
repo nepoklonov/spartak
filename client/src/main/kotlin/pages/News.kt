@@ -31,11 +31,6 @@ class News : RComponent<NewsProps, RState>() {
 
         headerText { +"Новости" }
 
-        styledDiv {
-            +props.selectedNewsId
-
-        }
-
         if (props.selectedNewsId == "feed") {
             child(Feed::class){
                 attrs.coroutineScope = props.coroutineScope

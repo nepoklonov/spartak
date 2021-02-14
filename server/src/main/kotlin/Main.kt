@@ -9,6 +9,8 @@ import io.ktor.sessions.*
 import jdk.nashorn.internal.objects.Global.getDate
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.css.Float
+import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -38,8 +40,10 @@ private val globalCss = CSSBuilder().apply {
 
         lineHeight = 20.px.lh
     }
-    h1 {
+    h1{
         fontFamily = "Russo"
+        fontSize = 42.667.px
+        margin = 50.px.toString()
     }
     h2 {
         fontFamily = "Russo"
@@ -50,6 +54,46 @@ private val globalCss = CSSBuilder().apply {
     "*" {
         fontFamily = "PT"
         fontSize = 20.px
+    }
+    button{
+        backgroundColor = Color("#9D0707")
+        hover {
+            backgroundColor = Color("#660c0c")
+        }
+        border = "none"
+        textDecoration = TextDecoration.none
+        fontFamily = "Russo"
+        color = Color.white
+        fontSize = 14.pt
+        padding = 15.px.toString()
+        paddingLeft = 50.px
+        paddingRight = 50.px
+        cursor = Cursor.pointer
+        margin = 10.px.toString()
+    }
+    rule(".news-img"){
+        width = 32.pct
+        padding = 1.pct.toString()
+        height = LinearDimension.auto
+        float = Float.left
+    }
+    rule(".news-div"){
+        padding = 1.pct.toString()
+        minWidth = 30.pct
+    }
+    rule(".summer-camp-img, .main-img" ){
+        width = 40.pct
+        padding = 50.px.toString()
+        height = LinearDimension.auto
+    }
+    rule(".summer-camp-div, .main"){
+        display = Display.flex
+        justifyContent = JustifyContent.spaceAround
+    }
+    rule(".summer-camp-content, .main-content"){
+        padding = 50.px.toString()
+        alignContent = Align.center
+        display = Display.block
     }
 }
 
