@@ -14,7 +14,6 @@ import react.router.dom.route
 import services.WorkoutsNavigationService
 import services.WorkoutsService
 import styled.*
-import tableHeader
 import kotlin.js.Date
 
 val months = mapOf(
@@ -224,6 +223,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                     headerText {
                         +"Расписание тренировок"
                     }
+
                     daysOfWeek.forEach { daysOfWeek ->
                         styledDiv {
                             css {
@@ -231,18 +231,31 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 marginLeft = 32.px
                             }
 
-                            tableHeader {
+                            styledDiv {
+                                css{
+                                    height = 60.px
+                                    width = 100.pct
+                                    marginTop = 3.px
+                                    backgroundColor = ColorSpartak.LightGrey.color
+                                    fontFamily = "Russo"
+                                    fontSize = 20.px
+                                    padding(10.px)
+                                    display = Display.flex
+                                    alignItems = Align.center
+                                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+                                }
                                 +daysOfWeek.value
                                 +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
                                 +(months[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
                             }
-
                             if (state.workouts != null) {
                                 state.workouts!!.forEach { workout ->
-                                    if (daysOfWeek.key == workout.dayOfWeek % 7) {
+                                    console.log(workout)
+                                    if (daysOfWeek.key % 7 == workout.dayOfWeek) {
                                         styledDiv {
                                             css {
                                                 minHeight = 70.px
+                                                width = 100.pct
                                                 padding(10.px)
                                                 marginTop = 3.px
                                                 backgroundColor = Color.white
@@ -294,10 +307,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                             props.coroutineScope.launch {
                                                                 var formIsCompleted = true
                                                                 state.inputs.values.forEach {
-                                                                    if (it.inputValue == "") {
-                                                                        setState {
-                                                                            it.isRed = true
-                                                                        }
+                                                                    if (it.isRed) {
                                                                         formIsCompleted = false
                                                                     }
                                                                 }
@@ -309,11 +319,13 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                     timetableService.addWorkout(
                                                                         WorkoutDTO(
                                                                             null,
-                                                                            Date(state.inputs["startDatetime"]!!.inputValue).getHours().toString()
+                                                                            Date(state.inputs["startDatetime"]!!.inputValue).getHours()
+                                                                                .toString()
                                                                                     + ":"
                                                                                     + Date(state.inputs["startDatetime"]!!.inputValue).getMinutes()
                                                                                 .toString(),
-                                                                            Date(state.inputs["endDatetime"]!!.inputValue).getHours().toString()
+                                                                            Date(state.inputs["endDatetime"]!!.inputValue).getHours()
+                                                                                .toString()
                                                                                     + ":"
                                                                                     + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
                                                                                 .toString(),
@@ -368,10 +380,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 props.coroutineScope.launch {
                                     var formIsCompleted = true
                                     state.inputs.values.forEach {
-                                        if (it.inputValue == "") {
-                                            setState {
-                                                it.isRed = true
-                                            }
+                                        if (it.isRed) {
                                             formIsCompleted = false
                                         }
                                     }

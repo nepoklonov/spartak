@@ -180,7 +180,18 @@ fun Application.main() {
                 it[role] = "defenders"
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
-                it[teamRole] = "к"
+                it[teamRole] = "K"
+            }
+            TeamMembers.insert {
+                it[teamLink] = "2003"
+                it[number] = "1"
+                it[photo] = "logo.png"
+                it[firstName] = "Змейка"
+                it[lastName] = "Гитарова"
+                it[role] = "defenders"
+                it[birthday] = "28.08.2019"
+                it[city] = "г.Ейск"
+                it[teamRole] = "А"
             }
         }
 

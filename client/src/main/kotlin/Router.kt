@@ -26,6 +26,7 @@ class Router : RComponent<RouterProps, RState>() {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
+            redirect(from = "/news", to = "/news/feed", exact = true)
             route("/news/feed") {
                 child(News::class) {
                     attrs.coroutineScope = props.coroutineScope

@@ -19,6 +19,7 @@ data class Input(
     val allowOtherOption: Boolean = false,
     var otherOption: Boolean = false,
     val isDateTime: Boolean = false,
+    val isNessesary: Boolean = true
 )
 
 external interface FormViewComponentProps : RProps {
@@ -150,14 +151,5 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
         child(ButtonMain::class){
             attrs.text = "отправить"
         }
-//        redButtonSpartak {
-//            styledInput(type = InputType.submit) {
-//                css {
-//                    display = Display.flex
-//                    justifyContent = JustifyContent.center
-//                }
-//                attrs.value = "отправить"
-//            }
-//        }
     }
 }

@@ -10,6 +10,7 @@ import model.RecruitmentDTO
 import pageComponents.ColorSpartak
 import pageComponents.FormViewComponent
 import pageComponents.Input
+import pageComponents.AdminButtonComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -105,11 +106,11 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 backgroundColor = Color("#F5F5F5")
             }
             styledForm {
-                css{
+                css {
                     width = 100.pct
                     display = Display.flex
                     flexWrap = FlexWrap.wrap
-                    child("div"){
+                    child("div") {
                         float = Float.left
                         width = 50.pct
                     }
@@ -121,10 +122,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                     props.coroutineScope.launch {
                         var formIsCompleted = true
                         state.inputs.values.forEach {
-                            if (it.inputValue == "") {
-                                setState {
-                                    it.isRed = true
-                                }
+                            if (it.isRed) {
                                 formIsCompleted = false
                             }
                         }
@@ -164,14 +162,14 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 state.recruitments!!.forEach { dto ->
                     styledDiv {
                         +dto.toString()
-                        styledButton {
-                            attrs.onClickFunction = {
-                                val recruitmentService = RecruitmentService(coroutineContext)
+                        child(AdminButtonComponent::class) {
+                            attrs.updateState = {
+                                val recruitmentService = RecruitmentService (coroutineContext)
                                 props.coroutineScope.launch {
                                     recruitmentService.deleteRecruitment(dto.id!!)
                                 }
                             }
-                            +"удалить"
+                            attrs.type = "delete"
                         }
                     }
                 }

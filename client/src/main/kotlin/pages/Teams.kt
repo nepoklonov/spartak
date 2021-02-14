@@ -31,6 +31,13 @@ class TeamsState : RState {
     var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
     var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
+    var teamInputs: MutableMap<String, Input> = mutableMapOf(
+        "teamName" to Input("Название команды", "teamName"),
+        "teamLink" to Input("Ссылка", "teamlink"),
+        "year" to Input("Год рождения участников", "year"),
+        "name" to Input("ФИО тренера", "name"),
+        "info" to Input("Информация о тренере", "info", isNessesary = false),
+    )
     var trainerInputs: MutableMap<String, Input> = mutableMapOf(
         "name" to Input("ФИО", "name"),
         "info" to Input("Информация", "info"),
@@ -44,9 +51,14 @@ class TeamsState : RState {
             options = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари"),
             allowOtherOption = true
         ),
-        "birthday" to Input("Дата рождения", "birthday"),
-        "city" to Input("Город", "city"),
-        "teamRole" to Input("к/а", "teamRole", isSelect = true, options = mapOf("к" to "к", "а" to "а", "null" to "нет"))
+        "birthday" to Input("Дата рождения", "birthday", isNessesary = false),
+        "city" to Input("Город", "city", isNessesary = false),
+        "teamRole" to Input(
+            "к/а",
+            "teamRole",
+            isSelect = true,
+            options = mapOf("к" to "к", "а" to "а", "null" to "нет")
+        )
     )
     var smallNavigationForm: Boolean = false
     var addTrainerForm: Boolean = false
@@ -65,6 +77,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
         get() = props.coroutineScope.coroutineContext
 
     private fun getState(selectedTeam: String, coroutineScope: CoroutineScope) {
+        console.log("!!!!!!!!!!!!!!!!!!11")
         val trainerService = TrainerService(coroutineContext)
         val teamService = TeamService(coroutineContext)
 
@@ -87,7 +100,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             }
             if (team.id != null) {
                 val trainer = try {
-                    if (team.id != null) {
+                    if (team.link != null) {
                         trainerService.getTrainerByLink(team.link!!)
                     } else {
                         null
@@ -111,13 +124,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                         }
                         return@launch
                     }
-                    console.log(teamMembers)
                     teamMembersWithRoles[role.value] = teamMembers
-                    console.log(teamMembersWithRoles)
-
                 }
-
-
                 setState {
                     this.team = team
                     this.navigationList = navigationList
@@ -211,20 +219,50 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             attrs.type = "add"
                         }
                     } else {
-                        child(SmallNavigationForm::class) {
-                            attrs.inputValues = listOf("", "")
-                            attrs.addSection = { listOfInputValues ->
+                        styledForm {
+                            attrs.onSubmitFunction = { event ->
+                                event.preventDefault()
+                                event.stopPropagation()
+                                val trainerService = TrainerService(coroutineContext)
                                 val teamService = TeamService(coroutineContext)
                                 props.coroutineScope.launch {
-                                    teamService.addTeam(
-                                        TeamDTO(
-                                            null,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1],
-                                            true,
-                                            props.selectedTeam,
+                                    var formIsCompleted = true
+                                    state.trainerInputs.values.forEach {
+                                        if (it.isRed) {
+                                            formIsCompleted = false
+                                        }
+                                    }
+                                    if (formIsCompleted) {
+                                        props.coroutineScope.launch {
+                                            teamService.addTeam(
+                                                TeamDTO(
+                                                    null,
+                                                    state.teamInputs["teamName"]!!.inputValue,
+                                                    state.teamInputs["teamLink"]!!.inputValue,
+                                                    true,
+                                                    state.teamInputs["year"]!!.inputValue,
+                                                )
+                                            )
+                                        }
+                                        trainerService.addTrainer(
+                                            TrainerDTO(
+                                                null,
+                                                state.teamInputs["teamLink"]!!.inputValue,
+                                                "address.png",
+                                                state.teamInputs["name"]!!.inputValue,
+                                                state.teamInputs["info"]!!.inputValue,
+                                            )
                                         )
-                                    )
+                                    }
+                                }
+                            }
+                            child(FormViewComponent::class) {
+                                attrs.inputs = state.teamInputs
+                                attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                    setState {
+                                        state.teamInputs[key]!!.inputValue = value
+                                        state.teamInputs[key]!!.isRed = isRed
+                                    }
                                 }
                             }
                         }
@@ -253,6 +291,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                         +"Команды"
                     }
                     if (state.trainer != null) {
+                        console.log(state.trainer)
                         state.trainer.let { trainer ->
                             styledDiv {
                                 css {
@@ -261,7 +300,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 }
                                 child(RedFrameComponent::class) {
                                     attrs.isTrainer = true
-                                    attrs.trainer = trainer
+                                    attrs.trainer = trainer.also { console.log(it) }
                                 }
                                 styledDiv {
                                     css {
@@ -301,10 +340,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         props.coroutineScope.launch {
                                             var formIsCompleted = true
                                             state.trainerInputs.values.forEach {
-                                                if (it.inputValue == "") {
-                                                    setState {
-                                                        it.isRed = true
-                                                    }
+                                                if (it.isRed) {
                                                     formIsCompleted = false
                                                 }
                                             }
@@ -390,10 +426,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                             props.coroutineScope.launch {
                                                 var formIsCompleted = true
                                                 state.teamMemberInputs.values.forEach {
-                                                    if (it.inputValue == "") {
-                                                        setState {
-                                                            it.isRed = true
-                                                        }
+                                                    if (it.isRed) {
                                                         formIsCompleted = false
                                                     }
                                                 }
@@ -432,56 +465,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 } else {
                     +"Загрузка..."
                 }
-                if (!state.addTrainerForm) {
-                    child(AdminButtonComponent::class) {
-                        attrs.updateState = {
-                            setState {
-                                addTrainerForm = true
-                            }
-                        }
-                        attrs.type = "add"
-                    }
-                } else {
-
-                    styledForm {
-                        attrs.onSubmitFunction = { event ->
-                            event.preventDefault()
-                            event.stopPropagation()
-                            val trainerService = TrainerService(coroutineContext)
-                            props.coroutineScope.launch {
-                                var formIsCompleted = true
-                                state.trainerInputs.values.forEach {
-                                    if (it.inputValue == "") {
-                                        setState {
-                                            it.isRed = true
-                                        }
-                                        formIsCompleted = false
-                                    }
-                                }
-                                if (formIsCompleted) {
-                                    trainerService.addTrainer(
-                                        TrainerDTO(
-                                            null,
-                                            props.selectedTeam,
-                                            "address.png",
-                                            state.trainerInputs["name"]!!.inputValue,
-                                            state.trainerInputs["info"]!!.inputValue,
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                        child(FormViewComponent::class) {
-                            attrs.inputs = state.trainerInputs
-                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                setState {
-                                    state.trainerInputs[key]!!.inputValue = value
-                                    state.trainerInputs[key]!!.isRed = isRed
-                                }
-                            }
-                        }
-                    }
-                }
 
                 if (!state.addTeamMemberForm) {
                     child(AdminButtonComponent::class) {
@@ -502,10 +485,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             props.coroutineScope.launch {
                                 var formIsCompleted = true
                                 state.teamMemberInputs.values.forEach {
-                                    if (it.inputValue == "") {
-                                        setState {
-                                            it.isRed = true
-                                        }
+                                    if (it.isRed) {
                                         formIsCompleted = false
                                     }
                                 }
@@ -538,7 +518,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                         }
                     }
                 }
-
             }
         }
     }

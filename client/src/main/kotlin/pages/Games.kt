@@ -18,7 +18,6 @@ import services.GameService
 import services.GamesNavigationService
 import services.TeamService
 import styled.*
-import tableHeader
 
 val tableHeaders = listOf("Дата", "Время", "Команда А", "Команда Б", "Стадион", "Результат")
 
@@ -42,8 +41,8 @@ class GamesState : RState {
     var gamesNavigationList: List<NavigationDTO>? = null
     var allGamesWithTeams: List<GameWithTeams>? = null
     var inputs: MutableMap<String, Input> = mutableMapOf(
-        "date" to Input("Дата", "date"),
-        "time" to Input("Время", "time"),
+        "date" to Input("Дата", "date", isNessesary = false),
+        "time" to Input("Время", "time", isNessesary = false),
         "teamA" to Input(
             "Команда А",
             "teamAId",
@@ -58,8 +57,8 @@ class GamesState : RState {
             options = mapOf(),
             allowOtherOption = true
         ),
-        "stadium" to Input("Стадион", "stadium"),
-        "result" to Input("Результат", "result"),
+        "stadium" to Input("Стадион", "stadium", isNessesary = false),
+        "result" to Input("Результат", "result", isNessesary = false),
     )
     var smallNavigationForm: Boolean = false
     var editSmallNavigationForm: NavigationDTO? = null
@@ -222,14 +221,15 @@ class Games : RComponent<GamesProps, GamesState>() {
                             }
                         }
                     }
+                    console.log(state.smallNavigationForm)
                     if (!state.smallNavigationForm) {
                         child(AdminButtonComponent::class) {
                             attrs.updateState = {
                                 setState {
                                     smallNavigationForm = true
                                 }
-                                attrs.type = "add"
                             }
+                            attrs.type = "add"
                         }
                     } else {
                         child(SmallNavigationForm::class) {
@@ -271,11 +271,18 @@ class Games : RComponent<GamesProps, GamesState>() {
                     }
 
                     styledThead {
+                        css {
+                            minHeight = 60.px
+                            width = 100.pct
+                            backgroundColor = ColorSpartak.LightGrey.color
+                            fontFamily = "Russo"
+                            fontSize = 20.px
+                            padding(10.px)
+                            boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+                        }
                         tableHeaders.forEach {
                             styledTh {
-                                tableHeader {
-                                    +it
-                                }
+                                +it
                             }
                         }
                     }
@@ -347,10 +354,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                                 props.coroutineScope.launch {
                                                     var formIsCompleted = true
                                                     state.inputs.values.forEach {
-                                                        if (it.inputValue == "") {
-                                                            setState {
-                                                                it.isRed = true
-                                                            }
+                                                        if (it.isRed) {
                                                             formIsCompleted = false
                                                         }
                                                     }
@@ -406,10 +410,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                             props.coroutineScope.launch {
                                 var formIsCompleted = true
                                 state.inputs.values.forEach {
-                                    if (it.inputValue == "") {
-                                        setState {
-                                            it.isRed = true
-                                        }
+                                    if (it.isRed) {
                                         formIsCompleted = false
                                     }
                                 }
@@ -450,9 +451,9 @@ class Games : RComponent<GamesProps, GamesState>() {
                                     val id = teamService.addTeam(team)
                                     team.id = id
                                     setState {
-                                        if(isItTeamA){
+                                        if (isItTeamA) {
                                             inputs["teamA"]!!.inputValue = id.toString()
-                                        }else{
+                                        } else {
                                             inputs["teamB"]!!.inputValue = id.toString()
                                         }
                                     }
