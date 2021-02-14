@@ -5,6 +5,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
+import react.dom.InnerHTML
 import styled.css
 import styled.styledDiv
 import styled.styledH1
@@ -77,7 +78,9 @@ class FooterComponent : RComponent<RProps, RState>() {
                 styledH1 {
                     +"Адрес на карте:"
                 }
-                styledImg(src = "/images/map.jpg") {}
+                styledDiv {
+                    attrs["dangerouslySetInnerHTML"] = InnerHTML("<iframe src=\"https://yandex.ru/map-widget/v1/?um=constructor%3A36ba0b6e5870ceca959a551496be2f606620f725e1f212c0ef8aa0abc8af3aff&amp;source=constructor\" width=\"500\" height=\"300\" frameborder=\"0\"></iframe>")
+                }
             }
 
         }

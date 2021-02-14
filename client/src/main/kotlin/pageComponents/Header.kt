@@ -63,7 +63,8 @@ class HeaderComponent : RComponent<RProps, RState>() {
                 css {
                     fontSize = 16.pt
                     alignItems = Align.center
-                    width = 320.px
+                    width = 450.px
+                    marginRight= 30.px
                 }
 
                 styledDiv {
