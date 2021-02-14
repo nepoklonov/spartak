@@ -2,9 +2,7 @@
 package pageComponents
 
 import react.RClass
-import react.RComponent
 import react.RProps
-import react.RState
 
 external interface CKEditorProps: RProps {
     var editor: dynamic
