@@ -51,12 +51,15 @@ private val globalCss = CSSBuilder().apply {
         fontFamily = "Russo"
         fontSize = 42.667.px
         margin = 50.px.toString()
+        fontWeight = FontWeight.normal
     }
     h2 {
         fontFamily = "Russo"
+        fontWeight = FontWeight.normal
     }
     h3 {
         fontFamily = "Russo"
+        fontWeight = FontWeight.normal
     }
     "*" {
         fontFamily = "PT"

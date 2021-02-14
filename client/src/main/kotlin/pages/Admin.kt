@@ -24,6 +24,12 @@ class Admin : RComponent<AdminProps, RState>() {
         }
         styledButton {
             attrs.onClickFunction = {
+                document.cookie = "role=Admin"
+            }
+            +"войти"
+        }
+        styledButton {
+            attrs.onClickFunction = {
                 document.cookie = "role=Basic"
             }
             +"выйти"

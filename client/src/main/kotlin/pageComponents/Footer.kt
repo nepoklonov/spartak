@@ -8,7 +8,6 @@ import react.RState
 import react.dom.InnerHTML
 import styled.css
 import styled.styledDiv
-import styled.styledH1
 import styled.styledImg
 
 
@@ -36,7 +35,11 @@ class FooterComponent : RComponent<RProps, RState>() {
             css {
                 overflow = Overflow.hidden
             }
-            styledH1 {
+            styledDiv {
+                css{
+                    fontSize = 25.px
+                    margin(30.px)
+                }
                 +it.header
             }
             addInfo(it.iconSrc, it.text)
@@ -47,15 +50,12 @@ class FooterComponent : RComponent<RProps, RState>() {
         styledDiv {
             css {
                 display = Display.flex
-                overflow = Overflow.hidden
+                justifyContent = JustifyContent.spaceBetween
                 padding = 40.px.toString()
                 background = "linear-gradient(180deg, rgba(223, 221, 221, 0) 0%, #5E5555 100%)"
             }
 
             styledDiv {
-                css {
-                    margin = 20.px.toString()
-                }
                 addOnPage(TextWithIcon.Phone)
                 addOnPage(TextWithIcon.Vk)
                 TextWithIcon.Inst.let {
@@ -63,19 +63,18 @@ class FooterComponent : RComponent<RProps, RState>() {
                 }
             }
             styledDiv {
-                css {
-                    margin = 20.px.toString()
-                    width = 300.px
-                }
                 addOnPage(TextWithIcon.Mail)
                 addOnPage(TextWithIcon.Address)
             }
             styledDiv {
                 css {
-                    margin = 20.px.toString()
                     width = 400.px
                 }
-                styledH1 {
+                styledDiv {
+                    css{
+                        fontSize = 25.px
+                        margin(30.px)
+                    }
                     +"Адрес на карте:"
                 }
                 styledDiv {
