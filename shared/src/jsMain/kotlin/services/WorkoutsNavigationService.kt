@@ -16,9 +16,11 @@ actual class WorkoutsNavigationService(coroutineContext: CoroutineContext) {
         return transport.post("addWorkoutsSection", Int.serializer(), "navigationDTO" to navigationDTO)
     }
 
+
     actual suspend fun editWorkoutsSection(navigationDTO: NavigationDTO): Boolean {
         return transport.post("editWorkoutsSection", Boolean.serializer(), "navigationDTO" to navigationDTO)
     }
+
 
     actual suspend fun deleteWorkoutsSection(id: Int): Boolean {
         return transport.post("deleteWorkoutsSection", Boolean.serializer(), "id" to id)

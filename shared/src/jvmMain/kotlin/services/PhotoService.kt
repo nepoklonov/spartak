@@ -9,16 +9,21 @@ import org.jetbrains.exposed.sql.select
 import rpc.RPCService
 
 actual class PhotoService: RPCService {
-    actual suspend fun getAllPhotosBySection(section: String): List<String> {
-        val listOfPhotosUrl = mutableListOf<String>()
+    actual suspend fun getAllPhotosBySection(section: String): List<PhotoDTO> {
+        val listOfPhotosUrl = mutableListOf<PhotoDTO>()
         database {
             Photos.select { Photos.gallerySection eq section }.forEach {
-                listOfPhotosUrl += it[Photos.url]
+                listOfPhotosUrl += PhotoDTO(
+                    it[Photos.id].value,
+                    it[Photos.url],
+                    it[Photos.gallerySection]
+                )
             }
         }
         return listOfPhotosUrl
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun addPhoto(photo: PhotoDTO): Int {
         return database{
             Photos.insertAndGetId {
@@ -28,6 +33,7 @@ actual class PhotoService: RPCService {
         }.value
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deletePhoto(id: Int): Boolean {
         database{
             Photos.deleteWhere { Photos.id eq id }

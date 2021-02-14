@@ -10,8 +10,7 @@ expect class TeamService {
     suspend fun getNavigationList(): List<NavigationDTO>
     suspend fun getTeamById(id: Int): TeamDTO
     suspend fun getTeamByLink(link: String): TeamDTO
-    suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO>
-    suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO>
+    suspend fun getTeamMemberByRoleAndTeam(role: String, teamLink: String): List<TeamMemberDTO>
     suspend fun editTeam(team: TeamDTO): Boolean
     suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean
     suspend fun deleteTeam(teamId: Int): Boolean

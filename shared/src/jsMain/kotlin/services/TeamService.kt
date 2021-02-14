@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import kotlinx.serialization.builtins.serializer
 import model.NavigationDTO
 import model.TeamDTO
@@ -30,12 +31,8 @@ actual class TeamService(coroutineContext: CoroutineContext) {
         return transport.get("getTeamByLink", TeamDTO.serializer(), "link" to link)
     }
 
-    actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
-        return transport.getList("getAllTeamMembers", TeamMemberDTO.serializer(), "name" to teamId.toString())
-    }
-
-    actual suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO> {
-        return transport.getList("getTeamMemberByTeamIdAndRole", TeamMemberDTO.serializer(), "role" to role, "teamId" to teamId)
+    actual suspend fun getTeamMemberByRoleAndTeam(role: String, teamLink: String): List<TeamMemberDTO> {
+        return transport.getList("getTeamMemberByRoleAndTeam", TeamMemberDTO.serializer(), "role" to role, "teamLink" to teamLink)
     }
 
     actual suspend fun editTeam(team: TeamDTO): Boolean {

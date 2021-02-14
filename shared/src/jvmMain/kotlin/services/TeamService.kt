@@ -1,5 +1,7 @@
 package services
 
+import Annotations.RequireRole
+import Role
 import database.TeamMembers
 import database.Teams
 import database.Teams.link
@@ -16,24 +18,28 @@ actual class TeamService : RPCService {
     private fun TeamMembers.getTeamMemberDtoFromDatabase(it: ResultRow): TeamMemberDTO {
         return TeamMemberDTO(
             it[TeamMembers.id].value,
-            it[teamId],
+            it[teamLink],
+            it[number],
             it[photo],
             it[firstName],
             it[lastName],
             it[role],
             it[birthday],
-            it[city]
+            it[city],
+            it[teamRole]
         )
     }
 
     private fun TeamMembers.insertTeamMemberDtoToDatabase(it: UpdateBuilder<Int>, newTeamMember: TeamMemberDTO) {
-        it[teamId] = newTeamMember.teamId
+        it[teamLink] = newTeamMember.teamLink
+        it[number] = newTeamMember.number
         it[photo] = newTeamMember.photo
         it[firstName] = newTeamMember.firstName
         it[lastName] = newTeamMember.lastName
         it[role] = newTeamMember.role
         it[birthday] = newTeamMember.birthday
         it[city] = newTeamMember.city
+        it[teamRole] = newTeamMember.teamRole
     }
 
     private fun Teams.getTeamDTO(it: ResultRow): TeamDTO {
@@ -48,17 +54,19 @@ actual class TeamService : RPCService {
 
     private fun Teams.insertTeamDtoToDatabase(it: UpdateBuilder<Int>, team: TeamDTO) {
         it[name] = team.name
-        it[link] = team.link
+        it[link] = team.link.toString()
         it[isOur] = team.isOur
         it[year] = team.year.toString()
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun addTeam(team: TeamDTO): Int {
         return database {
             Teams.insertAndGetId { insertTeamDtoToDatabase(it, team) }
         }.value
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun addTeamMember(newTeamMember: TeamMemberDTO): Int {
         return database {
             TeamMembers.insertAndGetId { insertTeamMemberDtoToDatabase(it, newTeamMember) }
@@ -89,26 +97,17 @@ actual class TeamService : RPCService {
         }
     }
 
-    actual suspend fun getAllTeamMembers(teamId: Int): List<TeamMemberDTO> {
-        val listOfTeamMembers: MutableList<TeamMemberDTO> = mutableListOf()
-        database {
-            TeamMembers.select { TeamMembers.teamId eq teamId }.forEach {
-                listOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
-            }
-        }
-        return listOfTeamMembers
-    }
-
-    actual suspend fun getTeamMemberByTeamIdAndRole(role: String, teamId: Int): List<TeamMemberDTO> {
+    actual suspend fun getTeamMemberByRoleAndTeam(role: String, teamLink: String): List<TeamMemberDTO> {
         val liftOfTeamMembers = mutableListOf<TeamMemberDTO>()
         database {
-            TeamMembers.select { (TeamMembers.teamId eq teamId) and (TeamMembers.role eq role) }.forEach {
+            TeamMembers.select { (TeamMembers.teamLink eq teamLink) and (TeamMembers.role eq role) }.forEach {
                 liftOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }
         return liftOfTeamMembers
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun editTeam(team: TeamDTO): Boolean {
         database {
             Teams.update({ Teams.id eq team.id }) { insertTeamDtoToDatabase(it, team) }
@@ -116,6 +115,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun editTeamMember(teamMember: TeamMemberDTO): Boolean {
         database {
             TeamMembers.update({ TeamMembers.id eq teamMember.id }) { insertTeamMemberDtoToDatabase(it, teamMember) }
@@ -123,6 +123,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteTeam(teamId: Int): Boolean {
         database {
             Teams.deleteWhere { Teams.id eq teamId }
@@ -130,6 +131,7 @@ actual class TeamService : RPCService {
         return true
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteTeamMember(id: Int): Boolean {
         database {
             TeamMembers.deleteWhere { TeamMembers.id eq id }

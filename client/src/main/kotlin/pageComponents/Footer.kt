@@ -45,13 +45,14 @@ class FooterComponent : RComponent<RProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
+                display = Display.flex
                 overflow = Overflow.hidden
                 padding = 40.px.toString()
+                background = "linear-gradient(180deg, rgba(223, 221, 221, 0) 0%, #5E5555 100%)"
             }
 
             styledDiv {
                 css {
-                    float = Float.left
                     margin = 20.px.toString()
                 }
                 addOnPage(TextWithIcon.Phone)
@@ -62,7 +63,6 @@ class FooterComponent : RComponent<RProps, RState>() {
             }
             styledDiv {
                 css {
-                    float = Float.left
                     margin = 20.px.toString()
                     width = 300.px
                 }
@@ -71,8 +71,8 @@ class FooterComponent : RComponent<RProps, RState>() {
             }
             styledDiv {
                 css {
-                    float = Float.right
                     margin = 20.px.toString()
+                    width = 400.px
                 }
                 styledH1 {
                     +"Адрес на карте:"

@@ -1,5 +1,6 @@
 package services
 
+import Annotations.RequireRole
 import kotlinx.serialization.builtins.serializer
 import model.GameDTO
 import rpc.Transport
@@ -11,12 +12,15 @@ actual class GameService(coroutineContext: CoroutineContext) {
     actual suspend fun getAllGamesByYear(year: String): List<GameDTO> {
         return transport.getList("getAllGamesByYear", GameDTO.serializer(), "year" to  year)
     }
+
     actual suspend fun addGame(newGame: GameDTO): Int {
         return transport.post("addGame", Int.serializer(), "newGame" to newGame)
     }
+
     actual suspend fun editGame(game: GameDTO): Boolean {
         return transport.post("editGame", Boolean.serializer(), "game" to game)
     }
+
     actual suspend fun deleteGame(id: Int): Boolean {
         return transport.post("deleteGame", Boolean.serializer(), "id" to id)
     }

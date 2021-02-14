@@ -3,16 +3,16 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.css.*
 import kotlinx.html.id
+import pageComponents.FooterComponent
+import pageComponents.HeaderComponent
+import pageComponents.MainNavigationComponent
+import pageComponents.MainNavigationProps
 import react.buildElements
 import react.dom.render
 import react.router.dom.browserRouter
 import react.router.dom.route
 import styled.css
 import styled.styledDiv
-import pageComponents.FooterComponent
-import pageComponents.HeaderComponent
-import pageComponents.MainNavigationComponent
-import pageComponents.MainNavigationProps
 import kotlin.coroutines.CoroutineContext
 
 private class Application : CoroutineScope {
@@ -25,15 +25,19 @@ private class Application : CoroutineScope {
                 browserRouter {
                     styledDiv {
                         css {
+                            position = Position.fixed
                             backgroundImage = Image("url(/images/background.jpg)")
                             width = 100.pct
-                            child("div"){
+                            height = 100.pct
+                            child("div") {
                                 fontFamily = "PT"
                             }
                         }
+                    }
                         styledDiv {
                             attrs.id = "root"
                             css {
+                                position = Position.relative
                                 marginLeft = 100.px
                                 marginRight = 100.px
                                 backgroundColor = rgba(255, 255, 255, 0.5)
@@ -50,7 +54,6 @@ private class Application : CoroutineScope {
                             child(FooterComponent::class) {}
                         }
                     }
-                }
             }, it)
         }
     }

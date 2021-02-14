@@ -5,15 +5,20 @@ import io.ktor.html.*
 import io.ktor.http.content.*
 import io.ktor.jackson.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
+import jdk.nashorn.internal.objects.Global.getDate
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.css.Float
+import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
-
+import java.time.LocalDate
+import java.util.*
 
 private val globalCss = CSSBuilder().apply {
     fontFace {
@@ -35,14 +40,60 @@ private val globalCss = CSSBuilder().apply {
 
         lineHeight = 20.px.lh
     }
-    h1 {
+    h1{
         fontFamily = "Russo"
+        fontSize = 42.667.px
+        margin = 50.px.toString()
     }
     h2 {
         fontFamily = "Russo"
     }
     h3 {
         fontFamily = "Russo"
+    }
+    "*" {
+        fontFamily = "PT"
+        fontSize = 20.px
+    }
+    button{
+        backgroundColor = Color("#9D0707")
+        hover {
+            backgroundColor = Color("#660c0c")
+        }
+        border = "none"
+        textDecoration = TextDecoration.none
+        fontFamily = "Russo"
+        color = Color.white
+        fontSize = 14.pt
+        padding = 15.px.toString()
+        paddingLeft = 50.px
+        paddingRight = 50.px
+        cursor = Cursor.pointer
+        margin = 10.px.toString()
+    }
+    rule(".news-img"){
+        width = 32.pct
+        padding = 1.pct.toString()
+        height = LinearDimension.auto
+        float = Float.left
+    }
+    rule(".news-div"){
+        padding = 1.pct.toString()
+        minWidth = 30.pct
+    }
+    rule(".summer-camp-img, .main-img" ){
+        width = 40.pct
+        padding = 50.px.toString()
+        height = LinearDimension.auto
+    }
+    rule(".summer-camp-div, .main"){
+        display = Display.flex
+        justifyContent = JustifyContent.spaceAround
+    }
+    rule(".summer-camp-content, .main-content"){
+        padding = 50.px.toString()
+        alignContent = Align.center
+        display = Display.block
     }
 }
 
@@ -51,15 +102,20 @@ fun Application.main() {
     install(ContentNegotiation) {
         jackson {}
     }
+    install(Sessions) {
+        cookie<LoginSession>("login-session", SessionStorageMemory()) {
+            cookie.path = "/"
+        }
+    }
 
     database {
         SchemaUtils.create(Checks)
         SchemaUtils.create(TeamMembers)
-        SchemaUtils.create(GameCalendar)
+        SchemaUtils.create(Games)
         SchemaUtils.create(Trainers)
         SchemaUtils.create(Photos)
         SchemaUtils.create(Teams)
-        SchemaUtils.create(Timetable)
+        SchemaUtils.create(Workouts)
         SchemaUtils.create(Admins)
         SchemaUtils.create(Recruitment)
         SchemaUtils.create(News)
@@ -94,7 +150,8 @@ fun Application.main() {
         for (i in 1 until 4) {
             database {
                 News.insert {
-                    it[url] = "/news/$i.html"
+                    it[url] = "/newsHtml/$i.html"
+                    it[date] = (Date()).getTime()
                 }
             }
         }
@@ -108,33 +165,34 @@ fun Application.main() {
         }
         database {
             TeamMembers.insert {
-                it[teamId] = 1
+                it[teamLink] = "2003"
+                it[number] = "1"
                 it[photo] = "logo.png"
                 it[firstName] = "Змейка"
                 it[lastName] = "Гитарова"
-                it[role] = "НП"
+                it[role] = "defenders"
                 it[birthday] = "28.08.2019"
                 it[city] = "г.Ейск"
+                it[teamRole] = "к"
             }
         }
 
         database {
-            GameCalendar.insert {
+            Games.insert {
                 it[date] = "dhzkjfh"
                 it[time] = "Змейка"
                 it[year] = "championship2003"
                 it[teamAId] = 1
-                it[teamBId] = 2
+                it[teamBId] = 1
                 it[stadium] = "28.08.2019"
                 it[result] = "г.Ейск"
             }
         }
         database {
             Trainers.insert {
-                it[teamId] = 1
+                it[teamLink] = "2003"
                 it[name] = "2003"
                 it[photo] = "logo.png"
-                it[dateOfBirth] = "2003"
                 it[info] = "drfghygtfrdesdrftgyhujhygtfrdesrftgyhujiuhygtrfeddrftgyhukjiuhygtrfedswredrftgyhu"
             }
         }
@@ -155,11 +213,14 @@ fun Application.main() {
             }
         }
         database {
-            Timetable.insert {
-                it[datetime] = 1612020600000.0
-                it[teamId] = 1
-                it[type] = "shhm"
-                it[place] = "ура наконец-то я доделала это ебанное расписание"
+            Workouts.insert {
+                it[startTime] = "10:15"
+                it[endTime] = "10:30"
+                it[dayOfWeek] = 1
+                it[sectionLink] = "shhm"
+                it[text] = "ура наконец-то я доделала это ебанное расписание"
+                it[actualFromDate] = 1612020600000.0
+                it[actualToDate] = 1612020600000.0
             }
         }
         database {
@@ -293,17 +354,21 @@ fun Application.main() {
         static("images") { files("images") }
         static("fonts") { files("fonts") }
         static("htmlPages") { files("htmlPages") }
-        static("news") { files("news") }
+        static("newsHtml") { files("newsHtml") }
 
 
         route("/api") {
             rpc(CheckService::class)
             rpc(GameService::class)
             rpc(TeamService::class)
-            rpc(TimetableService::class)
+            rpc(WorkoutsService::class)
             rpc(TrainerService::class)
             rpc(PhotoService::class)
-            rpc(AdminService::class)
+            rpc(AdminService::class, AdminService::checkAdmin to { call, result ->
+                if (result as Boolean) {
+                    call.sessions.set(LoginSession(username = "admin", role = Role.Admin))
+                }
+            })
             rpc(RecruitmentService::class)
             rpc(NewsService::class)
             rpc(GalleryNavigationService::class)

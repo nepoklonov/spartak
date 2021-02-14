@@ -1,9 +1,13 @@
 package rpc
 
+import Annotations.RequireRole
+import LoginSession
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.sessions.*
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerializationException
@@ -18,17 +22,28 @@ import kotlin.reflect.KFunction
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
-//                Json.decodeFromString(param.type.jvmErasure.serializer(), call.request.queryParameters[it].toString())
+// Json.decodeFromString(param.type.jvmErasure.serializer(), call.request.queryParameters[it].toString())
 @OptIn(InternalSerializationApi::class)
 @Suppress("UNCHECKED_CAST")
 
-fun Route.rpc(serviceClass: KClass<out RPCService>) {
+fun Route.rpc(serviceClass: KClass<out RPCService>, vararg blocks: Pair<KFunction<*>, (ApplicationCall, Any) -> Unit>) {
     val instance = serviceClass.createInstance()
 
-    suspend fun queryBody(function: KFunction<*>, call: ApplicationCall, args: MutableList<Any>) {
-        println(function.returnType)
-        println(function.returnType.arguments)
+    suspend fun queryBody(function: KFunction<*>, call: ApplicationCall, args: MutableList<Any?>) {
+
+        // check rights
+        function.findAnnotation<RequireRole>()?.let {
+            val role = call.sessions.get<LoginSession>()?.role ?: Role.Basic
+            if (it.role != role) {
+                call.respond(HttpStatusCode.Forbidden)
+                return
+            }
+        }
+
         val result = function.callSuspend(*args.toTypedArray())!!
+        blocks.find { it.first.name == function.name }?.let {
+            it.second(call, result)
+        }
         val serializedResult = if (function.returnType.arguments.isNotEmpty()) {
             when {
                 function.returnType.isSubtypeOf(List::class.createType(function.returnType.arguments)) -> Json.encodeToString(
@@ -50,12 +65,16 @@ fun Route.rpc(serviceClass: KClass<out RPCService>) {
     serviceClass.declaredMemberFunctions.map { function ->
         if (function.name.startsWith("get")) {
             get(function.name) {
-                val args = mutableListOf<Any>(instance)
+                val args = mutableListOf<Any?>(instance)
                 function.valueParameters.mapTo(args) { param ->
-                    Json { isLenient = true }.decodeFromString(
-                        param.type.jvmErasure.serializer(),
-                        call.request.queryParameters[param.name.toString()].toString()
-                    )
+                    call.request.queryParameters[param.name.toString()]
+                        ?.takeIf { it != null.toString() }
+                        ?.let { strValue ->
+                            Json { isLenient = true }.decodeFromString(
+                                param.type.jvmErasure.serializer(),
+                                strValue
+                            )
+                        }
                 }
                 queryBody(function, call, args)
             }
@@ -65,7 +84,7 @@ fun Route.rpc(serviceClass: KClass<out RPCService>) {
                     MapSerializer(String.serializer(), String.serializer()),
                     call.receiveText()
                 )
-                val args = mutableListOf<Any>(instance)
+                val args = mutableListOf<Any?>(instance)
                 function.valueParameters.mapTo(args) { param ->
                     Json { isLenient = true }.decodeFromString(
                         param.type.jvmErasure.serializer(),

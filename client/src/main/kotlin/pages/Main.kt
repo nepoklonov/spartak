@@ -3,7 +3,6 @@ package pages
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import pageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -44,7 +43,7 @@ class Main : RComponent<MainProps, MainState>() {
     }
 
     override fun RBuilder.render() {
-        child(CKEditorComponent::class){}
+//        child(CKEditorComponent::class){}
 
         styledDiv {
             if (state.mainHtml != null) {

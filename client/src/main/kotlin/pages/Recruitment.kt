@@ -24,17 +24,22 @@ class RecruitmentState : RState {
     var error: Throwable? = null
     var recruitmentHtml: String? = null
     var recruitments: List<RecruitmentDTO>? = null
-    var inputs: MutableList<Input> = mutableListOf(
-        Input("Предпочтительные даты участия в просмотровых сборах", "dates"),
-        Input("Ф.И.О. хоккеиста", "name"),
-        Input("Дата рождения(дд.мм.гг.)", "birthday"),
-        Input("Амплуа", "role", isSelect = true, options = mapOf("Защитник" to "Защитник","Вратарь" to "Вратарь","Нападающий" to "Нападающий",)),
-        Input("Хват клюшки", "stickGrip"),
-        Input("Рост - Вес", "params"),
-        Input("Хоккейная школа в предыдущем сезоне", "previousSchool"),
-        Input("Место жительства(город)", "city"),
-        Input("Контактный телефон", "phone"),
-        Input("E-mail", "email")
+    var inputs: MutableMap<String, Input> = mutableMapOf(
+        "dates" to Input("Предпочтительные даты участия в просмотровых сборах", "dates"),
+        "name" to Input("Ф.И.О. хоккеиста", "name"),
+        "birthday" to Input("Дата рождения(дд.мм.гг.)", "birthday"),
+        "role" to Input(
+            "Амплуа",
+            "role",
+            isSelect = true,
+            options = mapOf("Защитник" to "Защитник", "Вратарь" to "Вратарь", "Нападающий" to "Нападающий")
+        ),
+        "stickGrip" to Input("Хват клюшки", "stickGrip"),
+        "params" to Input("Рост - Вес", "params"),
+        "previousSchool" to Input("Хоккейная школа в предыдущем сезоне", "previousSchool"),
+        "city" to Input("Место жительства(город)", "city"),
+        "phone" to Input("Контактный телефон", "phone"),
+        "email" to Input("E-mail", "email")
     )
 }
 
@@ -95,46 +100,60 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
             }
         }
 
-        styledForm {
-            attrs.onSubmitFunction = { event ->
-                event.preventDefault()
-                event.stopPropagation()
-                val recruitmentService = RecruitmentService(coroutineContext)
-                props.coroutineScope.launch {
-                    var formIsCompleted = true
-                    state.inputs.forEach {
-                        if (it.inputValue == "") {
-                            setState {
-                                it.isRed = true
-                            }
-                            formIsCompleted = false
-                        }
-                    }
-                    if (formIsCompleted) {
-                        recruitmentService.addRecruitment(
-                            RecruitmentDTO(
-                                null,
-                                state.inputs[0].inputValue,
-                                state.inputs[1].inputValue,
-                                state.inputs[2].inputValue,
-                                state.inputs[3].inputValue,
-                                state.inputs[4].inputValue,
-                                state.inputs[5].inputValue,
-                                state.inputs[6].inputValue,
-                                state.inputs[7].inputValue,
-                                state.inputs[8].inputValue,
-                                state.inputs[9].inputValue,
-                            )
-                        )
+        styledDiv {
+            css {
+                backgroundColor = Color("#F5F5F5")
+            }
+            styledForm {
+                css{
+                    width = 100.pct
+                    display = Display.flex
+                    flexWrap = FlexWrap.wrap
+                    child("div"){
+                        float = Float.left
+                        width = 50.pct
                     }
                 }
-            }
-            child(FormViewComponent::class) {
-                attrs.inputs = state.inputs
-                attrs.updateState = {i: Int, value: String, isRed: Boolean ->
-                    setState {
-                        state.inputs[i].inputValue = value
-                        state.inputs[i].isRed = isRed
+                attrs.onSubmitFunction = { event ->
+                    event.preventDefault()
+                    event.stopPropagation()
+                    val recruitmentService = RecruitmentService(coroutineContext)
+                    props.coroutineScope.launch {
+                        var formIsCompleted = true
+                        state.inputs.values.forEach {
+                            if (it.inputValue == "") {
+                                setState {
+                                    it.isRed = true
+                                }
+                                formIsCompleted = false
+                            }
+                        }
+                        if (formIsCompleted) {
+                            recruitmentService.addRecruitment(
+                                RecruitmentDTO(
+                                    null,
+                                    state.inputs["dates"]!!.inputValue,
+                                    state.inputs["name"]!!.inputValue,
+                                    state.inputs["birthday"]!!.inputValue,
+                                    state.inputs["role"]!!.inputValue,
+                                    state.inputs["stickGrip"]!!.inputValue,
+                                    state.inputs["params"]!!.inputValue,
+                                    state.inputs["previousSchool"]!!.inputValue,
+                                    state.inputs["city"]!!.inputValue,
+                                    state.inputs["phone"]!!.inputValue,
+                                    state.inputs["email"]!!.inputValue,
+                                )
+                            )
+                        }
+                    }
+                }
+                child(FormViewComponent::class) {
+                    attrs.inputs = state.inputs
+                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                        setState {
+                            state.inputs[key]!!.inputValue = value
+                            state.inputs[key]!!.isRed = isRed
+                        }
                     }
                 }
             }

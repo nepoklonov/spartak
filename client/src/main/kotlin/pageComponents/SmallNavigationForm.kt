@@ -6,13 +6,13 @@ import styled.styledForm
 
 external interface SmallNavigationFormProps : RProps {
     var addSection: (List<String>) -> Unit
-    var isTeam: Boolean
+    var inputValues: List<String>
 }
 
 class SmallNavigationFormState : RState {
-    val inputs: MutableList<Input> = mutableListOf<Input>(
-        Input("Название раздела", "sectionName"),
-        Input("Ссылка", "sectionLink")
+    val inputs: MutableMap<String, Input> = mutableMapOf(
+        "sectionName" to Input("Название раздела", "sectionName"),
+        "sectionLink" to Input("Ссылка", "sectionLink")
     )
 }
 
@@ -21,13 +21,20 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
         state = SmallNavigationFormState()
     }
 
+    override fun componentDidMount(){
+        setState{
+            inputs["sectionName"]!!.inputValue = props.inputValues[0]
+            inputs["sectionLink"]!!.inputValue = props.inputValues[1]
+        }
+    }
+
     override fun RBuilder.render() {
         styledForm {
             attrs.onSubmitFunction = { event ->
                 event.preventDefault()
                 event.stopPropagation()
                 var formIsCompleted = true
-                state.inputs.forEach {
+                state.inputs.values.forEach {
                     if (it.inputValue == "") {
                         setState {
                             it.isRed = true
@@ -37,7 +44,7 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
                 }
                 if (formIsCompleted) {
                     val listOfInputValues = mutableListOf<String>()
-                    state.inputs.forEach {
+                    state.inputs.values.forEach {
                         listOfInputValues += it.inputValue
                     }
                     props.addSection(listOfInputValues)
@@ -45,10 +52,10 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
             }
             child(FormViewComponent::class) {
                 attrs.inputs = state.inputs
-                attrs.updateState = { i: Int, value: String, isRed: Boolean ->
+                attrs.updateState = { key: String, value: String, isRed: Boolean ->
                     setState {
-                        state.inputs[i].inputValue = value
-                        state.inputs[i].isRed = isRed
+                        state.inputs[key]!!.inputValue = value
+                        state.inputs[key]!!.isRed = isRed
                     }
                 }
             }

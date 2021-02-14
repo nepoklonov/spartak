@@ -11,15 +11,14 @@ import org.jetbrains.exposed.sql.update
 import rpc.RPCService
 
 actual class TrainerService : RPCService {
-    actual suspend fun getTrainerById(teamId: Int): TrainerDTO {
+    actual suspend fun getTrainerByLink(teamLink: String): TrainerDTO {
         return database {
-            Trainers.select { Trainers.teamId eq teamId }.first().let {
+            Trainers.select { Trainers.teamLink eq teamLink }.first().let {
                 TrainerDTO(
                     it[Trainers.id].value,
-                    it[Trainers.teamId],
+                    it[Trainers.teamLink],
                     it[Trainers.photo],
                     it[Trainers.name],
-                    it[Trainers.dateOfBirth],
                     it[Trainers.info]
                 )
             }
@@ -27,13 +26,13 @@ actual class TrainerService : RPCService {
     }
 
     private fun Trainers.insertTrainerDtoToDatabase(it: UpdateBuilder<Int>, trainer: TrainerDTO) {
-        it[teamId] = trainer.teamId
+        it[teamLink] = trainer.teamLink
         it[name] = trainer.name
         it[photo] = trainer.photo
-        it[dateOfBirth] = trainer.dateOfBirth
         it[info] = trainer.info
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun editTrainer(trainer: TrainerDTO): Boolean {
         database {
             Trainers.update({ Trainers.id eq trainer.id }) { insertTrainerDtoToDatabase(it, trainer) }
@@ -41,12 +40,14 @@ actual class TrainerService : RPCService {
         return true
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun addTrainer(trainer: TrainerDTO): Int {
         return database {
             Trainers.insertAndGetId { insertTrainerDtoToDatabase(it, trainer) }
         }.value
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteTrainer(trainerId: Int): Boolean {
         database {
             Trainers.deleteWhere { Trainers.id eq trainerId }

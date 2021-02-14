@@ -1,6 +1,6 @@
 package services
 
-import database.GameCalendar
+import database.Games
 import database.database
 import model.GameDTO
 import org.jetbrains.exposed.sql.deleteWhere
@@ -14,22 +14,22 @@ actual class GameService: RPCService {
     actual suspend fun getAllGamesByYear(year: String): List<GameDTO> {
         val listOfGamesByYear: MutableList<GameDTO> = mutableListOf()
         database {
-            GameCalendar.select { GameCalendar.year eq year }.forEach() {
+            Games.select { Games.year eq year }.forEach() {
                 listOfGamesByYear += GameDTO(
-                        it[GameCalendar.id].value,
-                        it[GameCalendar.date],
-                        it[GameCalendar.time],
-                        it[GameCalendar.year],
-                        it[GameCalendar.teamAId],
-                        it[GameCalendar.teamBId],
-                        it[GameCalendar.stadium],
-                        it[GameCalendar.result])
+                        it[Games.id].value,
+                        it[Games.date],
+                        it[Games.time],
+                        it[Games.year],
+                        it[Games.teamAId],
+                        it[Games.teamBId],
+                        it[Games.stadium],
+                        it[Games.result])
             }
         }
         return listOfGamesByYear
     }
 
-    private fun GameCalendar.insertGameDtoToDatabase(it: UpdateBuilder<Int>, newGame:GameDTO){
+    private fun Games.insertGameDtoToDatabase(it: UpdateBuilder<Int>, newGame:GameDTO){
         it[date] = newGame.date
         it[time] = newGame.time.toString()
         it[year] = newGame.year
@@ -39,26 +39,29 @@ actual class GameService: RPCService {
         it[result] = newGame.result.toString()
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun addGame(newGame: GameDTO): Int {
         return database {
-            GameCalendar.insertAndGetId {
+            Games.insertAndGetId {
                 insertGameDtoToDatabase(it, newGame)
             }
         }.value
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun editGame(game: GameDTO): Boolean {
         database {
-            GameCalendar.update({ GameCalendar.id eq game.id }) {
+            Games.update({ Games.id eq game.id }) {
                 insertGameDtoToDatabase(it, game)
             }
         }
         return true
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteGame(id: Int): Boolean {
         database {
-            GameCalendar.deleteWhere{ GameCalendar.id eq id }
+            Games.deleteWhere{ Games.id eq id }
         }
         return true
     }

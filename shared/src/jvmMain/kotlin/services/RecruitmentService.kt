@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.selectAll
 import rpc.RPCService
 
 actual class RecruitmentService : RPCService {
+//    @RequireRole(Role.Admin)
     actual suspend fun addRecruitment(recruitmentDTO: RecruitmentDTO): Boolean {
         database {
             Recruitment.insert {
@@ -49,6 +50,7 @@ actual class RecruitmentService : RPCService {
         return listOfRecruitmentDTO
     }
 
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteRecruitment(id: Int): Boolean {
         database {
             Recruitment.deleteWhere { Recruitment.id eq id }
