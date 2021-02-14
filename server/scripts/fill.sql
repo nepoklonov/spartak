@@ -23,7 +23,7 @@ CREATE TABLE teammembers (
 );
 CREATE TABLE news (
     "url"    text,
-    date    long
+    "date"      bigint
 );
 CREATE TABLE games (
     "date"    text,
@@ -68,8 +68,8 @@ CREATE TABLE workouts (
     dayOfWeek   int,
     sectionLink     text,
     text    text,
-    actualFromDate  double,
-    actualToDate    double
+    actualFromDate  real,
+    actualToDate    real
 );
 CREATE TABLE workoutssections (
     name    text,
@@ -190,27 +190,27 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '99', '', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '');
 
 
-INSERT INTO news (url, "date") VALUES ('1.html', '22.08.2019');
-INSERT INTO news (url, "date") VALUES ('2.html', '23.08.2019');
-INSERT INTO news (url, "date") VALUES ('3.html', '24.08.2019');
-INSERT INTO news (url, "date") VALUES ('4.html', '25.08.2019');
-INSERT INTO news (url, "date") VALUES ('5.html', '30.08.2019');
-INSERT INTO news (url, "date") VALUES ('6.html', '31.08.2019');
-INSERT INTO news (url, "date") VALUES ('7.html', '01.09.2019');
-INSERT INTO news (url, "date") VALUES ('8.html', '09.09.2019');
-INSERT INTO news (url, "date") VALUES ('9.html', '19.09.2019');
-INSERT INTO news (url, "date") VALUES ('10.html', '31.10.2019');
-INSERT INTO news (url, "date") VALUES ('11.html', '01.11.2019');
-INSERT INTO news (url, "date") VALUES ('12.html', '14.11.2019');
-INSERT INTO news (url, "date") VALUES ('13.html', '06.12.2019');
-INSERT INTO news (url, "date") VALUES ('14.html', '20.12.2019');
-INSERT INTO news (url, "date") VALUES ('15.html', '21.01.2020');
-INSERT INTO news (url, "date") VALUES ('16.html', '05.03.2020');
-INSERT INTO news (url, "date") VALUES ('17.html', '19.03.2020');
-INSERT INTO news (url, "date") VALUES ('19.html', '02.07.2020');
-INSERT INTO news (url, "date") VALUES ('20.html', '23.07.2020');
-INSERT INTO news (url, "date") VALUES ('21.html', '10.08.2020');
-INSERT INTO news (url, "date") VALUES ('21.html', '10.11.2020');
+INSERT INTO news (url, "date") VALUES ('1.html', 1566501170000);
+INSERT INTO news (url, "date") VALUES ('2.html', 1566587570000);
+INSERT INTO news (url, "date") VALUES ('3.html', 1566673970000);
+INSERT INTO news (url, "date") VALUES ('4.html', 1566760370000);
+INSERT INTO news (url, "date") VALUES ('5.html', 1567192370000);
+INSERT INTO news (url, "date") VALUES ('6.html', 1567278770000);
+INSERT INTO news (url, "date") VALUES ('7.html', 1567365170000);
+INSERT INTO news (url, "date") VALUES ('8.html', 1568056370000);
+INSERT INTO news (url, "date") VALUES ('9.html', 1568920370000);
+INSERT INTO news (url, "date") VALUES ('10.html', 1572549170000);
+INSERT INTO news (url, "date") VALUES ('11.html', 1572635570000);
+INSERT INTO news (url, "date") VALUES ('12.html', 1573758770000);
+INSERT INTO news (url, "date") VALUES ('13.html', 1575659570000);
+INSERT INTO news (url, "date") VALUES ('14.html', 1576869170000);
+INSERT INTO news (url, "date") VALUES ('15.html', 1579633970000);
+INSERT INTO news (url, "date") VALUES ('16.html', 1583435570000);
+INSERT INTO news (url, "date") VALUES ('17.html', 1584645170000);
+INSERT INTO news (url, "date") VALUES ('19.html', 1593717170000);
+INSERT INTO news (url, "date") VALUES ('20.html', 1595531570000);
+INSERT INTO news (url, "date") VALUES ('21.html', 1597086770000);
+INSERT INTO news (url, "date") VALUES ('21.html', 1605035570000);
 
 INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('03.10.20', '19:15', 'championship2003', 4, 1, 'ЛОК', '3:6');
 INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('10.10.20', '19:45', 'championship2003', 1, 5, 'ГКА', '9:1');
