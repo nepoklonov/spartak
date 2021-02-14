@@ -154,7 +154,7 @@ fun Application.main() {
                 }
             }
         }
-        for (i in 1 until 4) {
+        for (i in 1 until 21) {
             database {
                 News.insert {
                     it[url] = "/newsHtml/$i.html"

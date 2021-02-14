@@ -61,7 +61,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                 val h3 = e.getElementsByTagName("h3")[0]
                 val p = e.getElementsByTagName("p")[0]
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p?.innerHTML?.substring(0, 200), new.id, new.date ))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p?.innerHTML?.substring(0, 190), new.id, new.date ))
                 }
             }
         }

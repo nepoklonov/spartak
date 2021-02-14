@@ -1,6 +1,3 @@
-
-
-
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2003 г.р.', '2003', true, '2003');
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2005 г.р.', '2005', true, '2005');
 INSERT INTO teams (name, link, "isOur", year) VALUES ('Команда МХК «Спартак» 2006 г.р.', '2006', true, '2006');
@@ -81,5 +78,112 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '88', '', 'Иван', 'Дерягин', 'strikers', '18.05.2006', '','')
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '98', '', 'Симеон', 'Дмитриев', 'strikers', '08.02.2007', '','')
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '99', '', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '','')
+-- "defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари"
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '1', '', 'Даниил', 'Климин', 'goalkeepers', '03.04.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '41', '', 'Егор', 'Шпак', 'goalkeepers', '24.07.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '87', '', 'Артем', 'Покладок', 'goalkeepers', '17.05.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '4', '', 'Никита', 'Веселков', 'defenders', '30.09.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '13', '', 'Иван', 'Капылович', 'defenders', '13.01.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '18', '', 'Григорий', 'Шпак', 'defenders', '24.07.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '19', '', 'Егор', 'Чипкинян', 'defenders', '19.06.2007', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '25', '', 'Иван', 'Коновалов', 'defenders', '01.10.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '70', '', 'Федор', 'Бушляков', 'defenders', '07.08.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '81', '', 'Марк', 'Коннов', 'defenders', '26.02.2007', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '8', '', 'Андрей', 'Гассанов', 'strikers', '30.03.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '14', '', 'Варвара', 'Пазухина', 'strikers', '03.12.2005', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '23', '', 'Никита', 'Киселев', 'strikers', '03.08.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '27', '', 'Нил', 'Альбицкий', 'strikers', '09.07.2007', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '44', '', 'Святослав', 'Телегин', 'strikers', '23.12.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '66', '', 'Максим', 'Милаков', 'strikers', '10.08.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '77', '', 'Юлиан', 'Афанасьев', 'strikers', '31.07.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '88', '', 'Иван', 'Дерягин', 'strikers', '18.05.2006', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '98', '', 'Симеон', 'Дмитриев', 'strikers', '08.02.2007', '');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '99', '', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '');
 
 
+INSERT INTO news (url, "date") VALUES ('1.html', '22.08.2019');
+INSERT INTO news (url, "date") VALUES ('2.html', '23.08.2019');
+INSERT INTO news (url, "date") VALUES ('3.html', '24.08.2019');
+INSERT INTO news (url, "date") VALUES ('4.html', '25.08.2019');
+INSERT INTO news (url, "date") VALUES ('5.html', '30.08.2019');
+INSERT INTO news (url, "date") VALUES ('6.html', '31.08.2019');
+INSERT INTO news (url, "date") VALUES ('7.html', '01.09.2019');
+INSERT INTO news (url, "date") VALUES ('8.html', '09.09.2019');
+INSERT INTO news (url, "date") VALUES ('9.html', '19.09.2019');
+INSERT INTO news (url, "date") VALUES ('10.html', '31.10.2019');
+INSERT INTO news (url, "date") VALUES ('11.html', '01.11.2019');
+INSERT INTO news (url, "date") VALUES ('12.html', '14.11.2019');
+INSERT INTO news (url, "date") VALUES ('13.html', '06.12.2019');
+INSERT INTO news (url, "date") VALUES ('14.html', '20.12.2019');
+INSERT INTO news (url, "date") VALUES ('15.html', '21.01.2020');
+INSERT INTO news (url, "date") VALUES ('16.html', '05.03.2020');
+INSERT INTO news (url, "date") VALUES ('17.html', '19.03.2020');
+INSERT INTO news (url, "date") VALUES ('19.html', '02.07.2020');
+INSERT INTO news (url, "date") VALUES ('20.html', '23.07.2020');
+INSERT INTO news (url, "date") VALUES ('21.html', '10.08.2020');
+INSERT INTO news (url, "date") VALUES ('21.html', '10.11.2020');
+
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('03.10.20', '19:15', 2003, 4, 1, 'ЛОК', '3:6');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('10.10.20', '19:45', 2003, 1, 5, 'ГКА', '9:1');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('11.10.20', '19:00', 2003, 6, 1, 'ХКД', '4:11');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('17.10.20', '19:45', 2003, 1, 7, 'ГКА', '8:3');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('24.10.20', '09:00', 2003, 1, 8, 'ГКА', '5:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('25.10.20', '15:15', 2003, 9, 1, 'БУТ', '1:6');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('31.10.20', '19:45', 2003, 1, 10, 'ГКА', '8:2');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('07.11.20', '09:00', 2003, 1, 4, 'ГКА', '6:3');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('14.11.20', '18:15', 2003, 5, 1, 'АНТ', '4:5ПБ');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('15.11.20', '10:00', 2003, 1, 7, 'ГКА', '4:5ОТ');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('22.11.20', '10:00', 2003, 1, 11, 'ГКА', '6:1');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('05.12.20', '18:45', 2003, 8, 1, 'МАЛ', '3:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('13.12.20', '17:00', 2003, 10, 1, 'КСМ', '2:3');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('19.12.20', '09:00', 2003, 1, 7, 'ГКА', '0:6');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('20.12.20', '10:00', 2003, 1, 9, 'ГКА', '3:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('26.12.20', '', 2003, 4, 1, 'ЛОК', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('09.01.21', '', 2003, 1, 5, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('16.01.21', '', 2003, 6, 1, 'ХКД', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('23.01.21', '', 2003, 1, 8, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('30.01.21', '', 2003, 9, 1, 'БУТ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('06.02.21', '', 2003, 1, 10, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('13.02.21', '', 2003, 1, 4, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('20.02.21', '', 2003, 5, 1, 'АНТ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('28.02.21', '', 2003, 1, 6, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('13.03.21', '', 2003, 1, 7, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('14.03.21', '', 2003, 8, 1, 'МАЛ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('20.03.21', '', 2003, 1, 9, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('21.03.21', '', 2003, 10, 1, 'КСМ', '');
+
+
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('10.10.20', '09:00', 2005, 2, 12, 'ГКА', '5:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('17.10.20', '09:00', 2005, 2, 13, 'ГКА', '1:8');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('18.10.20', '18:45', 2005, 2, 14, 'ГКА', '3:4ПБ');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('24.10.20', '19:30', 2005, 2, 15, 'ГКА', '1:5');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('31.10.20', '09:00', 2005, 16, 2, 'ГКА', '9:0');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('01.11.20', '18:45', 2005, 2, 17, 'ГКА', '4:3');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('04.11.20', '11:00', 2005, 18, 2, 'КАХ', '10:1');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('07.11.20', '18:45', 2005, 19, 2, 'КСМ', '23:0');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('14.11.20', '19:30', 2005, 2, 20, 'ГКА', '2:7');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('22.11.20', '16:30', 2005, 21, 2, 'ЛОК', '13:2');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('05.12.20', '12:00', 2005, 22, 2, 'ЖДН', '11:0');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('12.12.20', '09:00', 2005, 2, 23, 'ГКА', '0:2');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('13.12.20', '10:00', 2005, 2, 24, 'ГКА', '2:1');
+
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('11.10.20', '15:15', 2006, 25, 3, 'КСМ', '5:0');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('17.10.20', '13:00', 2006, 26, 3, 'ЛОК', '4:11');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('18.10.20', '10:00', 2006, 3, 27, 'ГКА', '4:3ОТ');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('01.11.20', '17:45', 2006, 28, 3, 'ХКД', '4:5ПБ');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('04.11.20', '12:00', 2006, 3, 29, 'ГКА', '1:11');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('08.11.20', '10:00', 2006, 3, 30, 'ГКА', '2:3');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('05.12.20', '16:45', 2006, 29, 3, 'АСК', '17:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('06.12.20', '10:00', 2006, 3, 30, 'ГКА', '1:6');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('12.11.20', '09:30', 2006, 3, 31, 'ГКА', '2:4');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('13.12.20', '16:30', 2006, 32, 3, 'ХГГ', '7:1');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('20.12.20', '13:45', 2006, 33, 3, 'КАХ', '7:2');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('26.12.20', '', 2006, 3, 34, 'ГКА', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('16.01.21', '10:15', 2006, 3, 32, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('18.01.21', '16:00', 2006, 34, 3, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('21.01.21', '10:15', 2006, 3, 31, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('23.01.21', '16:00', 2006, 3, 33, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('27.01.21', '10:15', 2006, 30, 3, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('30.01.21', '10:15', 2006, 3, 29, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('27.01.21', '10:15', 2006, 30, 3, 'СОЧ', '');
+INSERT INTO games ("date", "time", "year", teamAId, teamBId, stadium, "result") VALUES ('07.02.21', '16:00', 2006, 3, 30, 'КСМ', '');

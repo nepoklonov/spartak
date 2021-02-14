@@ -49,9 +49,9 @@ class Feed : RComponent<FeedProps, FeedState>() {
                 e.innerHTML = new.url
                 val img = e.getElementsByTagName("img")[0]
                 val h3 = e.getElementsByTagName("h3")[0]
-                val p = e.getElementsByTagName("p")[0]?.innerHTML + e.getElementsByTagName("p")[1]?.innerHTML
+                val p = e.getElementsByTagName("p")[0]?.innerHTML
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p, new.id, new.date))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p?.substring(0,700), new.id, new.date))
                 }
             }
         }
@@ -81,13 +81,20 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         styledH5 {
                             +Date(it.date).getDate().toString()
                             +"."
-                            +(Date(it.date).getMonth()+1).toString()
+                            +(Date(it.date).getMonth() + 1).toString()
                             +"."
                             +Date(it.date).getFullYear().toString()
                         }
-                        styledP {
-                            +it.content!!
+                        +it.content!!.let { it.substring(0, it.length - 40) }
+                        it.content!!.let { it.substring(it.length - 40, it.length) }.forEachIndexed { index, c ->
+                            styledSpan {
+                                +c.toString()
+                                css {
+                                    opacity = 1 - 0.025 * index
+                                }
+                            }
                         }
+
                         css {
                             if (i % 2 == 0) float = Float.right
                             else float = Float.left
