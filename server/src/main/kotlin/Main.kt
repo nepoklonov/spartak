@@ -397,6 +397,7 @@ fun Application.main() {
             rpc(GalleryNavigationService::class)
             rpc(GamesNavigationService::class)
             rpc(WorkoutsNavigationService::class)
+            rpc(MainNavigationService::class)
 
             post("upload/image") {
                 suspend fun InputStream.copyToSuspend(

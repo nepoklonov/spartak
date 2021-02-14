@@ -43,7 +43,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                     if (props.isTrainer) {
                         +"Тренер"
                     } else {
-                        +props.teamMember!!.id.toString()
+                        +props.teamMember!!.number
                     }
                 }
                 styledDiv {

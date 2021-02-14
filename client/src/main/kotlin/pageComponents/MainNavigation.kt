@@ -14,13 +14,13 @@ import styled.styledDiv
 
 enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
-    News("Новости", "/news/feed"),
-    Games("Игры", "/games/championship2003"),
-    Teams("Команды", "/teams/2003"),
+    News("Новости", "/news"),
+    Games("Игры", "/games"),
+    Teams("Команды", "/teams"),
     Recruitment("Набор", "/recruitment"),
-    Workouts("Тренировки", "/workouts/shhm"),
+    Workouts("Тренировки", "/workouts"),
     SummerCamp("Летние Сборы", "/summerCamp"),
-    Gallery("Галерея", "/gallery/trainingProcess")
+    Gallery("Галерея", "/gallery")
 }
 
 external interface MainNavigationProps : RProps {

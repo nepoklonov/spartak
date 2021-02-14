@@ -1,16 +1,16 @@
 package pages
 
 import Styles
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onSubmitFunction
 import model.RecruitmentDTO
+import pageComponents.AdminButtonComponent
 import pageComponents.ColorSpartak
 import pageComponents.FormViewComponent
 import pageComponents.Input
-import pageComponents.AdminButtonComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -156,20 +156,21 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 }
             }
         }
-
-        styledDiv {
-            if (state.recruitments != null) {
-                state.recruitments!!.forEach { dto ->
-                    styledDiv {
-                        +dto.toString()
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                val recruitmentService = RecruitmentService (coroutineContext)
-                                props.coroutineScope.launch {
-                                    recruitmentService.deleteRecruitment(dto.id!!)
+        if (document.cookie == "role=Admin") {
+            styledDiv {
+                if (state.recruitments != null) {
+                    state.recruitments!!.forEach { dto ->
+                        styledDiv {
+                            +dto.toString()
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    val recruitmentService = RecruitmentService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        recruitmentService.deleteRecruitment(dto.id!!)
+                                    }
                                 }
+                                attrs.type = "delete"
                             }
-                            attrs.type = "delete"
                         }
                     }
                 }

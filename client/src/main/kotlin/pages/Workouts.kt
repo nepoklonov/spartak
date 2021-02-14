@@ -1,6 +1,7 @@
 package pages
 
 import headerText
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -143,64 +144,68 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    workoutsNavigationService.deleteWorkoutsSection(workoutsNavigation.id!!)
-                                }
-                            }
-                            attrs.type = "delete"
-                        }
-                        if (state.editSmallNavigationForm != workoutsNavigation) {
+                        if (document.cookie == "role=Admin") {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
-                                    setState {
-                                        editSmallNavigationForm = workoutsNavigation
-                                    }
-                                }
-                                attrs.type = "edit"
-                            }
-                        } else {
-                            child(SmallNavigationForm::class) {
-                                attrs.inputValues = listOf(workoutsNavigation.header, workoutsNavigation.link)
-                                attrs.addSection = { listOfInputValues ->
                                     val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
                                     props.coroutineScope.launch {
-                                        workoutsNavigationService.editWorkoutsSection(
-                                            NavigationDTO(
-                                                workoutsNavigation.id,
-                                                listOfInputValues[0],
-                                                listOfInputValues[1]
+                                        workoutsNavigationService.deleteWorkoutsSection(workoutsNavigation.id!!)
+                                    }
+                                }
+                                attrs.type = "delete"
+                            }
+                            if (state.editSmallNavigationForm != workoutsNavigation) {
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        setState {
+                                            editSmallNavigationForm = workoutsNavigation
+                                        }
+                                    }
+                                    attrs.type = "edit"
+                                }
+                            } else {
+                                child(SmallNavigationForm::class) {
+                                    attrs.inputValues = listOf(workoutsNavigation.header, workoutsNavigation.link)
+                                    attrs.addSection = { listOfInputValues ->
+                                        val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            workoutsNavigationService.editWorkoutsSection(
+                                                NavigationDTO(
+                                                    workoutsNavigation.id,
+                                                    listOfInputValues[0],
+                                                    listOfInputValues[1]
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    if (!state.smallNavigationForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    smallNavigationForm = true
+                    if (document.cookie == "role=Admin") {
+                        if (!state.smallNavigationForm) {
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        smallNavigationForm = true
+                                    }
                                 }
+                                attrs.type = "add"
                             }
-                            attrs.type = "add"
-                        }
-                    } else {
-                        child(SmallNavigationForm::class) {
-                            attrs.inputValues = listOf("", "")
-                            attrs.addSection = { listOfInputValues ->
-                                val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    workoutsNavigationService.addWorkoutsSection(
-                                        NavigationDTO(
-                                            null,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1]
+                        } else {
+                            child(SmallNavigationForm::class) {
+                                attrs.inputValues = listOf("", "")
+                                attrs.addSection = { listOfInputValues ->
+                                    val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        workoutsNavigationService.addWorkoutsSection(
+                                            NavigationDTO(
+                                                null,
+                                                listOfInputValues[0],
+                                                listOfInputValues[1]
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
@@ -232,7 +237,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                             }
 
                             styledDiv {
-                                css{
+                                css {
                                     height = 60.px
                                     width = 100.pct
                                     marginTop = 3.px
@@ -242,7 +247,12 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                     padding(10.px)
                                     display = Display.flex
                                     alignItems = Align.center
-                                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+                                    boxShadow(
+                                        color = rgba(0, 0, 0, 0.25),
+                                        offsetX = 0.px,
+                                        offsetY = 4.px,
+                                        blurRadius = 4.px
+                                    )
                                 }
                                 +daysOfWeek.value
                                 +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
@@ -280,74 +290,76 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                 +workout.text
                                             }
                                             styledTd {
-                                                child(AdminButtonComponent::class) {
-                                                    attrs.updateState = {
-                                                        val timetableService = WorkoutsService(coroutineContext)
-                                                        props.coroutineScope.launch {
-                                                            timetableService.makeNotActual(workout.id!!, monday)
-                                                        }
-                                                    }
-                                                    attrs.type = "delete"
-                                                }
-                                                if (state.editWorkoutForm != workout) {
+                                                if (document.cookie == "role=Admin") {
                                                     child(AdminButtonComponent::class) {
                                                         attrs.updateState = {
-                                                            setState {
-                                                                editWorkoutForm = workout
-                                                            }
-                                                        }
-                                                        attrs.type = "edit"
-                                                    }
-                                                } else {
-                                                    styledForm {
-                                                        attrs.onSubmitFunction = { event ->
-                                                            event.preventDefault()
-                                                            event.stopPropagation()
                                                             val timetableService = WorkoutsService(coroutineContext)
                                                             props.coroutineScope.launch {
-                                                                var formIsCompleted = true
-                                                                state.inputs.values.forEach {
-                                                                    if (it.isRed) {
-                                                                        formIsCompleted = false
-                                                                    }
-                                                                }
-                                                                if (formIsCompleted) {
-                                                                    timetableService.makeNotActual(
-                                                                        workout.id!!,
-                                                                        monday
-                                                                    )
-                                                                    timetableService.addWorkout(
-                                                                        WorkoutDTO(
-                                                                            null,
-                                                                            Date(state.inputs["startDatetime"]!!.inputValue).getHours()
-                                                                                .toString()
-                                                                                    + ":"
-                                                                                    + Date(state.inputs["startDatetime"]!!.inputValue).getMinutes()
-                                                                                .toString(),
-                                                                            Date(state.inputs["endDatetime"]!!.inputValue).getHours()
-                                                                                .toString()
-                                                                                    + ":"
-                                                                                    + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
-                                                                                .toString(),
-                                                                            Date(state.inputs["startDatetime"]!!.inputValue).getDay(),
-                                                                            props.selectedWorkout,
-                                                                            state.inputs["text"]!!.inputValue,
-                                                                            monday,
-                                                                            9999999999999.0
-                                                                        )
-                                                                    )
-                                                                }
+                                                                timetableService.makeNotActual(workout.id!!, monday)
                                                             }
                                                         }
-                                                        child(FormViewComponent::class) {
-                                                            attrs.inputs = state.inputs
-                                                            attrs.updateState =
-                                                                { key: String, value: String, isRed: Boolean ->
-                                                                    setState {
-                                                                        state.inputs[key]!!.inputValue = value
-                                                                        state.inputs[key]!!.isRed = isRed
+                                                        attrs.type = "delete"
+                                                    }
+                                                    if (state.editWorkoutForm != workout) {
+                                                        child(AdminButtonComponent::class) {
+                                                            attrs.updateState = {
+                                                                setState {
+                                                                    editWorkoutForm = workout
+                                                                }
+                                                            }
+                                                            attrs.type = "edit"
+                                                        }
+                                                    } else {
+                                                        styledForm {
+                                                            attrs.onSubmitFunction = { event ->
+                                                                event.preventDefault()
+                                                                event.stopPropagation()
+                                                                val timetableService = WorkoutsService(coroutineContext)
+                                                                props.coroutineScope.launch {
+                                                                    var formIsCompleted = true
+                                                                    state.inputs.values.forEach {
+                                                                        if (it.isRed) {
+                                                                            formIsCompleted = false
+                                                                        }
+                                                                    }
+                                                                    if (formIsCompleted) {
+                                                                        timetableService.makeNotActual(
+                                                                            workout.id!!,
+                                                                            monday
+                                                                        )
+                                                                        timetableService.addWorkout(
+                                                                            WorkoutDTO(
+                                                                                null,
+                                                                                Date(state.inputs["startDatetime"]!!.inputValue).getHours()
+                                                                                    .toString()
+                                                                                        + ":"
+                                                                                        + Date(state.inputs["startDatetime"]!!.inputValue).getMinutes()
+                                                                                    .toString(),
+                                                                                Date(state.inputs["endDatetime"]!!.inputValue).getHours()
+                                                                                    .toString()
+                                                                                        + ":"
+                                                                                        + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
+                                                                                    .toString(),
+                                                                                Date(state.inputs["startDatetime"]!!.inputValue).getDay(),
+                                                                                props.selectedWorkout,
+                                                                                state.inputs["text"]!!.inputValue,
+                                                                                monday,
+                                                                                9999999999999.0
+                                                                            )
+                                                                        )
                                                                     }
                                                                 }
+                                                            }
+                                                            child(FormViewComponent::class) {
+                                                                attrs.inputs = state.inputs
+                                                                attrs.updateState =
+                                                                    { key: String, value: String, isRed: Boolean ->
+                                                                        setState {
+                                                                            state.inputs[key]!!.inputValue = value
+                                                                            state.inputs[key]!!.isRed = isRed
+                                                                        }
+                                                                    }
+                                                            }
                                                         }
                                                     }
                                                 }
@@ -359,59 +371,61 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                         }
                     }
                 }
+                if (document.cookie == "role=Admin") {
 
-                styledDiv {
-
-                    if (!state.addWorkoutForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    addWorkoutForm = true
+                    styledDiv {
+                        if (!state.addWorkoutForm) {
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        addWorkoutForm = true
+                                    }
                                 }
+                                attrs.type = "add"
                             }
-                            attrs.type = "add"
-                        }
-                    } else {
-                        styledForm {
-                            attrs.onSubmitFunction = { event ->
-                                event.preventDefault()
-                                event.stopPropagation()
-                                val timetableService = WorkoutsService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    var formIsCompleted = true
-                                    state.inputs.values.forEach {
-                                        if (it.isRed) {
-                                            formIsCompleted = false
+                        } else {
+                            styledForm {
+                                attrs.onSubmitFunction = { event ->
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                    val timetableService = WorkoutsService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        var formIsCompleted = true
+                                        state.inputs.values.forEach {
+                                            if (it.isRed) {
+                                                formIsCompleted = false
+                                            }
+                                        }
+                                        if (formIsCompleted) {
+                                            timetableService.addWorkout(
+                                                WorkoutDTO(
+                                                    null,
+                                                    Date(state.inputs["startDatetime"]!!.inputValue).getHours()
+                                                        .toString()
+                                                            + ":"
+                                                            + Date(state.inputs["startDatetime"]!!.inputValue).getMinutes()
+                                                        .toString(),
+                                                    Date(state.inputs["endDatetime"]!!.inputValue).getHours().toString()
+                                                            + ":"
+                                                            + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
+                                                        .toString(),
+                                                    Date(state.inputs["startDatetime"]!!.inputValue).getDay(),
+                                                    props.selectedWorkout,
+                                                    state.inputs["text"]!!.inputValue,
+                                                    monday,
+                                                    9999999999999.0
+                                                )
+                                            )
                                         }
                                     }
-                                    if (formIsCompleted) {
-                                        timetableService.addWorkout(
-                                            WorkoutDTO(
-                                                null,
-                                                Date(state.inputs["startDatetime"]!!.inputValue).getHours().toString()
-                                                        + ":"
-                                                        + Date(state.inputs["startDatetime"]!!.inputValue).getMinutes()
-                                                    .toString(),
-                                                Date(state.inputs["endDatetime"]!!.inputValue).getHours().toString()
-                                                        + ":"
-                                                        + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
-                                                    .toString(),
-                                                Date(state.inputs["startDatetime"]!!.inputValue).getDay(),
-                                                props.selectedWorkout,
-                                                state.inputs["text"]!!.inputValue,
-                                                monday,
-                                                9999999999999.0
-                                            )
-                                        )
-                                    }
                                 }
-                            }
-                            child(FormViewComponent::class) {
-                                attrs.inputs = state.inputs
-                                attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                    setState {
-                                        state.inputs[key]!!.inputValue = value
-                                        state.inputs[key]!!.isRed = isRed
+                                child(FormViewComponent::class) {
+                                    attrs.inputs = state.inputs
+                                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                        setState {
+                                            state.inputs[key]!!.inputValue = value
+                                            state.inputs[key]!!.isRed = isRed
+                                        }
                                     }
                                 }
                             }
@@ -420,7 +434,6 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                 }
             }
         }
-
     }
 }
 

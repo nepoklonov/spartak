@@ -1,6 +1,7 @@
 package pages
 
 import headerText
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -32,6 +33,8 @@ class GalleryState : RState {
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
+
+
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
@@ -96,64 +99,69 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                val galleryNavigationService = GalleryNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    galleryNavigationService.deleteGallerySection(galleryNavigation.id!!)
-                                }
-                            }
-                            attrs.type = "delete"
-                        }
-                        if (state.editSmallNavigationForm != galleryNavigation) {
+                        if (document.cookie == "role=Admin") {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
-                                    setState {
-                                        editSmallNavigationForm = galleryNavigation
-                                    }
-                                }
-                                attrs.type = "edit"
-                            }
-                        } else {
-                            child(SmallNavigationForm::class) {
-                                attrs.inputValues = listOf(galleryNavigation.header, galleryNavigation.link)
-                                attrs.addSection = { listOfInputValues ->
                                     val galleryNavigationService = GalleryNavigationService(coroutineContext)
                                     props.coroutineScope.launch {
-                                        galleryNavigationService.editGallerySection(
-                                            NavigationDTO(
-                                                galleryNavigation.id,
-                                                listOfInputValues[0],
-                                                listOfInputValues[1]
+                                        galleryNavigationService.deleteGallerySection(galleryNavigation.id!!)
+                                    }
+                                }
+                                attrs.type = "delete"
+                            }
+
+                            if (state.editSmallNavigationForm != galleryNavigation) {
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        setState {
+                                            editSmallNavigationForm = galleryNavigation
+                                        }
+                                    }
+                                    attrs.type = "edit"
+                                }
+                            } else {
+                                child(SmallNavigationForm::class) {
+                                    attrs.inputValues = listOf(galleryNavigation.header, galleryNavigation.link)
+                                    attrs.addSection = { listOfInputValues ->
+                                        val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            galleryNavigationService.editGallerySection(
+                                                NavigationDTO(
+                                                    galleryNavigation.id,
+                                                    listOfInputValues[0],
+                                                    listOfInputValues[1]
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    if (!state.smallNavigationForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    smallNavigationForm = true
+                    if (document.cookie == "role=Admin") {
+                        if (!state.smallNavigationForm) {
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        smallNavigationForm = true
+                                    }
                                 }
+                                attrs.type = "add"
                             }
-                            attrs.type = "add"
-                        }
-                    } else {
-                        child(SmallNavigationForm::class) {
-                            attrs.inputValues = listOf("", "")
-                            attrs.addSection = { listOfInputValues ->
-                                val galleryNavigationService = GalleryNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    galleryNavigationService.addGallerySection(
-                                        NavigationDTO(
-                                            null,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1]
+                        } else {
+                            child(SmallNavigationForm::class) {
+                                attrs.inputValues = listOf("", "")
+                                attrs.addSection = { listOfInputValues ->
+                                    val galleryNavigationService = GalleryNavigationService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        galleryNavigationService.addGallerySection(
+                                            NavigationDTO(
+                                                null,
+                                                listOfInputValues[0],
+                                                listOfInputValues[1]
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
@@ -192,48 +200,50 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                     float = Float.left
                                 }
 
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        val photoService = PhotoService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            photoService.deletePhoto(photo.id!!)
+                                if (document.cookie == "role=Admin") {
+                                    child(AdminButtonComponent::class) {
+                                        attrs.updateState = {
+                                            val photoService = PhotoService(coroutineContext)
+                                            props.coroutineScope.launch {
+                                                photoService.deletePhoto(photo.id!!)
+                                            }
                                         }
+                                        attrs.type = "delete"
                                     }
-                                    attrs.type = "delete"
                                 }
                             }
                         }
                     }
                 }
                 styledDiv {
-                    if (!state.photoForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    photoForm = true
+                    if (document.cookie == "role=Admin") {
+                        if (!state.photoForm) {
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        photoForm = true
+                                    }
                                 }
+                                attrs.type = "add"
                             }
-                            attrs.type = "add"
-                        }
-                    } else {
-                        styledButton {
-                            attrs.onClickFunction = {
-                                val photoService = PhotoService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    photoService.addPhoto(
-                                        PhotoDTO(
-                                            null,
-                                            "address.png",
-                                            props.selectedGallerySection
+                        } else {
+                            styledButton {
+                                attrs.onClickFunction = {
+                                    val photoService = PhotoService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        photoService.addPhoto(
+                                            PhotoDTO(
+                                                null,
+                                                "address.png",
+                                                props.selectedGallerySection
+                                            )
                                         )
-                                    )
+                                    }
                                 }
+                                +"Добавить изображение (потом тут будет загрузка фоток честно)"
                             }
-                            +"Добавить изображение (потом тут будет загрузка фоток честно)"
                         }
-
                     }
-
                     if (state.selectedPhotoIndex != null) {
                         styledDiv {
                             attrs.onClickFunction = {
@@ -292,3 +302,4 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
         }
     }
 }
+

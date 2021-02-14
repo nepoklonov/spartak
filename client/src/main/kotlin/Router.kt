@@ -1,18 +1,39 @@
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import pages.*
-import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
+import react.*
 import react.router.dom.redirect
 import react.router.dom.route
 import react.router.dom.switch
+import services.MainNavigationService
 
 external interface RouterProps : RProps {
     var coroutineScope: CoroutineScope
 }
 
-class Router : RComponent<RouterProps, RState>() {
+class RouterState : RState {
+    var error: Throwable? = null
+    var mainNavigationList: List<String>? = null
+}
+
+class Router : RComponent<RouterProps, RouterState>() {
+    override fun componentDidMount() {
+        val mainNavigationService = MainNavigationService(props.coroutineScope.coroutineContext)
+        props.coroutineScope.launch {
+            val mainNavigationList = try {
+                mainNavigationService.getFirstLinks()
+            } catch (e: Throwable) {
+                setState {
+                    error = e
+                }
+                return@launch
+            }
+            setState {
+                this.mainNavigationList = mainNavigationList
+            }
+        }
+    }
+
     fun RBuilder.appWithRouter() {
         switch {
             redirect(from = "/", to = "/main", exact = true)
@@ -41,13 +62,18 @@ class Router : RComponent<RouterProps, RState>() {
                 }
             }
 
+            if (state.mainNavigationList != null) {
+                redirect(from = "/games", to = "/games/${state.mainNavigationList!![0]}", exact = true)
+            }
             route<GamesProps>("/games/:selectedChampionship") { championshipProps ->
                 child(Games::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedChampionship = championshipProps.match.params.selectedChampionship
                 }
             }
-
+            if (state.mainNavigationList != null) {
+                redirect(from = "/teams", to = "/teams/${state.mainNavigationList!![1]}", exact = true)
+            }
             route<TeamsProps>("/teams/:selectedTeam") { teamsProps ->
                 child(Teams::class) {
                     attrs.coroutineScope = props.coroutineScope
@@ -58,6 +84,9 @@ class Router : RComponent<RouterProps, RState>() {
                 child(Recruitment::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
+            }
+            if (state.mainNavigationList != null) {
+                redirect(from = "/workouts", to = "/workouts/${state.mainNavigationList!![2]}", exact = true)
             }
             route<WorkoutsProps>("/workouts/:selectedWorkout") { workoutsProps ->
                 child(Workouts::class) {
@@ -70,6 +99,9 @@ class Router : RComponent<RouterProps, RState>() {
                 child(SummerCamp::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
+            }
+            if (state.mainNavigationList != null) {
+                redirect(from = "/gallery", to = "/gallery/${state.mainNavigationList!![3]}", exact = true)
             }
             route<GalleryProps>("/gallery/:selectedGallerySection") { galleryProps ->
                 child(Gallery::class) {

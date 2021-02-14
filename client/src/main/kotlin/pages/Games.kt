@@ -1,6 +1,7 @@
 package pages
 
 import headerText
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -185,65 +186,68 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                val gameNavigationService = GamesNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    gameNavigationService.deleteGamesSection(gameNavigation.id!!)
-                                }
-                            }
-                            attrs.type = "delete"
-                        }
-                        if (state.editSmallNavigationForm != gameNavigation) {
+                        if (document.cookie == "role=Admin") {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
-                                    setState {
-                                        editSmallNavigationForm = gameNavigation
+                                    val gameNavigationService = GamesNavigationService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        gameNavigationService.deleteGamesSection(gameNavigation.id!!)
                                     }
                                 }
-                                attrs.type = "edit"
+                                attrs.type = "delete"
                             }
-                        } else {
-                            child(SmallNavigationForm::class) {
-                                attrs.inputValues = listOf(gameNavigation.header, gameNavigation.link)
-                                attrs.addSection = { listOfInputValues ->
-                                    val gamesNavigationService = GamesNavigationService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        gamesNavigationService.editGamesSection(
-                                            NavigationDTO(
-                                                gameNavigation.id,
-                                                listOfInputValues[0],
-                                                listOfInputValues[1]
+                            if (state.editSmallNavigationForm != gameNavigation) {
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        setState {
+                                            editSmallNavigationForm = gameNavigation
+                                        }
+                                    }
+                                    attrs.type = "edit"
+                                }
+                            } else {
+                                child(SmallNavigationForm::class) {
+                                    attrs.inputValues = listOf(gameNavigation.header, gameNavigation.link)
+                                    attrs.addSection = { listOfInputValues ->
+                                        val gamesNavigationService = GamesNavigationService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            gamesNavigationService.editGamesSection(
+                                                NavigationDTO(
+                                                    gameNavigation.id,
+                                                    listOfInputValues[0],
+                                                    listOfInputValues[1]
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                    console.log(state.smallNavigationForm)
-                    if (!state.smallNavigationForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    smallNavigationForm = true
+                    if (document.cookie == "role=Admin") {
+                        if (!state.smallNavigationForm) {
+                            child(AdminButtonComponent::class) {
+                                attrs.updateState = {
+                                    setState {
+                                        smallNavigationForm = true
+                                    }
                                 }
+                                attrs.type = "add"
                             }
-                            attrs.type = "add"
-                        }
-                    } else {
-                        child(SmallNavigationForm::class) {
-                            attrs.inputValues = listOf("", "")
-                            attrs.addSection = { listOfInputValues ->
-                                val gamesNavigationService = GamesNavigationService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    gamesNavigationService.addGamesSection(
-                                        NavigationDTO(
-                                            null,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1]
+                        } else {
+                            child(SmallNavigationForm::class) {
+                                attrs.inputValues = listOf("", "")
+                                attrs.addSection = { listOfInputValues ->
+                                    val gamesNavigationService = GamesNavigationService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        gamesNavigationService.addGamesSection(
+                                            NavigationDTO(
+                                                null,
+                                                listOfInputValues[0],
+                                                listOfInputValues[1]
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                         }
@@ -319,68 +323,69 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 td {
                                     +game.result!!
                                 }
-
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        val gameService = GameService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            gameService.deleteGame(game.id)
-                                        }
-                                    }
-                                    attrs.type = "delete"
-                                }
-                                if (state.editGameForm != game) {
+                                if (document.cookie == "role=Admin") {
                                     child(AdminButtonComponent::class) {
                                         attrs.updateState = {
-                                            setState {
-                                                editGameForm = game
-                                                inputs["date"]!!.inputValue = game.date
-                                                inputs["time"]!!.inputValue = game.time ?: ""
-                                                inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
-                                                inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
-                                                inputs["stadium"]!!.inputValue = game.stadium
-                                                inputs["result"]!!.inputValue = game.result ?: ""
+                                            val gameService = GameService(coroutineContext)
+                                            props.coroutineScope.launch {
+                                                gameService.deleteGame(game.id)
                                             }
                                         }
-                                        attrs.type = "edit"
+                                        attrs.type = "delete"
                                     }
-                                } else {
-                                    styledDiv {
-                                        styledForm {
-                                            attrs.onSubmitFunction = { event ->
-                                                event.preventDefault()
-                                                event.stopPropagation()
-                                                val gameService = GameService(coroutineContext)
-                                                props.coroutineScope.launch {
-                                                    var formIsCompleted = true
-                                                    state.inputs.values.forEach {
-                                                        if (it.isRed) {
-                                                            formIsCompleted = false
-                                                        }
-                                                    }
-                                                    if (formIsCompleted) {
-                                                        gameService.editGame(
-                                                            GameDTO(
-                                                                game.id,
-                                                                state.inputs["date"]!!.inputValue,
-                                                                state.inputs["time"]!!.inputValue,
-                                                                props.selectedChampionship,
-                                                                state.inputs["teamA"]!!.inputValue.toInt(),
-                                                                state.inputs["teamB"]!!.inputValue.toInt(),
-                                                                state.inputs["stadium"]!!.inputValue,
-                                                                state.inputs["result"]!!.inputValue,
-                                                            )
-                                                        )
-                                                    }
+                                    if (state.editGameForm != game) {
+                                        child(AdminButtonComponent::class) {
+                                            attrs.updateState = {
+                                                setState {
+                                                    editGameForm = game
+                                                    inputs["date"]!!.inputValue = game.date
+                                                    inputs["time"]!!.inputValue = game.time ?: ""
+                                                    inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
+                                                    inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
+                                                    inputs["stadium"]!!.inputValue = game.stadium
+                                                    inputs["result"]!!.inputValue = game.result ?: ""
                                                 }
                                             }
-                                            child(FormViewComponent::class) {
-                                                console.log(state.inputs)
-                                                attrs.inputs = state.inputs
-                                                attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                                    setState {
-                                                        state.inputs[key]!!.inputValue = value
-                                                        state.inputs[key]!!.isRed = isRed
+                                            attrs.type = "edit"
+                                        }
+                                    } else {
+                                        styledDiv {
+                                            styledForm {
+                                                attrs.onSubmitFunction = { event ->
+                                                    event.preventDefault()
+                                                    event.stopPropagation()
+                                                    val gameService = GameService(coroutineContext)
+                                                    props.coroutineScope.launch {
+                                                        var formIsCompleted = true
+                                                        state.inputs.values.forEach {
+                                                            if (it.isRed) {
+                                                                formIsCompleted = false
+                                                            }
+                                                        }
+                                                        if (formIsCompleted) {
+                                                            gameService.editGame(
+                                                                GameDTO(
+                                                                    game.id,
+                                                                    state.inputs["date"]!!.inputValue,
+                                                                    state.inputs["time"]!!.inputValue,
+                                                                    props.selectedChampionship,
+                                                                    state.inputs["teamA"]!!.inputValue.toInt(),
+                                                                    state.inputs["teamB"]!!.inputValue.toInt(),
+                                                                    state.inputs["stadium"]!!.inputValue,
+                                                                    state.inputs["result"]!!.inputValue,
+                                                                )
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                child(FormViewComponent::class) {
+                                                    console.log(state.inputs)
+                                                    attrs.inputs = state.inputs
+                                                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                                        setState {
+                                                            state.inputs[key]!!.inputValue = value
+                                                            state.inputs[key]!!.isRed = isRed
+                                                        }
                                                     }
                                                 }
                                             }
@@ -392,69 +397,71 @@ class Games : RComponent<GamesProps, GamesState>() {
 
                     }
                 }
-                if (!state.addGameForm) {
-                    child(AdminButtonComponent::class) {
-                        attrs.updateState = {
-                            setState {
-                                addGameForm = true
+                if (document.cookie == "role=Admin") {
+                    if (!state.addGameForm) {
+                        child(AdminButtonComponent::class) {
+                            attrs.updateState = {
+                                setState {
+                                    addGameForm = true
+                                }
                             }
+                            attrs.type = "add"
                         }
-                        attrs.type = "add"
-                    }
-                } else {
-                    styledForm {
-                        attrs.onSubmitFunction = { event ->
-                            event.preventDefault()
-                            event.stopPropagation()
-                            val gameService = GameService(coroutineContext)
-                            props.coroutineScope.launch {
-                                var formIsCompleted = true
-                                state.inputs.values.forEach {
-                                    if (it.isRed) {
-                                        formIsCompleted = false
+                    } else {
+                        styledForm {
+                            attrs.onSubmitFunction = { event ->
+                                event.preventDefault()
+                                event.stopPropagation()
+                                val gameService = GameService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    var formIsCompleted = true
+                                    state.inputs.values.forEach {
+                                        if (it.isRed) {
+                                            formIsCompleted = false
+                                        }
+                                    }
+                                    if (formIsCompleted) {
+                                        gameService.addGame(
+                                            GameDTO(
+                                                null,
+                                                state.inputs["date"]!!.inputValue,
+                                                state.inputs["time"]!!.inputValue,
+                                                props.selectedChampionship,
+                                                state.inputs["teamA"]!!.inputValue.toInt(),
+                                                state.inputs["teamB"]!!.inputValue.toInt(),
+                                                state.inputs["stadium"]!!.inputValue,
+                                                state.inputs["result"]!!.inputValue,
+                                            )
+                                        )
                                     }
                                 }
-                                if (formIsCompleted) {
-                                    gameService.addGame(
-                                        GameDTO(
-                                            null,
-                                            state.inputs["date"]!!.inputValue,
-                                            state.inputs["time"]!!.inputValue,
-                                            props.selectedChampionship,
-                                            state.inputs["teamA"]!!.inputValue.toInt(),
-                                            state.inputs["teamB"]!!.inputValue.toInt(),
-                                            state.inputs["stadium"]!!.inputValue,
-                                            state.inputs["result"]!!.inputValue,
-                                        )
-                                    )
-                                }
                             }
-                        }
-                        child(FormViewComponent::class) {
-                            attrs.inputs = state.inputs
-                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                setState {
-                                    state.inputs[key]!!.inputValue = value
-                                    state.inputs[key]!!.isRed = isRed
-                                }
-                            }
-                            attrs.addOtherOption = { isItTeamA: Boolean, teamName: String ->
-                                val teamService = TeamService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    val team = TeamDTO(
-                                        null,
-                                        teamName,
-                                        null,
-                                        false,
-                                        null
-                                    )
-                                    val id = teamService.addTeam(team)
-                                    team.id = id
+                            child(FormViewComponent::class) {
+                                attrs.inputs = state.inputs
+                                attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                     setState {
-                                        if (isItTeamA) {
-                                            inputs["teamA"]!!.inputValue = id.toString()
-                                        } else {
-                                            inputs["teamB"]!!.inputValue = id.toString()
+                                        state.inputs[key]!!.inputValue = value
+                                        state.inputs[key]!!.isRed = isRed
+                                    }
+                                }
+                                attrs.addOtherOption = { isItTeamA: Boolean, teamName: String ->
+                                    val teamService = TeamService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        val team = TeamDTO(
+                                            null,
+                                            teamName,
+                                            null,
+                                            false,
+                                            null
+                                        )
+                                        val id = teamService.addTeam(team)
+                                        team.id = id
+                                        setState {
+                                            if (isItTeamA) {
+                                                inputs["teamA"]!!.inputValue = id.toString()
+                                            } else {
+                                                inputs["teamB"]!!.inputValue = id.toString()
+                                            }
                                         }
                                     }
                                 }

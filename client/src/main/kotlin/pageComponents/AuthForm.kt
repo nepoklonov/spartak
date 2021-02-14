@@ -1,5 +1,6 @@
 package pageComponents
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.InputType
@@ -36,6 +37,7 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
         props.coroutineScope.launch {
             if (adminService.checkAdmin(state.inputs["login"].toString(), state.inputs["password"].toString())) {
                 console.log("LOGGED IN")
+                document.cookie = "role=Admin"
             } else {
                 console.log("FAILED")
             }

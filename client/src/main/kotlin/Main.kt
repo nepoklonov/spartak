@@ -1,3 +1,4 @@
+
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -21,6 +22,9 @@ private class Application : CoroutineScope {
 
     fun start() {
         document.getElementById("react-app")?.let {
+            val SpartakContext = react.createContext("Basic")
+            SpartakContext.Provider
+
             render(buildElements {
                 browserRouter {
                     styledDiv {
