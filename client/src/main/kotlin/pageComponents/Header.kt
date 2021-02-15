@@ -66,14 +66,14 @@ class HeaderComponent : RComponent<RProps, RState>() {
                     alignSelf = Align.center
                     fontSize = 60.px
                     lineHeight = LineHeight.normal
-                    media("(max-width: 980px)"){
+                    media("(max-width: 1024px)"){
                         fontSize = 26.px
                     }
                     media("(max-width: 1200px)"){
                         fontSize = 40.px
                     }
                 }
-                +"Молодежный хоккейный клуб «Спартак»"
+                +"Молодежный хоккейный клуб «Спартак»"
             }
 
             styledDiv {

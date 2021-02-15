@@ -99,7 +99,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie == "role=Admin") {
+                        if (document.cookie.contains("role=Admin") ) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val galleryNavigationService = GalleryNavigationService(coroutineContext)
@@ -138,7 +138,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                         }
                     }
-                    if (document.cookie == "role=Admin") {
+                    if (document.cookie.contains("role=Admin") ) {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -200,7 +200,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                     float = Float.left
                                 }
 
-                                if (document.cookie == "role=Admin") {
+                                if (document.cookie.contains("role=Admin") ) {
                                     child(AdminButtonComponent::class) {
                                         attrs.updateState = {
                                             val photoService = PhotoService(coroutineContext)
@@ -216,7 +216,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     }
                 }
                 styledDiv {
-                    if (document.cookie == "role=Admin") {
+                    if (document.cookie.contains("role=Admin") ) {
                         if (!state.photoForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {

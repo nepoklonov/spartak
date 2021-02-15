@@ -186,7 +186,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie == "role=Admin") {
+                        if (document.cookie.contains("role=Admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val gameNavigationService = GamesNavigationService(coroutineContext)
@@ -224,7 +224,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                             }
                         }
                     }
-                    if (document.cookie == "role=Admin") {
+                    if (document.cookie.contains("role=Admin")) {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -323,7 +323,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 td {
                                     +game.result!!
                                 }
-                                if (document.cookie == "role=Admin") {
+                                if (document.cookie.contains("role=Admin")) {
                                     child(AdminButtonComponent::class) {
                                         attrs.updateState = {
                                             val gameService = GameService(coroutineContext)
@@ -397,7 +397,7 @@ class Games : RComponent<GamesProps, GamesState>() {
 
                     }
                 }
-                if (document.cookie == "role=Admin") {
+                if (document.cookie.contains("role=Admin")) {
                     if (!state.addGameForm) {
                         child(AdminButtonComponent::class) {
                             attrs.updateState = {

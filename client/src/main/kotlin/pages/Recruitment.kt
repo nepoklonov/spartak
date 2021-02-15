@@ -156,7 +156,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 }
             }
         }
-        if (document.cookie == "role=Admin") {
+        if (document.cookie.contains("role=Admin")) {
             styledDiv {
                 if (state.recruitments != null) {
                     state.recruitments!!.forEach { dto ->

@@ -321,9 +321,10 @@ INSERT INTO photos ("url", "gallerySection") VALUES ('Training_process_3.jpg', '
 INSERT INTO photos ("url", "gallerySection") VALUES ('Training_process_4.jpg', 'trainingProcess');
 INSERT INTO photos ("url", "gallerySection") VALUES ('Training_process_5.jpg', 'trainingProcess');
 
-INSERT INTO gallerysections ("name", "link") VALUES ('Первенство СПБ 2003', 'championship2003');
-INSERT INTO gallerysections ("name", "link") VALUES ('Первенство СПБ 2005', 'championship2005');
-INSERT INTO gallerysections ("name", "link") VALUES ('Первенство СПБ 2006', 'championship2006');
+INSERT INTO gallerysections ("name", "link") VALUES ('Тренировочный процесс', 'trainingProcess');
+INSERT INTO gallerysections ("name", "link") VALUES ('Кубок Ладоги 2019', 'LadogaCup2019');
+INSERT INTO gallerysections ("name", "link") VALUES ('Пекин', 'Beijing');
+INSERT INTO gallerysections ("name", "link") VALUES ('Турнир 2011 г.р.', 'championship2011');
 
 INSERT INTO workoutssections ("name", "link") VALUES ('ШХМ', 'shhm');
 INSERT INTO workoutssections ("name", "link") VALUES ('Спартак 2013', 'spartak_2013');

@@ -14,6 +14,7 @@ import io.ktor.sessions.*
 import kotlinx.coroutines.*
 import kotlinx.css.*
 import kotlinx.css.Float
+import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
@@ -64,6 +65,7 @@ private val globalCss = CSSBuilder().apply {
     "*" {
         fontFamily = "PT"
         fontSize = 20.px
+        lineHeight = LineHeight.normal
     }
     button{
         backgroundColor = Color("#9D0707")

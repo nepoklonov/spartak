@@ -2,7 +2,6 @@
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
-import kotlinx.css.properties.boxShadow
 import kotlinx.html.BUTTON
 import kotlinx.html.H1
 import pageComponents.ColorSpartak
@@ -23,6 +22,7 @@ object Styles : StyleSheet("main") {
 
 
     val button by css {
+        textAlign = TextAlign.center
         border = "none"
         textDecoration = TextDecoration.none
         fontFamily = "Russo"
@@ -32,6 +32,7 @@ object Styles : StyleSheet("main") {
         paddingLeft = 50.px
         paddingRight = 50.px
         cursor = Cursor.pointer
+        margin(left=0.px)
     }
 
 }
