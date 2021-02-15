@@ -1,5 +1,3 @@
-@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-
 import database.*
 import io.ktor.application.*
 import io.ktor.features.*
@@ -11,6 +9,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
+import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.css.*
 import kotlinx.css.Float
@@ -18,15 +17,17 @@ import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
-
 import java.util.*
+
 
 private val globalCss = CSSBuilder().apply {
     fontFace {
@@ -48,7 +49,7 @@ private val globalCss = CSSBuilder().apply {
 
         lineHeight = 20.px.lh
     }
-    h1{
+    h1 {
         fontFamily = "Russo"
         fontSize = 42.667.px
         margin = 50.px.toString()
@@ -67,7 +68,7 @@ private val globalCss = CSSBuilder().apply {
         fontSize = 20.px
         lineHeight = LineHeight.normal
     }
-    button{
+    button {
         backgroundColor = Color("#9D0707")
         hover {
             backgroundColor = Color("#660c0c")
@@ -83,26 +84,26 @@ private val globalCss = CSSBuilder().apply {
         cursor = Cursor.pointer
         margin = 10.px.toString()
     }
-    rule(".news-img"){
+    rule(".news-img") {
         width = 32.pct
         padding = 1.pct.toString()
         height = LinearDimension.auto
         float = Float.left
     }
-    rule(".news-div"){
+    rule(".news-div") {
         padding = 1.pct.toString()
         minWidth = 30.pct
     }
-    rule(".summer-camp-img, .main-img" ){
+    rule(".summer-camp-img, .main-img") {
         width = 40.pct
         padding = 50.px.toString()
         height = LinearDimension.auto
     }
-    rule(".summer-camp-div, .main"){
+    rule(".summer-camp-div, .main") {
         display = Display.flex
         justifyContent = JustifyContent.spaceAround
     }
-    rule(".summer-camp-content, .main-content"){
+    rule(".summer-camp-content, .main-content") {
         padding = 50.px.toString()
         alignContent = Align.center
         display = Display.block
@@ -134,214 +135,6 @@ fun Application.main() {
         SchemaUtils.create(GallerySections)
         SchemaUtils.create(GamesSections)
         SchemaUtils.create(WorkoutsSections)
-    }
-
-    launch {
-
-        database {
-            Admins.insert {
-                it[login] = "admin"
-                it[password] = "admin"
-            }
-        }
-
-        database {
-            Checks.insert {
-                it[checkId] = 1
-                it[checkText] = "Everything is fine. Thanks."
-            }
-        }
-        for (i in 1 until 20) {
-            database {
-                Photos.insert {
-                    it[url] = "logo.png"
-                    it[gallerySection] = "trainingProcess"
-                }
-            }
-        }
-        for (i in 1 until 21) {
-            database {
-                News.insert {
-                    it[url] = "/newsHtml/$i.html"
-                    it[date] = (Date()).getTime()
-                }
-            }
-        }
-        for (i in 1 until 20) {
-            database {
-                Photos.insert {
-                    it[url] = "vk.png"
-                    it[gallerySection] = "LadogaCup2019"
-                }
-            }
-        }
-        database {
-            TeamMembers.insert {
-                it[teamLink] = "2003"
-                it[number] = "1"
-                it[photo] = "logo.png"
-                it[firstName] = "Змейка"
-                it[lastName] = "Гитарова"
-                it[role] = "defenders"
-                it[birthday] = "28.08.2019"
-                it[city] = "г.Ейск"
-                it[teamRole] = "K"
-            }
-            TeamMembers.insert {
-                it[teamLink] = "2003"
-                it[number] = "1"
-                it[photo] = "logo.png"
-                it[firstName] = "Змейка"
-                it[lastName] = "Гитарова"
-                it[role] = "defenders"
-                it[birthday] = "28.08.2019"
-                it[city] = "г.Ейск"
-                it[teamRole] = "А"
-            }
-        }
-
-        database {
-            Games.insert {
-                it[date] = "dhzkjfh"
-                it[time] = "Змейка"
-                it[year] = "championship2003"
-                it[teamAId] = 1
-                it[teamBId] = 1
-                it[stadium] = "28.08.2019"
-                it[result] = "г.Ейск"
-            }
-        }
-        database {
-            Trainers.insert {
-                it[teamLink] = "2003"
-                it[name] = "2003"
-                it[photo] = "logo.png"
-                it[info] = "drfghygtfrdesdrftgyhujhygtfrdesrftgyhujiuhygtrfeddrftgyhukjiuhygtrfedswredrftgyhu"
-            }
-        }
-        database {
-            Teams.insert {
-                it[name] = "spartak"
-                it[link] = "2003"
-                it[isOur] = true
-                it[year] = "2003"
-            }
-        }
-        database {
-            Teams.insert {
-                it[name] = "ne spartak"
-                it[link] = "2004"
-                it[isOur] = false
-                it[year] = "2003"
-            }
-        }
-        database {
-            Workouts.insert {
-                it[startTime] = "10:15"
-                it[endTime] = "10:30"
-                it[dayOfWeek] = 1
-                it[sectionLink] = "shhm"
-                it[text] = "ура наконец-то я доделала это ебанное расписание"
-                it[actualFromDate] = 1612020600000.0
-                it[actualToDate] = 1612020600000.0
-            }
-        }
-        database {
-            GallerySections.insert {
-                it[header] = "Тренировочный процесс"
-                it[link] = "trainingProcess"
-            }
-        }
-        database {
-            GallerySections.insert {
-                it[header] = "Кубок Ладоги 2019"
-                it[link] = "LadogaCup2019"
-            }
-        }
-        database {
-            GallerySections.insert {
-                it[header] = "Пекин"
-                it[link] = "Beijing"
-            }
-        }
-        database {
-            GallerySections.insert {
-                it[header] = "Турнир 2011 г.р."
-                it[link] = "championship2011"
-            }
-        }
-        database {
-            GamesSections.insert {
-                it[header] = "Первенство СПБ 2003"
-                it[link] = "championship2003"
-            }
-        }
-        database {
-            GamesSections.insert {
-                it[header] = "Первенство СПБ 2004"
-                it[link] = "championship2004"
-            }
-        }
-        database {
-            GamesSections.insert {
-                it[header] = "Первенство СПБ 2006"
-                it[link] = "championship2006"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "ШХМ"
-                it[link] = "shhm"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак 2013"
-                it[link] = "2013"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак 2003-2004"
-                it[link] = "2003"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак 2005"
-                it[link] = "2005"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Вратарские Тренировки"
-                it[link] = "goalkeepers"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Группа набора"
-                it[link] = "recruitment"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак 2006"
-                it[link] = "2006"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак Красная Ракета"
-                it[link] = "red"
-            }
-        }
-        database {
-            WorkoutsSections.insert {
-                it[header] = "Спартак 2008"
-                it[link] = "2008"
-            }
-        }
     }
 
     routing {
@@ -405,47 +198,86 @@ fun Application.main() {
             rpc(MainNavigationService::class)
 
             post("upload/image") {
-                suspend fun InputStream.copyToSuspend(
-                    out: OutputStream,
-                    bufferSize: Int = DEFAULT_BUFFER_SIZE,
-                    yieldSize: Int = 4 * 1024 * 1024,
-                    dispatcher: CoroutineDispatcher = Dispatchers.IO
-                ): Long {
-                    return withContext(dispatcher) {
-                        val buffer = ByteArray(bufferSize)
-                        var bytesCopied = 0L
-                        var bytesAfterYield = 0L
-                        while (true) {
-                            val bytes = read(buffer).takeIf { it >= 0 } ?: break
-                            out.write(buffer, 0, bytes)
-                            if (bytesAfterYield >= yieldSize) {
-                                yield()
-                                bytesAfterYield %= yieldSize
-                            }
-                            bytesCopied += bytes
-                            bytesAfterYield += bytes
-                        }
-                        return@withContext bytesCopied
-                    }
-                }
-
+                var location: String? = null
+                val files = mutableListOf<File>()
+                val uploadDir = "uploads"
+                val timestamp = createTimestamp("yyyy-MM-dd-HH-mm-ss-SSS")
+                var counter = 0
                 val multipart = call.receiveMultipart()
+
                 multipart.forEachPart { part ->
                     when (part) {
+                        is PartData.FormItem -> {
+                            if (part.name == "location") {
+                                location = part.value
+                            }
+                        }
+
                         is PartData.FileItem -> {
-                            val uploadDir = "uploads"  // CREATED LINE
-                            val ext = File(part.originalFileName).extension
-                            val file = File(uploadDir, "upload-${System.currentTimeMillis()}.$ext")
+                            val suffix = randomString(8L)
+                            val fileName = "$timestamp-$counter-$suffix"
+                            val extension = part.originalFileName?.let { File(it) }?.extension ?: "file"
+                            val file = File(uploadDir, "$fileName.$extension").also { it.parentFile.mkdirs() }
+                            files += file
                             part.streamProvider().use { input ->
                                 file.outputStream().buffered().use { output -> input.copyToSuspend(output) }
                             }
                         }
+                        is PartData.BinaryItem -> TODO()
                     }
-
                     part.dispose()
+                    counter += 1
+                }
+
+                location
+                    ?.takeIf { it.startsWith("uploads") || it.startsWith("images") }
+                    ?.takeIf { !it.contains("..") } //perfect task for the interview
+                    ?.let { dir ->
+                        files.replaceAll { file ->
+                            File(dir, file.name)
+                                .also { it.parentFile.mkdirs() }
+                                .takeIf { !it.exists() }
+                                ?.also { destination ->
+                                    file.copyTo(destination)
+                                    file.delete()
+                                } ?: file
+                        }
+                    }
+                val address: File.() -> String = { "$parent/$name" }
+                when (files.size) {
+                    0 -> call.respond(HttpStatusCode.BadRequest)
+                    1 -> call.respondText(files[0].address())
+                    else -> call.respondText {
+                        Json.encodeToString(ListSerializer(String.serializer()), files.map(address))
+                    }
                 }
             }
         }
     }
 }
 
+
+@Suppress("BlockingMethodInNonBlockingContext")
+suspend fun InputStream.copyToSuspend(
+    out: OutputStream,
+    bufferSize: Int = DEFAULT_BUFFER_SIZE,
+    yieldSize: Int = 4 * 1024 * 1024,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+): Long {
+    return withContext(dispatcher) {
+        val buffer = ByteArray(bufferSize)
+        var bytesCopied = 0L
+        var bytesAfterYield = 0L
+        while (true) {
+            val bytes = read(buffer).takeIf { it >= 0 } ?: break
+            out.write(buffer, 0, bytes)
+            if (bytesAfterYield >= yieldSize) {
+                yield()
+                bytesAfterYield %= yieldSize
+            }
+            bytesCopied += bytes
+            bytesAfterYield += bytes
+        }
+        return@withContext bytesCopied
+    }
+}

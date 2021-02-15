@@ -1,19 +1,13 @@
 package pages
 
-import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.html.InputType
-import kotlinx.html.js.onSubmitFunction
-import org.w3c.dom.events.Event
 import pageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
 import styled.styledDiv
-import styled.styledForm
-import styled.styledInput
 
 external interface MainProps : RProps {
     var coroutineScope: CoroutineScope
@@ -43,7 +37,7 @@ class Main : RComponent<MainProps, MainState>() {
                 return@launch
             }
 
-            setState() {
+            setState {
                 this.mainHtml = mainHtml
             }
         }

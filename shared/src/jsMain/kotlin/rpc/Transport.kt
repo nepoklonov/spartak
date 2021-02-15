@@ -72,8 +72,8 @@ class Transport(private val coroutineContext: CoroutineContext) {
                 url, RequestInit(
                     method = method,
                     headers = json(
-                        "Accept" to "application/json",
-                        "Content-Type" to "application/json"
+                        "Accept" to "application/json; charset=UTF-8",
+                        "Content-Type" to "application/json; charset=UTF-8"
                     ),
                     credentials = "same-origin".asDynamic(),
                     body = if (method == "POST") JSON.stringify(json(*args)).also { console.log(it) } else undefined
