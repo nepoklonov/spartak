@@ -77,6 +77,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
     }
 
     override fun RBuilder.render() {
+        console.log(document.cookie)
 
         styledDiv {
             css {
@@ -99,7 +100,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie.contains("role=Admin") ) {
+                        if (document.cookie.contains("role=admin") ) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val galleryNavigationService = GalleryNavigationService(coroutineContext)
@@ -138,7 +139,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                         }
                     }
-                    if (document.cookie.contains("role=Admin") ) {
+                    if (document.cookie.contains("role=admin") ) {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -200,7 +201,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                     float = Float.left
                                 }
 
-                                if (document.cookie.contains("role=Admin") ) {
+                                if (document.cookie.contains("role=admin") ) {
                                     child(AdminButtonComponent::class) {
                                         attrs.updateState = {
                                             val photoService = PhotoService(coroutineContext)
@@ -216,7 +217,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     }
                 }
                 styledDiv {
-                    if (document.cookie.contains("role=Admin") ) {
+                    if (document.cookie.contains("role=admin") ) {
                         if (!state.photoForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {

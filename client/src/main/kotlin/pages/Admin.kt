@@ -17,6 +17,7 @@ interface AdminProps : RProps {
 
 class Admin : RComponent<AdminProps, RState>() {
     override fun RBuilder.render() {
+        console.log(document.cookie)
         styledDiv {
             child(AuthFormComponent::class) {
                 attrs.coroutineScope = props.coroutineScope
@@ -24,13 +25,15 @@ class Admin : RComponent<AdminProps, RState>() {
         }
         styledButton {
             attrs.onClickFunction = {
-                document.cookie = "role=Admin"
+                document.cookie = "role=admin"
+                console.log(document.cookie)
             }
             +"войти"
         }
         styledButton {
             attrs.onClickFunction = {
-                document.cookie = "role=Basic"
+                document.cookie = "role=basic"
+                console.log(document.cookie)
             }
             +"выйти"
         }

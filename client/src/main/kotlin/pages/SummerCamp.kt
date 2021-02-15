@@ -1,7 +1,9 @@
 package pages
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import pageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -41,6 +43,11 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
     }
 
     override fun RBuilder.render() {
+        if ((document.cookie == "role=admin") && (state.summerCampHtml != null)) {
+            child(CKEditorComponent::class) {
+                attrs.text = state.summerCampHtml!!
+            }
+        }
         styledDiv {
             if (state.summerCampHtml != null) {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.summerCampHtml!!)
