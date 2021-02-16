@@ -69,9 +69,11 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
 
 
     override fun RBuilder.render() {
-        if ((document.cookie == "role=admin") && (state.longNews?.news != null)) {
+        if (document.cookie.contains("role=admin")&& (state.longNews?.news != null)) {
             child(CKEditorComponent::class) {
                 attrs.text = state.longNews?.news!!
+                attrs.coroutineScope = props.coroutineScope
+                attrs.url = "newsHtml/${props.selectedNewsId}.html"
             }
         }
         val previousNewsId = if (state.longNews?.prevId != null) {

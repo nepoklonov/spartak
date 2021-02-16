@@ -1,5 +1,6 @@
 package pages
 
+import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -44,7 +45,7 @@ class Main : RComponent<MainProps, MainState>() {
     }
 
     override fun RBuilder.render() {
-        if ( (state.mainHtml != null)) {
+        if (document.cookie.contains("role=admin") && (state.mainHtml != null)) {
             child(CKEditorComponent::class) {
                 attrs.text = state.mainHtml!!
                 attrs.url = "htmlPages/Main.html"

@@ -1,3 +1,5 @@
+@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+
 import database.*
 import io.ktor.application.*
 import io.ktor.features.*
@@ -9,25 +11,21 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.sessions.*
-import io.ktor.util.*
 import kotlinx.coroutines.*
 import kotlinx.css.*
 import kotlinx.css.Float
-import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
-import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
-import java.util.*
 
+import java.util.*
 
 private val globalCss = CSSBuilder().apply {
     fontFace {
@@ -49,7 +47,7 @@ private val globalCss = CSSBuilder().apply {
 
         lineHeight = 20.px.lh
     }
-    h1 {
+    h1{
         fontFamily = "Russo"
         fontSize = 42.667.px
         margin = 50.px.toString()
@@ -66,9 +64,8 @@ private val globalCss = CSSBuilder().apply {
     "*" {
         fontFamily = "PT"
         fontSize = 20.px
-        lineHeight = LineHeight.normal
     }
-    button {
+    button{
         backgroundColor = Color("#9D0707")
         hover {
             backgroundColor = Color("#660c0c")
@@ -84,27 +81,31 @@ private val globalCss = CSSBuilder().apply {
         cursor = Cursor.pointer
         margin = 10.px.toString()
     }
-    rule(".news-img") {
+    rule(".news-img"){
         width = 32.pct
         padding = 1.pct.toString()
         height = LinearDimension.auto
         float = Float.left
     }
-    rule(".news-div") {
+    rule(".news-div"){
         padding = 1.pct.toString()
         minWidth = 30.pct
     }
-    rule(".summer-camp-img, .main-img") {
+    rule(".summer-camp-img, .main-img, .ck-content .image" ){
         width = 40.pct
         padding = 50.px.toString()
         height = LinearDimension.auto
     }
-    rule(".summer-camp-div, .main") {
+    rule(".summer-camp-div, .main"){
         display = Display.flex
         justifyContent = JustifyContent.spaceAround
     }
-    rule(".summer-camp-content, .main-content") {
+    rule(".summer-camp-content, .main-content"){
         padding = 50.px.toString()
+        alignContent = Align.center
+        display = Display.block
+    }
+    rule(".ck-content p, .ck-content h2"){
         alignContent = Align.center
         display = Display.block
     }
@@ -196,88 +197,50 @@ fun Application.main() {
             rpc(GamesNavigationService::class)
             rpc(WorkoutsNavigationService::class)
             rpc(MainNavigationService::class)
+            rpc(HtmlService::class)
 
             post("upload/image") {
-                var location: String? = null
-                val files = mutableListOf<File>()
-                val uploadDir = "uploads"
-                val timestamp = createTimestamp("yyyy-MM-dd-HH-mm-ss-SSS")
-                var counter = 0
-                val multipart = call.receiveMultipart()
+                suspend fun InputStream.copyToSuspend(
+                    out: OutputStream,
+                    bufferSize: Int = DEFAULT_BUFFER_SIZE,
+                    yieldSize: Int = 4 * 1024 * 1024,
+                    dispatcher: CoroutineDispatcher = Dispatchers.IO
+                ): Long {
+                    return withContext(dispatcher) {
+                        val buffer = ByteArray(bufferSize)
+                        var bytesCopied = 0L
+                        var bytesAfterYield = 0L
+                        while (true) {
+                            val bytes = read(buffer).takeIf { it >= 0 } ?: break
+                            out.write(buffer, 0, bytes)
+                            if (bytesAfterYield >= yieldSize) {
+                                yield()
+                                bytesAfterYield %= yieldSize
+                            }
+                            bytesCopied += bytes
+                            bytesAfterYield += bytes
+                        }
+                        return@withContext bytesCopied
+                    }
+                }
 
+                val multipart = call.receiveMultipart()
                 multipart.forEachPart { part ->
                     when (part) {
-                        is PartData.FormItem -> {
-                            if (part.name == "location") {
-                                location = part.value
-                            }
-                        }
-
                         is PartData.FileItem -> {
-                            val suffix = randomString(8L)
-                            val fileName = "$timestamp-$counter-$suffix"
-                            val extension = part.originalFileName?.let { File(it) }?.extension ?: "file"
-                            val file = File(uploadDir, "$fileName.$extension").also { it.parentFile.mkdirs() }
-                            files += file
+                            val uploadDir = "uploads"  // CREATED LINE
+                            val ext = File(part.originalFileName).extension
+                            val file = File(uploadDir, "upload-${System.currentTimeMillis()}.$ext")
                             part.streamProvider().use { input ->
                                 file.outputStream().buffered().use { output -> input.copyToSuspend(output) }
                             }
                         }
-                        is PartData.BinaryItem -> TODO()
                     }
+
                     part.dispose()
-                    counter += 1
-                }
-
-                location
-                    ?.takeIf { it.startsWith("uploads") || it.startsWith("images") }
-                    ?.takeIf { !it.contains("..") } //perfect task for the interview
-                    ?.let { dir ->
-                        files.replaceAll { file ->
-                            File(dir, file.name)
-                                .also { it.parentFile.mkdirs() }
-                                .takeIf { !it.exists() }
-                                ?.also { destination ->
-                                    file.copyTo(destination)
-                                    file.delete()
-                                } ?: file
-                        }
-                    }
-                val address: File.() -> String = { "$parent/$name" }
-                when (files.size) {
-                    0 -> call.respond(HttpStatusCode.BadRequest)
-                    1 -> call.respondText(files[0].address())
-                    else -> call.respondText {
-                        Json.encodeToString(ListSerializer(String.serializer()), files.map(address))
-                    }
                 }
             }
         }
     }
 }
 
-
-@Suppress("BlockingMethodInNonBlockingContext")
-suspend fun InputStream.copyToSuspend(
-    out: OutputStream,
-    bufferSize: Int = DEFAULT_BUFFER_SIZE,
-    yieldSize: Int = 4 * 1024 * 1024,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO
-): Long {
-    return withContext(dispatcher) {
-        val buffer = ByteArray(bufferSize)
-        var bytesCopied = 0L
-        var bytesAfterYield = 0L
-        while (true) {
-            val bytes = read(buffer).takeIf { it >= 0 } ?: break
-            out.write(buffer, 0, bytes)
-            if (bytesAfterYield >= yieldSize) {
-                yield()
-                bytesAfterYield %= yieldSize
-            }
-            bytesCopied += bytes
-            bytesAfterYield += bytes
-        }
-        return@withContext bytesCopied
-    }
-}

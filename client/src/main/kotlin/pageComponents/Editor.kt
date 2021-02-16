@@ -28,11 +28,11 @@ external interface EditorState : RState {
 class CKEditorComponent: RComponent<EditorProps, EditorState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
-    private fun handleSubmit(url: String, htmlService: HtmlService, event: Event) {
+    private fun handleSubmit(url: String, content: String, htmlService: HtmlService, event: Event) {
         event.preventDefault()
         event.stopPropagation()
         props.coroutineScope.launch {
-            htmlService.editHtml(url)
+            htmlService.editHtml(url, content)
         }
     }
     override fun RBuilder.render() {
@@ -64,7 +64,7 @@ class CKEditorComponent: RComponent<EditorProps, EditorState>() {
             }
             styledForm {
                 attrs.onSubmitFunction = {
-                    handleSubmit(props.url, htmlService, it)
+                    handleSubmit(props.url, state.text!!, htmlService, it)
                 }
                 child(ButtonMain::class) {
                     attrs.text = "Отправить"

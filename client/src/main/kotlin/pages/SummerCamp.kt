@@ -43,9 +43,11 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
     }
 
     override fun RBuilder.render() {
-        if ((document.cookie == "role=admin") && (state.summerCampHtml != null)) {
+        if (document.cookie.contains("role=admin") && (state.summerCampHtml != null)) {
             child(CKEditorComponent::class) {
                 attrs.text = state.summerCampHtml!!
+                attrs.coroutineScope = props.coroutineScope
+                attrs.url = "htmlPages/SummerCamp.html"
             }
         }
         styledDiv {

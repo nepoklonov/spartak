@@ -79,9 +79,11 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     }
 
     override fun RBuilder.render() {
-        if ((document.cookie == "role=admin") && (state.recruitmentHtml != null)) {
+        if (document.cookie.contains("role=admin") && (state.recruitmentHtml != null)) {
             child(CKEditorComponent::class) {
                 attrs.text = state.recruitmentHtml!!
+                attrs.coroutineScope = props.coroutineScope
+                attrs.url = "htmlPages/Recruitment.html"
             }
         }
         styledDiv {
