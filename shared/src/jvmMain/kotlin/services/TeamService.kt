@@ -1,7 +1,5 @@
 package services
 
-import Annotations.RequireRole
-import Role
 import database.TeamMembers
 import database.Teams
 import database.Teams.link
@@ -76,7 +74,7 @@ actual class TeamService : RPCService {
     actual suspend fun getNavigationList(): List<NavigationDTO> {
         val navigationList = mutableListOf<NavigationDTO>()
         database {
-            Teams.selectAll().forEach() {
+            Teams.select{Teams.isOur eq true}.forEach() {
                 navigationList += NavigationDTO(it[Teams.id].value, it[name], it[link])
             }
         }

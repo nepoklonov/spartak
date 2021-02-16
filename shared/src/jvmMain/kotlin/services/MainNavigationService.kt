@@ -1,9 +1,6 @@
 package services
 
-import database.GamesSections
-import database.Teams
-import database.WorkoutsSections
-import database.database
+import database.*
 import org.jetbrains.exposed.sql.selectAll
 import rpc.RPCService
 
@@ -26,8 +23,8 @@ actual class MainNavigationService: RPCService {
             }
         }
         database {
-            GamesSections.selectAll().first().let{
-                mainNavigationList += it[GamesSections.link]
+            GallerySections.selectAll().first().let{
+                mainNavigationList += it[GallerySections.link]
             }
         }
         return mainNavigationList
