@@ -64,14 +64,14 @@ actual class NewsService : RPCService {
         }
     }
 
-    @RequireRole(Role.Admin)
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
         database { News.deleteWhere { News.id eq id }
         }
         return true
     }
 
-    @RequireRole(Role.Admin)
+//    @RequireRole(Role.Admin)
     actual suspend fun addNews(news: NewsDTO): Int {
         return database {
             News.insertAndGetId {
