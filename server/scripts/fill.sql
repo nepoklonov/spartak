@@ -296,3 +296,7 @@ INSERT INTO workoutssections ("name", "link") VALUES ('Нруппа набора
 INSERT INTO workoutssections ("name", "link") VALUES ('Спартак 2006', 'spartak_2006');
 INSERT INTO workoutssections ("name", "link") VALUES ('Спартак красная ракета', 'spartak_red_rocket');
 INSERT INTO workoutssections ("name", "link") VALUES ('Спартак 2008', 'spartak_2006');
+
+INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2003', 'championship2003');
+INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2004', 'championship2004');
+INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2006', 'championship2006');
