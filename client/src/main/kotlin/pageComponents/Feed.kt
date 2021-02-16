@@ -4,13 +4,17 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import kotlinx.html.js.onSubmitFunction
 import model.NewsDTO
 import org.w3c.dom.asList
 import org.w3c.dom.get
+import pageComponents.AdminButtonComponent
 import pageComponents.ButtonSecondary
+import pageComponents.CKEditorComponent
 import react.*
 import services.HtmlService
 import services.NewsService
+import services.TeamService
 import styled.*
 import kotlin.js.Date
 import kotlin.collections.map as map
@@ -73,6 +77,24 @@ class Feed : RComponent<FeedProps, FeedState>() {
     }
 
     override fun RBuilder.render() {
+//        if (document.cookie.contains("role=admin")) {
+//            styledForm {
+//                child(AdminButtonComponent::class) {
+//                    attrs.type = "add"
+//                }
+//                attrs.onSubmitFunction = { event ->
+//                    val newsService = NewsService(coroutineContext)
+//                    props.coroutineScope.launch {
+//                        val id = newsService.getNextNewId()
+//                        child(CKEditorComponent::class) {
+//                            attrs.text = "Новая новость"
+//                            attrs.url = "/newsHtml/${id}.html"
+//                            attrs.coroutineScope = props.coroutineScope
+//                        }
+//                    }
+//                }
+//            }
+//        }
         styledDiv {
             state.news.forEachIndexed { i, it ->
 
@@ -93,6 +115,22 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         styledDiv {
                             styledH3 {
                                 +it.header!!
+                            }
+                            if (document.cookie.contains("role=admin")) {
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        val newsService = NewsService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            newsService.deleteNews(it.id!!)
+                                        }
+                                    }
+                                    attrs.type = "delete"
+                                }
+                                styledA (href = "/news/${it.id}") {
+                                    child(AdminButtonComponent::class) {
+                                        attrs.type = "edit"
+                                    }
+                                }
                             }
                             styledH5 {
                                 +Date(it.date).getDate().toString()

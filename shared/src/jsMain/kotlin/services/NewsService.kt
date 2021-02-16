@@ -28,6 +28,9 @@ actual class NewsService (coroutineContext: CoroutineContext){
     actual suspend fun addNews(news: NewsDTO): Int {
         return transport.post("addNews", Int.serializer(), "news" to news)
     }
+    actual suspend fun getNextNewId(): Int {
+        return transport.post("getNextNewId", Int.serializer())
+    }
 
     actual suspend fun getNewsTripleById(id: Int): NewsTripleDTO {
         return transport.get("getNewsTripleById", NewsTripleDTO.serializer(), "id" to id)

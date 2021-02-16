@@ -31,6 +31,13 @@ actual class NewsService : RPCService {
             }
         }
     }
+    actual suspend fun getNextNewId(): Int {
+        return database {
+            News.selectAll().orderBy(News.id, SortOrder.DESC).first().let {
+                it[News.id].value + 1
+            }
+        }
+    }
 
     actual suspend fun getNewsTripleById(id: Int): NewsTripleDTO {
         var news = NewsDTO(0, "", 0L)
