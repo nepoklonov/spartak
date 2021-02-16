@@ -113,27 +113,27 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 
 
 
-INSERT INTO news (url, "date") VALUES ('1.html', 1566501170000);
-INSERT INTO news (url, "date") VALUES ('2.html', 1566587570000);
-INSERT INTO news (url, "date") VALUES ('3.html', 1566673970000);
-INSERT INTO news (url, "date") VALUES ('4.html', 1566760370000);
-INSERT INTO news (url, "date") VALUES ('5.html', 1567192370000);
-INSERT INTO news (url, "date") VALUES ('6.html', 1567278770000);
-INSERT INTO news (url, "date") VALUES ('7.html', 1567365170000);
-INSERT INTO news (url, "date") VALUES ('8.html', 1568056370000);
-INSERT INTO news (url, "date") VALUES ('9.html', 1568920370000);
-INSERT INTO news (url, "date") VALUES ('10.html', 1572549170000);
-INSERT INTO news (url, "date") VALUES ('11.html', 1572635570000);
-INSERT INTO news (url, "date") VALUES ('12.html', 1573758770000);
-INSERT INTO news (url, "date") VALUES ('13.html', 1575659570000);
-INSERT INTO news (url, "date") VALUES ('14.html', 1576869170000);
-INSERT INTO news (url, "date") VALUES ('15.html', 1579633970000);
-INSERT INTO news (url, "date") VALUES ('16.html', 1583435570000);
-INSERT INTO news (url, "date") VALUES ('17.html', 1584645170000);
-INSERT INTO news (url, "date") VALUES ('19.html', 1593717170000);
-INSERT INTO news (url, "date") VALUES ('20.html', 1595531570000);
-INSERT INTO news (url, "date") VALUES ('21.html', 1597086770000);
-INSERT INTO news (url, "date") VALUES ('21.html', 1605035570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/1.html', 1566501170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/2.html', 1566587570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/3.html', 1566673970000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/4.html', 1566760370000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/5.html', 1567192370000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/6.html', 1567278770000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/7.html', 1567365170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/8.html', 1568056370000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/9.html', 1568920370000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/10.html', 1572549170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/11.html', 1572635570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/12.html', 1573758770000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/13.html', 1575659570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/14.html', 1576869170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/15.html', 1579633970000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/16.html', 1583435570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/17.html', 1584645170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/18.html', 1593717170000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/19.html', 1595531570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/20.html', 1597086770000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/21.html', 1605035570000);
 
 INSERT INTO games ("date", "time", "year", "teamAId", "teamBId", stadium, "result") VALUES ('03.10.20', '19:15', 'championship2003', 4, 1, 'ЛОК', '3:6');
 INSERT INTO games ("date", "time", "year", "teamAId", "teamBId", stadium, "result") VALUES ('10.10.20', '19:45', 'championship2003', 1, 5, 'ГКА', '9:1');
