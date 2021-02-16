@@ -1,4 +1,3 @@
-
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -31,6 +30,8 @@ private class Application : CoroutineScope {
                         css {
                             position = Position.fixed
                             backgroundImage = Image("url(/images/background.jpg)")
+                            backgroundSize = "cover"
+                            opacity = 0.8
                             width = 100.pct
                             height = 100.pct
                             child("div") {
@@ -38,26 +39,26 @@ private class Application : CoroutineScope {
                             }
                         }
                     }
-                        styledDiv {
-                            attrs.id = "root"
-                            css {
-                                position = Position.relative
-                                marginLeft = 100.px
-                                marginRight = 100.px
-                                backgroundColor = rgba(255, 255, 255, 0.5)
-                            }
-                            child(HeaderComponent::class) {}
-                            route<MainNavigationProps>("/:selectedString") { props ->
-                                child(MainNavigationComponent::class) {
-                                    attrs.selectedString = props.match.params.selectedString
-                                }
-                            }
-                            child(Router::class) {
-                                attrs.coroutineScope = this@Application
-                            }
-                            child(FooterComponent::class) {}
+                    styledDiv {
+                        attrs.id = "root"
+                        css {
+                            position = Position.relative
+                            marginLeft = 100.px
+                            marginRight = 100.px
+                            backgroundColor = rgba(255, 255, 255, 0.6)
                         }
+                        child(HeaderComponent::class) {}
+                        route<MainNavigationProps>("/:selectedString") { props ->
+                            child(MainNavigationComponent::class) {
+                                attrs.selectedString = props.match.params.selectedString
+                            }
+                        }
+                        child(Router::class) {
+                            attrs.coroutineScope = this@Application
+                        }
+                        child(FooterComponent::class) {}
                     }
+                }
             }, it)
         }
     }
