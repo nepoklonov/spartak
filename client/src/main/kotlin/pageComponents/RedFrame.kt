@@ -57,7 +57,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                             height = 390.px
                             width = 310.px
                         } else {
-                            backgroundImage = Image("url(/images/${props.teamMember!!.photo})")
+                            backgroundImage = Image("url(/images/teams/${props.teamMember!!.photo})")
                             height = 250.px
                             width = 200.px
                         }
