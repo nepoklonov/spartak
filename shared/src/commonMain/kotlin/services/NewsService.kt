@@ -9,4 +9,5 @@ expect class NewsService {
     suspend fun addNews(news: NewsDTO): Int
     suspend fun getLastNews(number: Int?): List<NewsDTO>
     suspend fun getNewsTripleById(id: Int): NewsTripleDTO
+    suspend fun getNextNewId(): Int
 }

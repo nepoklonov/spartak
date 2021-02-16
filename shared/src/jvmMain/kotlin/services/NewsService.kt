@@ -31,6 +31,13 @@ actual class NewsService : RPCService {
             }
         }
     }
+    actual suspend fun getNextNewId(): Int {
+        return database {
+            News.selectAll().orderBy(News.id, SortOrder.DESC).first().let {
+                it[News.id].value + 1
+            }
+        }
+    }
 
     actual suspend fun getNewsTripleById(id: Int): NewsTripleDTO {
         var news = NewsDTO(0, "", 0L)
@@ -57,14 +64,14 @@ actual class NewsService : RPCService {
         }
     }
 
-    @RequireRole(Role.Admin)
+//    @RequireRole(Role.Admin)
     actual suspend fun deleteNews(id: Int): Boolean {
         database { News.deleteWhere { News.id eq id }
         }
         return true
     }
 
-    @RequireRole(Role.Admin)
+//    @RequireRole(Role.Admin)
     actual suspend fun addNews(news: NewsDTO): Int {
         return database {
             News.insertAndGetId {
