@@ -81,6 +81,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                             margin(5.px)
                         }
                         +props.teamMember!!.firstName
+                        +" "
                         +props.teamMember!!.lastName
                     }
                     styledDiv {

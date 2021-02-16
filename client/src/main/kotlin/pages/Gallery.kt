@@ -185,31 +185,39 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     if (state.images == null) {
                         +"загрузка..."
                     } else {
-                        state.images!!.forEachIndexed { index, photo ->
-                            styledDiv {
-                                attrs.onClickFunction = {
-                                    setState {
-                                        selectedPhotoIndex = index
-                                    }
-                                }
-                                css {
-                                    backgroundImage = Image("url(/images/${photo.url})")
-                                    backgroundSize = 230.px.toString()
-                                    width = 230.px
-                                    height = 230.px
-                                    margin = 10.px.toString()
-                                    float = Float.left
-                                }
+                        styledDiv {
+                            css {
+                                display = Display.flex
+                                justifyContent = JustifyContent.spaceBetween
+                                flexWrap = FlexWrap.wrap
+                            }
 
-                                if (document.cookie.contains("role=admin") ) {
-                                    child(AdminButtonComponent::class) {
-                                        attrs.updateState = {
-                                            val photoService = PhotoService(coroutineContext)
-                                            props.coroutineScope.launch {
-                                                photoService.deletePhoto(photo.id!!)
-                                            }
+                            state.images!!.forEachIndexed { index, photo ->
+                                styledDiv {
+                                    attrs.onClickFunction = {
+                                        setState {
+                                            selectedPhotoIndex = index
                                         }
-                                        attrs.type = "delete"
+                                    }
+                                    css {
+                                        backgroundImage = Image("url(/images/${photo.url})")
+                                        backgroundRepeat = BackgroundRepeat.noRepeat
+                                        backgroundSize = 230.px.toString()
+                                        width = 230.px
+                                        height = 230.px
+                                        margin = 10.px.toString()
+                                    }
+
+                                    if (document.cookie.contains("role=admin")) {
+                                        child(AdminButtonComponent::class) {
+                                            attrs.updateState = {
+                                                val photoService = PhotoService(coroutineContext)
+                                                props.coroutineScope.launch {
+                                                    photoService.deletePhoto(photo.id!!)
+                                                }
+                                            }
+                                            attrs.type = "delete"
+                                        }
                                     }
                                 }
                             }
@@ -280,12 +288,13 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             styledImg(src = "/images/" + state.images?.get(state.selectedPhotoIndex!!)!!.url) {
                                 css {
                                     height = 254.px
+                                    backgroundRepeat = BackgroundRepeat.noRepeat
                                 }
                             }
                             styledImg(src = "/images/right-arrow.png") {
                                 attrs.onClickFunction = {
                                     it.stopPropagation()
-                                    if (state.selectedPhotoIndex!! < state.images!!.size) {
+                                    if (state.selectedPhotoIndex!! < state.images!!.size - 1) {
                                         setState {
                                             selectedPhotoIndex = selectedPhotoIndex!! + 1
                                         }
