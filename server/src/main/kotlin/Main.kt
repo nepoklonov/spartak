@@ -47,10 +47,10 @@ private val globalCss = CSSBuilder().apply {
 
         lineHeight = 20.px.lh
     }
-    h1{
+    h1 {
         fontFamily = "Russo"
         fontSize = 42.667.px
-        margin = 50.px.toString()
+        margin(50.px)
         fontWeight = FontWeight.normal
     }
     h2 {
@@ -65,7 +65,7 @@ private val globalCss = CSSBuilder().apply {
         fontFamily = "PT"
         fontSize = 20.px
     }
-    button{
+    button {
         backgroundColor = Color("#9D0707")
         hover {
             backgroundColor = Color("#660c0c")
@@ -81,31 +81,31 @@ private val globalCss = CSSBuilder().apply {
         cursor = Cursor.pointer
         margin = 10.px.toString()
     }
-    rule(".news-img"){
+    rule(".news-img") {
         width = 32.pct
         padding = 1.pct.toString()
         height = LinearDimension.auto
         float = Float.left
     }
-    rule(".news-div"){
+    rule(".news-div") {
         padding = 1.pct.toString()
         minWidth = 30.pct
     }
-    rule(".summer-camp-img, .main-img, .ck-content .image" ){
+    rule(".summer-camp-img, .main-img, .ck-content .image") {
         width = 40.pct
         padding = 50.px.toString()
         height = LinearDimension.auto
     }
-    rule(".summer-camp-div, .main"){
+    rule(".summer-camp-div, .main") {
         display = Display.flex
         justifyContent = JustifyContent.spaceAround
     }
-    rule(".summer-camp-content, .main-content"){
+    rule(".summer-camp-content, .main-content") {
         padding = 50.px.toString()
         alignContent = Align.center
         display = Display.block
     }
-    rule(".ck-content p, .ck-content h2"){
+    rule(".ck-content p, .ck-content h2") {
         alignContent = Align.center
         display = Display.block
     }
