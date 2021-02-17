@@ -7,11 +7,35 @@ import kotlinx.html.H1
 import pageComponents.ColorSpartak
 import react.RBuilder
 import styled.*
+import kotlin.reflect.KProperty
+
+fun CSSBuilder.gridTemplateAreas(vararg s: String) {
+    gridTemplateAreas = GridTemplateAreas(s.joinToString("") { "\"$it\" " })
+}
+@Suppress("UNCHECKED_CAST")
+private class CSSProperty<T>(private val default: (() -> T)? = null) {
+    operator fun getValue(thisRef: StyledElement, property: KProperty<*>): T {
+        default?.let { default ->
+            if (!thisRef.declarations.containsKey(property.name)) {
+                thisRef.declarations[property.name] = default() as Any
+            }
+        }
+        return thisRef.declarations[property.name] as T
+    }
+
+    operator fun setValue(thisRef: StyledElement, property: KProperty<*>, value: T) {
+        thisRef.declarations[property.name] = value as Any
+    }
+}
+var StyledElement.gridArea: String by CSSProperty()
+
+
 
 object Styles : StyleSheet("main") {
     val header by css {
         fontSize = 32.pt
         lineHeight = LineHeight.normal
+        gridArea = "header"
     }
 
     val smallHeader by css {

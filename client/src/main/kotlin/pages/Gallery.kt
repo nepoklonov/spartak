@@ -1,5 +1,7 @@
 package pages
 
+import gridArea
+import gridTemplateAreas
 import headerText
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -80,14 +82,23 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
         console.log(document.cookie)
 
         styledDiv {
-            css {
-                display = Display.flex
-                justifyContent = JustifyContent.spaceBetween
-                alignItems = Align.flexStart
+            css{
+                display = Display.grid
+                gridTemplateAreas(
+                    ". header",
+                    "navigation content"
+                )
+                gridTemplateRows = GridTemplateRows("auto auto")
+                gridTemplateColumns = GridTemplateColumns("325px auto")
             }
+
+            headerText {
+                +"Галерея"
+            }
+
             styledDiv {
                 css {
-                    marginTop = 115.px
+                    gridArea = "navigation"
                     backgroundColor = Color.white
                     boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
                 }
@@ -100,7 +111,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                 attrs.selectedLink = linkProps.match.params.selectedLink
                             }
                         }
-                        if (document.cookie.contains("role=admin") ) {
+                        if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
                                     val galleryNavigationService = GalleryNavigationService(coroutineContext)
@@ -139,7 +150,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                         }
                     }
-                    if (document.cookie.contains("role=admin") ) {
+                    if (document.cookie.contains("role=admin")) {
                         if (!state.smallNavigationForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -174,13 +185,12 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
             styledDiv {
                 css {
+                    gridArea = "content"
                     width = 100.pct
                     paddingLeft = 50.px
                     paddingRight = 50.px
                 }
-                headerText {
-                    +"Галерея"
-                }
+
                 styledDiv {
                     if (state.images == null) {
                         +"загрузка..."
@@ -225,7 +235,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                     }
                 }
                 styledDiv {
-                    if (document.cookie.contains("role=admin") ) {
+                    if (document.cookie.contains("role=admin")) {
                         if (!state.photoForm) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -287,7 +297,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                             styledImg(src = "/images/" + state.images?.get(state.selectedPhotoIndex!!)!!.url) {
                                 css {
-                                    height = 254.px
+                                    height = 500.px
                                     backgroundRepeat = BackgroundRepeat.noRepeat
                                 }
                             }

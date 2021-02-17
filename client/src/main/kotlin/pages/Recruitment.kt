@@ -79,101 +79,111 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     }
 
     override fun RBuilder.render() {
-        if (document.cookie.contains("role=admin") && (state.recruitmentHtml != null)) {
-            child(CKEditorComponent::class) {
-                attrs.text = state.recruitmentHtml!!
-                attrs.coroutineScope = props.coroutineScope
-                attrs.url = "htmlPages/Recruitment.html"
-            }
-        }
         styledDiv {
-            css {
-                textAlign = TextAlign.center
-                fontSize = 16.pt
-                fontWeight = FontWeight.bold
+            css{
+                display = Display.flex
+                justifyContent = JustifyContent.center
+                flexWrap = FlexWrap.wrap
             }
-            if (state.recruitmentHtml != null) {
-                css {
-                    child("div button") {
-                        Styles.button
-                        backgroundColor = ColorSpartak.Grey.color
-                    }
-                }
-                attrs["dangerouslySetInnerHTML"] = InnerHTML(state.recruitmentHtml!!)
-            } else {
-                +"загрузка..."
-            }
-        }
 
-        styledDiv {
-            css {
-                backgroundColor = Color("#F5F5F5")
-            }
-            styledForm {
-                css {
-                    width = 100.pct
-                    display = Display.flex
-                    flexWrap = FlexWrap.wrap
-                    child("div") {
-                        float = Float.left
-                        width = 50.pct
-                    }
+            if (document.cookie.contains("role=admin") && (state.recruitmentHtml != null)) {
+                child(CKEditorComponent::class) {
+                    attrs.text = state.recruitmentHtml!!
+                    attrs.coroutineScope = props.coroutineScope
+                    attrs.url = "htmlPages/Recruitment.html"
                 }
-                attrs.onSubmitFunction = { event ->
-                    event.preventDefault()
-                    event.stopPropagation()
-                    val recruitmentService = RecruitmentService(coroutineContext)
-                    props.coroutineScope.launch {
-                        var formIsCompleted = true
-                        state.inputs.values.forEach {
-                            if (it.isRed) {
-                                formIsCompleted = false
+            }
+            styledDiv {
+                css {
+                    textAlign = TextAlign.center
+                    fontSize = 16.pt
+                    fontWeight = FontWeight.bold
+                }
+                if (state.recruitmentHtml != null) {
+                    css {
+                        child("div button") {
+                            Styles.button
+                            backgroundColor = ColorSpartak.Grey.color
+                        }
+                    }
+                    attrs["dangerouslySetInnerHTML"] = InnerHTML(state.recruitmentHtml!!)
+                } else {
+                    +"загрузка..."
+                }
+            }
+
+            styledDiv {
+                css {
+                    backgroundColor = Color("#F5F5F5")
+                    width = 80.pct
+                    borderRadius = 10.px
+                }
+                styledForm {
+                    css {
+                        display = Display.flex
+                        justifyContent = JustifyContent.spaceAround
+                        flexWrap = FlexWrap.wrap
+                        child("div") {
+                            float = Float.left
+                            width = 45.pct
+                        }
+                    }
+                    attrs.onSubmitFunction = { event ->
+                        event.preventDefault()
+                        event.stopPropagation()
+                        val recruitmentService = RecruitmentService(coroutineContext)
+                        props.coroutineScope.launch {
+                            var formIsCompleted = true
+                            state.inputs.values.forEach {
+                                if (it.isRed) {
+                                    formIsCompleted = false
+                                }
+                            }
+                            if (formIsCompleted) {
+                                recruitmentService.addRecruitment(
+                                    RecruitmentDTO(
+                                        null,
+                                        state.inputs["dates"]!!.inputValue,
+                                        state.inputs["name"]!!.inputValue,
+                                        state.inputs["birthday"]!!.inputValue,
+                                        state.inputs["role"]!!.inputValue,
+                                        state.inputs["stickGrip"]!!.inputValue,
+                                        state.inputs["params"]!!.inputValue,
+                                        state.inputs["previousSchool"]!!.inputValue,
+                                        state.inputs["city"]!!.inputValue,
+                                        state.inputs["phone"]!!.inputValue,
+                                        state.inputs["email"]!!.inputValue,
+                                    )
+                                )
                             }
                         }
-                        if (formIsCompleted) {
-                            recruitmentService.addRecruitment(
-                                RecruitmentDTO(
-                                    null,
-                                    state.inputs["dates"]!!.inputValue,
-                                    state.inputs["name"]!!.inputValue,
-                                    state.inputs["birthday"]!!.inputValue,
-                                    state.inputs["role"]!!.inputValue,
-                                    state.inputs["stickGrip"]!!.inputValue,
-                                    state.inputs["params"]!!.inputValue,
-                                    state.inputs["previousSchool"]!!.inputValue,
-                                    state.inputs["city"]!!.inputValue,
-                                    state.inputs["phone"]!!.inputValue,
-                                    state.inputs["email"]!!.inputValue,
-                                )
-                            )
-                        }
                     }
-                }
-                child(FormViewComponent::class) {
-                    attrs.inputs = state.inputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.inputs[key]!!.inputValue = value
-                            state.inputs[key]!!.isRed = isRed
+                    child(FormViewComponent::class) {
+                        attrs.inputs = state.inputs
+                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                            setState {
+                                state.inputs[key]!!.inputValue = value
+                                state.inputs[key]!!.isRed = isRed
+                            }
                         }
                     }
                 }
             }
-        }
-        if (document.cookie.contains("role=admin")) {
-            styledDiv {
-                if (state.recruitments != null) {
-                    state.recruitments!!.forEach { dto ->
-                        styledDiv {
-                            +dto.toString()
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    val recruitmentService = RecruitmentService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        recruitmentService.deleteRecruitment(dto.id!!)
+            if (document.cookie.contains("role=admin")) {
+                styledDiv {
+                    if (state.recruitments != null) {
+                        state.recruitments!!.forEach { dto ->
+                            styledDiv {
+                                +dto.toString()
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        val recruitmentService = RecruitmentService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            recruitmentService.deleteRecruitment(dto.id!!)
+                                        }
                                     }
+                                    attrs.type = "delete"
                                 }
-                                attrs.type = "delete"
                             }
                         }
                     }
