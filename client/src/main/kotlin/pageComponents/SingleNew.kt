@@ -87,19 +87,26 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
             props.selectedNewsId
         }
         styledDiv {
+            styledH5 {
+                if (state.longNews?.date !=null){
+                    val date = state.longNews?.date!!
+                    console.log(date)
+                    +Date(date).getDate().toString()
+                    +"."
+                    +(Date(date).getMonth()+1).toString()
+                    +"."
+                    +Date(date).getFullYear().toString()
+                    css {
+                        paddingLeft = 50.px
+                    }
+                }
+            }
             styledDiv {
                 css{
                     overflow = Overflow.hidden
                 }
                 if (state.longNews?.news != null) {
                     attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
-//                    styledH5 {
-//                        +Date(state.longNews?.date!!).getDate().toString()
-//                          +"."
-//                        +(Date(state.longNews?.date!!).getMonth()+1).toString()
-//                          +"."
-//                        +Date(state.longNews?.date!!).getFullYear().toString()
-//                     }
                 } else {
                     +"загрузка..."
                 }

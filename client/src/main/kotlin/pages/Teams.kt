@@ -78,7 +78,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
         get() = props.coroutineScope.coroutineContext
 
     private fun getState(selectedTeam: String, coroutineScope: CoroutineScope) {
-        console.log("!!!!!!!!!!!!!!!!!!11")
         val trainerService = TrainerService(coroutineContext)
         val teamService = TeamService(coroutineContext)
 
@@ -150,19 +149,21 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
-                css {
-                    display = Display.flex
-                    justifyContent = JustifyContent.spaceBetween
-                    alignItems = Align.flexStart
-                }
+                display = Display.flex
+                justifyContent = JustifyContent.spaceBetween
+                alignItems = Align.flexStart
             }
-
-            styledDiv {
-                css {
-                    marginTop = 115.px
-                    backgroundColor = Color.white
-                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+            styledDiv{
+                css{
+                    minWidth = 325.px
                 }
+                styledDiv {
+                     css {
+                       position = Position.fixed
+                       marginTop = 115.px
+                       backgroundColor = Color.white
+                       boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+                     }
                 if (state.navigationList != null) {
                     state.navigationList!!.forEach { teamsNavigation ->
                         route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
@@ -198,13 +199,13 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         val teamService = TeamService(coroutineContext)
                                         props.coroutineScope.launch {
                                             teamService.editTeam(
-                                                TeamDTO(
-                                                    teamsNavigation.id,
-                                                    listOfInputValues[0],
-                                                    listOfInputValues[1],
-                                                    true,
-                                                    props.selectedTeam,
-                                                )
+                                                    TeamDTO(
+                                                            teamsNavigation.id,
+                                                            listOfInputValues[0],
+                                                            listOfInputValues[1],
+                                                            true,
+                                                            props.selectedTeam,
+                                                    )
                                             )
                                         }
                                     }
@@ -239,23 +240,23 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         if (formIsCompleted) {
                                             props.coroutineScope.launch {
                                                 teamService.addTeam(
-                                                    TeamDTO(
-                                                        null,
-                                                        state.teamInputs["teamName"]!!.inputValue,
-                                                        state.teamInputs["teamLink"]!!.inputValue,
-                                                        true,
-                                                        state.teamInputs["year"]!!.inputValue,
-                                                    )
+                                                        TeamDTO(
+                                                                null,
+                                                                state.teamInputs["teamName"]!!.inputValue,
+                                                                state.teamInputs["teamLink"]!!.inputValue,
+                                                                true,
+                                                                state.teamInputs["year"]!!.inputValue,
+                                                        )
                                                 )
                                             }
                                             trainerService.addTrainer(
-                                                TrainerDTO(
-                                                    null,
-                                                    state.teamInputs["teamLink"]!!.inputValue,
-                                                    "address.png",
-                                                    state.teamInputs["name"]!!.inputValue,
-                                                    state.teamInputs["info"]!!.inputValue,
-                                                )
+                                                    TrainerDTO(
+                                                            null,
+                                                            state.teamInputs["teamLink"]!!.inputValue,
+                                                            "address.png",
+                                                            state.teamInputs["name"]!!.inputValue,
+                                                            state.teamInputs["info"]!!.inputValue,
+                                                    )
                                             )
                                         }
                                     }
@@ -275,6 +276,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                     }
                 }
             }
+        }
 
             styledDiv {
                 css {

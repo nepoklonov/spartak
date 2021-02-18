@@ -76,6 +76,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                         textDecoration = TextDecoration.none
                         minWidth = 300.px
                         width = 20.pct
+                        padding(1.pct)
                     }
                     styledDiv {
                         css {

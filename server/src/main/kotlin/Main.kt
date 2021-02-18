@@ -109,6 +109,19 @@ private val globalCss = CSSBuilder().apply {
         alignContent = Align.center
         display = Display.block
     }
+    rule(".recruitment-left"){
+        float = Float.left
+        width = 30.pct
+    }
+    rule(".recruitment-right"){
+        float = Float.right
+        width = 30.pct
+    }
+    rule(".recruitment"){
+        display = Display.flex
+        justifyContent = JustifyContent.spaceBetween
+        padding = 5.pct.toString()
+    }
 }
 
 
