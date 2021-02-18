@@ -272,8 +272,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                             }
                         }
 
-                    } else {
-                        +"Загрузка..."
                     }
                 }
             }

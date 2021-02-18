@@ -6,7 +6,6 @@ import kotlinx.html.js.onChangeFunction
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
 import react.*
-import redButtonSpartak
 import styled.*
 
 data class Input(
@@ -90,6 +89,10 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                         +"Название команды"
                     }
                     styledInput(type = InputType.text) {
+                        css{
+                            width = 100.pct
+                            backgroundColor = Color.green
+                        }
                         attrs {
                             name = it.inputName
                             value = it.inputValue
