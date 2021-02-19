@@ -47,7 +47,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
         props.coroutineScope.launch {
                 val newsHtml : MutableList<NewsDTO> = mutableListOf()
                 try {
-                    newsService.getLastNews(4).forEach { newsHtml.add(NewsDTO(it.id,htmlService.getHtml(it.url), it.date)) }
+                    newsService.getLastNews(3).forEach { newsHtml.add(NewsDTO(it.id,htmlService.getHtml(it.url), it.date)) }
                 } catch (e: Throwable) {
                     setState {
                         error = e

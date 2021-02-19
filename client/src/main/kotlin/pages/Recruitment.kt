@@ -23,9 +23,9 @@ class RecruitmentState : RState {
     var recruitmentHtml: String? = null
     var recruitments: List<RecruitmentDTO>? = null
     var inputs: MutableMap<String, Input> = mutableMapOf(
-        "dates" to Input("Предпочтительные даты участия в просмотровых сборах", "dates"),
+        "dates" to Input("Желаемые даты просмотровых сборов", "dates"),
         "name" to Input("Ф.И.О. хоккеиста", "name"),
-        "birthday" to Input("Дата рождения(дд.мм.гг.)", "birthday"),
+        "birthday" to Input("Дата рождения  (дд.мм.гг.)", "birthday"),
         "role" to Input(
             "Амплуа",
             "role",
@@ -35,7 +35,7 @@ class RecruitmentState : RState {
         "stickGrip" to Input("Хват клюшки", "stickGrip"),
         "params" to Input("Рост - Вес", "params"),
         "previousSchool" to Input("Хоккейная школа в предыдущем сезоне", "previousSchool"),
-        "city" to Input("Место жительства(город)", "city"),
+        "city" to Input("Место жительства (город)", "city"),
         "phone" to Input("Контактный телефон", "phone"),
         "email" to Input("E-mail", "email")
     )
@@ -95,6 +95,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
             }
             styledDiv {
                 css {
+                    margin(top = 13.px)
                     textAlign = TextAlign.center
                     fontSize = 16.pt
                     fontWeight = FontWeight.bold
@@ -126,6 +127,13 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         child("div") {
                             float = Float.left
                             width = 45.pct
+                            child("h3"){
+                                fontFamily = "PT"
+                            }
+                            child("input"){
+                                width = 95.pct
+//                                height = 40.px
+                            }
                         }
                     }
                     attrs.onSubmitFunction = { event ->
