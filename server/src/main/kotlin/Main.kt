@@ -62,6 +62,7 @@ private val globalCss = CSSBuilder().apply {
     "*" {
         fontFamily = "PT"
         fontSize = 20.px
+        lineHeight = 24.px.lh
     }
     button {
         backgroundColor = Color("#9D0707")
