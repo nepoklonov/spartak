@@ -1,20 +1,24 @@
 package pages
 
-import headerText
+import content
+import grid
+import header
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.boxShadow
 import kotlinx.html.js.onSubmitFunction
 import model.NavigationDTO
 import model.WorkoutDTO
+import navigation
 import pageComponents.*
 import react.*
 import react.router.dom.route
 import services.WorkoutsNavigationService
 import services.WorkoutsService
 import styled.*
+import workoutsTableContent
+import workoutsTableHeader
 import kotlin.js.Date
 
 val months = mapOf(
@@ -123,18 +127,8 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
     override fun RBuilder.render() {
 
-        styledDiv {
-            css {
-                display = Display.flex
-                justifyContent = JustifyContent.spaceBetween
-                alignItems = Align.flexStart
-            }
-            styledDiv {
-                css {
-                    marginTop = 115.px
-                    backgroundColor = Color.white
-                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
-                }
+        grid {
+            navigation {
                 if (state.workoutsNavigationList != null) {
                     state.workoutsNavigationList!!.forEach { workoutsNavigation ->
                         route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
@@ -215,20 +209,13 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                 }
             }
 
-            styledDiv {
-                css {
-                    width = 100.pct
-                    marginLeft = 50.px
-                    marginRight = 50.px
-                }
-                styledDiv {
-                    css {
-                        width = 100.pct
-                    }
-                    headerText {
-                        +"Расписание тренировок"
-                    }
+            header {
+                +"Расписание тренировок"
+            }
 
+
+            content {
+                styledDiv {
                     daysOfWeek.forEach { daysOfWeek ->
                         styledDiv {
                             css {
@@ -236,24 +223,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 marginLeft = 32.px
                             }
 
-                            styledDiv {
-                                css {
-                                    height = 60.px
-                                    width = 100.pct
-                                    marginTop = 3.px
-                                    backgroundColor = ColorSpartak.LightGrey.color
-                                    fontFamily = "Russo"
-                                    fontSize = 20.px
-                                    padding(10.px)
-                                    display = Display.flex
-                                    alignItems = Align.center
-                                    boxShadow(
-                                        color = rgba(0, 0, 0, 0.25),
-                                        offsetX = 0.px,
-                                        offsetY = 4.px,
-                                        blurRadius = 4.px
-                                    )
-                                }
+                            workoutsTableHeader {
                                 +daysOfWeek.value
                                 +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
                                 +(months[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
@@ -262,22 +232,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 state.workouts!!.forEach { workout ->
                                     console.log(workout)
                                     if (daysOfWeek.key % 7 == workout.dayOfWeek) {
-                                        styledDiv {
-                                            css {
-                                                minHeight = 70.px
-                                                width = 100.pct
-                                                padding(10.px)
-                                                marginTop = 3.px
-                                                backgroundColor = Color.white
-                                                boxShadow(
-                                                    color = rgba(0, 0, 0, 0.25),
-                                                    offsetX = 0.px,
-                                                    offsetY = 4.px,
-                                                    blurRadius = 4.px
-                                                )
-                                                display = Display.flex
-                                                alignItems = Align.center
-                                            }
+                                        workoutsTableContent {
                                             styledTd {
                                                 css {
                                                     width = 400.px

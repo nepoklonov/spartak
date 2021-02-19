@@ -18,13 +18,11 @@ import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.lh
 import kotlinx.html.*
 import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
 import rpc.rpc
 import services.*
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
-
 import java.util.*
 
 private val globalCss = CSSBuilder().apply {
@@ -50,7 +48,7 @@ private val globalCss = CSSBuilder().apply {
     h1 {
         fontFamily = "Russo"
         fontSize = 42.667.px
-        margin(50.px)
+        marginLeft = 50.px
         fontWeight = FontWeight.normal
     }
     h2 {

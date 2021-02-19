@@ -1,20 +1,8 @@
 package pages
 
-import greyButtonSpartak
-import headerText
+import header
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.css.Display
-import kotlinx.css.JustifyContent
-import kotlinx.css.display
-import kotlinx.css.justifyContent
 import react.*
-import react.dom.InnerHTML
-import react.router.dom.navLink
-import services.HtmlService
-import services.NewsService
-import styled.css
-import styled.styledDiv
 import view.SingleNew
 
 external interface NewsProps : RProps {
@@ -29,7 +17,7 @@ class News : RComponent<NewsProps, RState>() {
 
     override fun RBuilder.render() {
 
-        headerText { +"Новости" }
+        header { +"Новости" }
 
         if (props.selectedNewsId == "feed") {
             child(Feed::class){

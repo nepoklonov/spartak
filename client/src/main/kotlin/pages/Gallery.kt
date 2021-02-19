@@ -1,16 +1,16 @@
 package pages
 
-import gridArea
-import gridTemplateAreas
-import headerText
+import content
+import grid
+import header
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.css.properties.boxShadow
 import kotlinx.html.js.onClickFunction
 import model.NavigationDTO
 import model.PhotoDTO
+import navigation
 import pageComponents.*
 import react.*
 import react.router.dom.route
@@ -79,29 +79,13 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
     }
 
     override fun RBuilder.render() {
-        console.log(document.cookie)
 
-        styledDiv {
-            css{
-                display = Display.grid
-                gridTemplateAreas(
-                    ". header",
-                    "navigation content"
-                )
-                gridTemplateRows = GridTemplateRows("auto auto")
-                gridTemplateColumns = GridTemplateColumns("325px auto")
-            }
-
-            headerText {
+        grid {
+            header {
                 +"Галерея"
             }
 
-            styledDiv {
-                css {
-                    gridArea = "navigation"
-                    backgroundColor = Color.white
-                    boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
-                }
+            navigation {
                 if (state.galleryNavigationList != null) {
                     state.galleryNavigationList!!.forEach { galleryNavigation ->
                         route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
@@ -183,13 +167,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                 }
             }
 
-            styledDiv {
-                css {
-                    gridArea = "content"
-                    width = 100.pct
-                    paddingLeft = 50.px
-                    paddingRight = 50.px
-                }
+            content {
 
                 styledDiv {
                     if (state.images == null) {
