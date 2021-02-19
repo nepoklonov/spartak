@@ -56,6 +56,8 @@ object Styles : StyleSheet("main") {
         position = Position.sticky
         backgroundColor = Color.white
         boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+        position = Position.sticky
+        top = 30.px
     }
 
     val content by css {
