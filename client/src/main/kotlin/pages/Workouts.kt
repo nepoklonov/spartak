@@ -17,8 +17,8 @@ import react.router.dom.route
 import services.WorkoutsNavigationService
 import services.WorkoutsService
 import styled.*
-import workoutsTableContent
-import workoutsTableHeader
+import tableContent
+import tableHeader
 import kotlin.js.Date
 
 val months = mapOf(
@@ -223,7 +223,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 marginLeft = 32.px
                             }
 
-                            workoutsTableHeader {
+                            tableHeader {
                                 +daysOfWeek.value
                                 +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
                                 +(months[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
@@ -232,7 +232,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                 state.workouts!!.forEach { workout ->
                                     console.log(workout)
                                     if (daysOfWeek.key % 7 == workout.dayOfWeek) {
-                                        workoutsTableContent {
+                                        tableContent {
                                             styledTd {
                                                 css {
                                                     width = 400.px

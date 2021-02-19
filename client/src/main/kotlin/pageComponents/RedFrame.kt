@@ -64,7 +64,6 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
             styledDiv {
                 css {
                     position = Position.relative
-                    top = (-65).px
                 }
 
                 styledH2 {
