@@ -32,39 +32,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                     width = 220.px
                 }
             }
-
-            if (!props.isTrainer) {
-                if (props.teamMember!!.teamRole != "") {
-                    styledDiv {
-                        css {
-                            position = Position.relative
-                            zIndex = 1
-                            top = 0.px
-                            left = 20.px
-                            width = 50.px
-                            height = 65.px
-                            color = ColorSpartak.Red.color
-                            if (props.teamMember!!.teamRole == "К") {
-                                background = "linear-gradient(180deg, rgba(255, 215, 0, 0.55) 0%, #FFD700 92.71%)"
-                            }
-                            if (props.teamMember!!.teamRole == "А") {
-                                background = "linear-gradient(180deg, rgb(220, 220, 220) 0%, rgb(185, 185, 185) 92%)"
-                            }
-                            display = Display.flex
-                            justifyContent = JustifyContent.center
-                            alignItems = Align.center
-                        }
-                        styledH2 {
-                            +props.teamMember!!.teamRole
-                        }
-                    }
-                }
-            }
-
             styledDiv {
-                css {
-                    position = Position.relative
-                }
 
                 styledH2 {
                     css {
@@ -83,17 +51,14 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                         backgroundRepeat = BackgroundRepeat.noRepeat
                         backgroundSize = "contain"
                         backgroundPosition = "center"
+                        margin = "auto"
 
                         if (props.isTrainer) {
                             backgroundImage = Image("url(/images/${props.trainer!!.photo})")
                             height = 390.px
                             width = 310.px
                         } else {
-                            if(props.teamMember!!.photo != "") {
-                                backgroundImage = Image("url(/images/teams/${props.teamMember!!.photo})")
-                            }else{
-                                backgroundImage = Image("url(/images/defaultPhoto.jpg)")
-                            }
+                            backgroundImage = Image("url(/images/teams/${props.teamMember!!.photo})")
                             height = 250.px
                             width = 200.px
                         }
@@ -137,6 +102,32 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                             margin(5.px)
                         }
                         +props.teamMember!!.city
+                    }
+                }
+            }
+            if (!props.isTrainer) {
+                if (props.teamMember!!.teamRole != "") {
+                    styledDiv {
+                        css {
+                            position = Position.relative
+                            zIndex = 1
+                            bottom = 384.px
+                            left = 20.px
+                            width = 50.px
+                            height = 65.px
+                            color = ColorSpartak.Red.color
+                            if (props.teamMember!!.teamRole == "К") {
+                                background = "linear-gradient(180deg, rgba(255, 215, 0, 0.55) 0%, #FFD700 92.71%)"
+                            }
+                            if (props.teamMember!!.teamRole == "А") {
+                                background =
+                                        "linear-gradient(180deg, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.29) 92.71%)"
+                            }
+                            display = Display.flex
+                            justifyContent = JustifyContent.center
+                            alignItems = Align.center
+                        }
+                        +props.teamMember!!.teamRole
                     }
                 }
             }
