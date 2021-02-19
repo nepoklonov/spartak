@@ -82,6 +82,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                         css {
                             backgroundImage = Image("url('${it.imageSrc}')")
                             backgroundSize = "cover"
+                            backgroundPosition = "center"
                             height = 600.px
                             position = Position.relative
                         }

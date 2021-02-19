@@ -1,10 +1,11 @@
 package pages
 
 import content
-import gamesTableContent
-import gamesTableHeader
+import tableContent
+import tableHeader
 import grid
 import gridArea
+import gridTemplateAreas
 import header
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -260,11 +261,16 @@ class Games : RComponent<GamesProps, GamesState>() {
             }
 
             content {
+                styledDiv {
+                    css {
+                        display = Display.grid
+                        gridTemplateAreas(
+                            "date time teamA teamB stadium result"
+                        )
+                    }
 
-
-                gamesTableHeader {
                     tableHeaders.keys.forEach { key ->
-                        styledDiv {
+                        tableHeader {
                             css {
                                 gridArea = key
                                 fontFamily = "Russo"
@@ -273,113 +279,112 @@ class Games : RComponent<GamesProps, GamesState>() {
                             +tableHeaders[key]!!
                         }
                     }
-                }
-                state.allGamesWithTeams?.forEach { game ->
 
-                    gamesTableContent {
-                        styledDiv {
+                    state.allGamesWithTeams?.forEach { game ->
+                        tableContent {
                             css {
                                 gridArea = "date"
                             }
                             +game.date
                         }
-                        styledDiv {
+                        tableContent {
                             css {
                                 gridArea = "time"
                             }
                             +game.time!!
                         }
-                        styledDiv {
+                        tableContent {
                             css {
                                 gridArea = "teamA"
                             }
+                            +game.teamA?.name!!
                         }
-                        +game.teamA?.name!!
-                        styledDiv {
+                        tableContent {
                             css {
                                 gridArea = "teamB"
                             }
                             +game.teamB?.name!!
                         }
-                        styledDiv {
+                        tableContent {
                             css {
                                 gridArea = "stadium"
                             }
                             +game.stadium
                         }
-                        styledDiv {
+                        tableContent {
                             css {
                                 gridArea = "result"
                             }
                             +game.result!!
                         }
-                    }
 
-                    if (document.cookie.contains("role=admin")) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                val gameService = GameService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    gameService.deleteGame(game.id)
-                                }
-                            }
-                            attrs.type = "delete"
-                        }
-                        if (state.editGameForm != game) {
+
+                        if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
-                                    setState {
-                                        editGameForm = game
-                                        inputs["date"]!!.inputValue = game.date
-                                        inputs["time"]!!.inputValue = game.time ?: ""
-                                        inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
-                                        inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
-                                        inputs["stadium"]!!.inputValue = game.stadium
-                                        inputs["result"]!!.inputValue = game.result ?: ""
+                                    val gameService = GameService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        gameService.deleteGame(game.id)
                                     }
                                 }
-                                attrs.type = "edit"
+                                attrs.type = "delete"
                             }
-                        } else {
-                            styledDiv {
-                                styledForm {
-                                    attrs.onSubmitFunction = { event ->
-                                        event.preventDefault()
-                                        event.stopPropagation()
-                                        val gameService = GameService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            var formIsCompleted = true
-                                            state.inputs.values.forEach {
-                                                if (it.isRed) {
-                                                    formIsCompleted = false
-                                                }
-                                            }
-                                            if (formIsCompleted) {
-                                                gameService.editGame(
-                                                    GameDTO(
-                                                        game.id,
-                                                        state.inputs["date"]!!.inputValue,
-                                                        state.inputs["time"]!!.inputValue,
-                                                        props.selectedChampionship,
-                                                        state.inputs["teamA"]!!.inputValue.toInt(),
-                                                        state.inputs["teamB"]!!.inputValue.toInt(),
-                                                        state.inputs["stadium"]!!.inputValue,
-                                                        state.inputs["result"]!!.inputValue,
-                                                    )
-                                                )
-                                            }
+                            if (state.editGameForm != game) {
+                                child(AdminButtonComponent::class) {
+                                    attrs.updateState = {
+                                        setState {
+                                            editGameForm = game
+                                            inputs["date"]!!.inputValue = game.date
+                                            inputs["time"]!!.inputValue = game.time ?: ""
+                                            inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
+                                            inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
+                                            inputs["stadium"]!!.inputValue = game.stadium
+                                            inputs["result"]!!.inputValue = game.result ?: ""
                                         }
                                     }
-                                    child(FormViewComponent::class) {
-                                        console.log(state.inputs)
-                                        attrs.inputs = state.inputs
-                                        attrs.updateState =
-                                            { key: String, value: String, isRed: Boolean ->
-                                                setState {
-                                                    state.inputs[key]!!.inputValue = value
-                                                    state.inputs[key]!!.isRed = isRed
+                                    attrs.type = "edit"
+                                }
+                            } else {
+                                styledDiv {
+                                    styledForm {
+                                        attrs.onSubmitFunction = { event ->
+                                            event.preventDefault()
+                                            event.stopPropagation()
+                                            val gameService = GameService(coroutineContext)
+                                            props.coroutineScope.launch {
+                                                var formIsCompleted = true
+                                                state.inputs.values.forEach {
+                                                    if (it.isRed) {
+                                                        formIsCompleted = false
+                                                    }
+                                                }
+                                                if (formIsCompleted) {
+                                                    gameService.editGame(
+                                                        GameDTO(
+                                                            game.id,
+                                                            state.inputs["date"]!!.inputValue,
+                                                            state.inputs["time"]!!.inputValue,
+                                                            props.selectedChampionship,
+                                                            state.inputs["teamA"]!!.inputValue.toInt(),
+                                                            state.inputs["teamB"]!!.inputValue.toInt(),
+                                                            state.inputs["stadium"]!!.inputValue,
+                                                            state.inputs["result"]!!.inputValue,
+                                                        )
+                                                    )
                                                 }
                                             }
+                                        }
+                                        child(FormViewComponent::class) {
+                                            console.log(state.inputs)
+                                            attrs.inputs = state.inputs
+                                            attrs.updateState =
+                                                { key: String, value: String, isRed: Boolean ->
+                                                    setState {
+                                                        state.inputs[key]!!.inputValue = value
+                                                        state.inputs[key]!!.isRed = isRed
+                                                    }
+                                                }
+                                        }
                                     }
                                 }
                             }
@@ -387,71 +392,71 @@ class Games : RComponent<GamesProps, GamesState>() {
                     }
                 }
 
-            }
-            if (document.cookie.contains("role=admin")) {
-                if (!state.addGameForm) {
-                    child(AdminButtonComponent::class) {
-                        attrs.updateState = {
-                            setState {
-                                addGameForm = true
+                if (document.cookie.contains("role=admin")) {
+                    if (!state.addGameForm) {
+                        child(AdminButtonComponent::class) {
+                            attrs.updateState = {
+                                setState {
+                                    addGameForm = true
+                                }
                             }
+                            attrs.type = "add"
                         }
-                        attrs.type = "add"
-                    }
-                } else {
-                    styledForm {
-                        attrs.onSubmitFunction = { event ->
-                            event.preventDefault()
-                            event.stopPropagation()
-                            val gameService = GameService(coroutineContext)
-                            props.coroutineScope.launch {
-                                var formIsCompleted = true
-                                state.inputs.values.forEach {
-                                    if (it.isRed) {
-                                        formIsCompleted = false
+                    } else {
+                        styledForm {
+                            attrs.onSubmitFunction = { event ->
+                                event.preventDefault()
+                                event.stopPropagation()
+                                val gameService = GameService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    var formIsCompleted = true
+                                    state.inputs.values.forEach {
+                                        if (it.isRed) {
+                                            formIsCompleted = false
+                                        }
+                                    }
+                                    if (formIsCompleted) {
+                                        gameService.addGame(
+                                            GameDTO(
+                                                null,
+                                                state.inputs["date"]!!.inputValue,
+                                                state.inputs["time"]!!.inputValue,
+                                                props.selectedChampionship,
+                                                state.inputs["teamA"]!!.inputValue.toInt(),
+                                                state.inputs["teamB"]!!.inputValue.toInt(),
+                                                state.inputs["stadium"]!!.inputValue,
+                                                state.inputs["result"]!!.inputValue,
+                                            )
+                                        )
                                     }
                                 }
-                                if (formIsCompleted) {
-                                    gameService.addGame(
-                                        GameDTO(
-                                            null,
-                                            state.inputs["date"]!!.inputValue,
-                                            state.inputs["time"]!!.inputValue,
-                                            props.selectedChampionship,
-                                            state.inputs["teamA"]!!.inputValue.toInt(),
-                                            state.inputs["teamB"]!!.inputValue.toInt(),
-                                            state.inputs["stadium"]!!.inputValue,
-                                            state.inputs["result"]!!.inputValue,
-                                        )
-                                    )
-                                }
                             }
-                        }
-                        child(FormViewComponent::class) {
-                            attrs.inputs = state.inputs
-                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                setState {
-                                    state.inputs[key]!!.inputValue = value
-                                    state.inputs[key]!!.isRed = isRed
-                                }
-                            }
-                            attrs.addOtherOption = { isItTeamA: Boolean, teamName: String ->
-                                val teamService = TeamService(coroutineContext)
-                                props.coroutineScope.launch {
-                                    val team = TeamDTO(
-                                        null,
-                                        teamName,
-                                        null,
-                                        false,
-                                        null
-                                    )
-                                    val id = teamService.addTeam(team)
-                                    team.id = id
+                            child(FormViewComponent::class) {
+                                attrs.inputs = state.inputs
+                                attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                     setState {
-                                        if (isItTeamA) {
-                                            inputs["teamA"]!!.inputValue = id.toString()
-                                        } else {
-                                            inputs["teamB"]!!.inputValue = id.toString()
+                                        state.inputs[key]!!.inputValue = value
+                                        state.inputs[key]!!.isRed = isRed
+                                    }
+                                }
+                                attrs.addOtherOption = { isItTeamA: Boolean, teamName: String ->
+                                    val teamService = TeamService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        val team = TeamDTO(
+                                            null,
+                                            teamName,
+                                            null,
+                                            false,
+                                            null
+                                        )
+                                        val id = teamService.addTeam(team)
+                                        team.id = id
+                                        setState {
+                                            if (isItTeamA) {
+                                                inputs["teamA"]!!.inputValue = id.toString()
+                                            } else {
+                                                inputs["teamB"]!!.inputValue = id.toString()
+                                            }
                                         }
                                     }
                                 }

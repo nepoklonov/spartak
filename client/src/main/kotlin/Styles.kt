@@ -56,6 +56,8 @@ object Styles : StyleSheet("main") {
         position = Position.sticky
         backgroundColor = Color.white
         boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
+        position = Position.sticky
+        top = 30.px
     }
 
     val content by css {
@@ -82,14 +84,6 @@ object Styles : StyleSheet("main") {
         paddingRight = 50.px
         cursor = Cursor.pointer
         margin(left = 0.px)
-    }
-
-    val tableGrid by css{
-        display = Display.grid
-        gridTemplateAreas(
-            "date time teamA teamB stadium result"
-        )
-        gridTemplateColumns = GridTemplateColumns("1fr 1fr 1fr 1fr 1fr 1fr")
     }
 
     val tableHeader by css {
@@ -179,30 +173,14 @@ fun RBuilder.greyButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = sty
     block()
 }
 
-fun RBuilder.gamesTableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
-    css {
-        +Styles.tableGrid
-        +Styles.tableHeader
-    }
-    block()
-}
-
-fun RBuilder.workoutsTableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
+fun RBuilder.tableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
         +Styles.tableHeader
     }
     block()
 }
 
-
-fun RBuilder.gamesTableContent(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
-    css {
-        +Styles.tableGrid
-        +Styles.tableContent
-    }
-    block()
-}
-fun RBuilder.workoutsTableContent(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
+fun RBuilder.tableContent(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
         +Styles.tableContent
     }
