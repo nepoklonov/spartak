@@ -295,6 +295,11 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 styledDiv {
                                     css {
                                         width = 100.pct
+                                        textAlign = TextAlign.center
+                                        justifyContent = JustifyContent.center
+                                        display = Display.flex
+                                        height == 100.pct
+                                        padding = 50.px.toString()
                                     }
                                     +trainer?.info!!
                                 }

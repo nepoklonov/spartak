@@ -190,7 +190,8 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                     css {
                                         backgroundImage = Image("url(/images/${photo.url})")
                                         backgroundRepeat = BackgroundRepeat.noRepeat
-                                        backgroundSize = 230.px.toString()git
+                                        backgroundSize = "cover"
+                                        backgroundPosition = "center"
                                         width = 230.px
                                         height = 230.px
                                         margin = 10.px.toString()

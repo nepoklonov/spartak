@@ -295,3 +295,10 @@ INSERT INTO workoutssections ("name", "link") VALUES ('Спартак 2008', 'sp
 INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2003', 'championship2003');
 INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2005', 'championship2005');
 INSERT INTO gamessections (name, link) VALUES ('Первенство СПБ 2006', 'championship2006');
+
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 1, '9:30', 'shhm', '8:30', 'ШХМ');
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 2, '8:15', 'shhm', '7:00', 'ШХМ защитники (все возраста)');
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 2, '10:15', 'shhm', '09:30', 'индивидуальная работа');
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 3, '9:30', 'shhm', '8:30', '(лед) маневренное катание');
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 4, '10:15', 'shhm', '9:30', 'индивидуальная работа');
+INSERT INTO workouts ("actualFromDate", "actualToDate", "dayOfWeek", "endTime", "sectionLink", "startTime", "text") VALUES (1.61325E12, 9.999999999999E12, 5, '8:15', 'shhm', '7:00', 'ШХМ нападающие (все возраста)');
