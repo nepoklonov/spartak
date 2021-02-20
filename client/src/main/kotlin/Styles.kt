@@ -88,7 +88,7 @@ object Styles : StyleSheet("main") {
 
     val tableHeader by css {
         height = 60.px
-        width = 100.pct
+//        width = 100.pct
         marginTop = 3.px
         backgroundColor = ColorSpartak.LightGrey.color
         fontFamily = "Russo"
@@ -106,7 +106,7 @@ object Styles : StyleSheet("main") {
 
     val tableContent by css {
         minHeight = 70.px
-        width = 100.pct
+//        width = 100.pct
         padding(10.px)
         marginTop = 3.px
         backgroundColor = Color.white
