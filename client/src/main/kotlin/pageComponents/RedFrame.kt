@@ -111,17 +111,19 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                         css {
                             position = Position.relative
                             zIndex = 1
-                            bottom = 384.px
-                            left = 20.px
+                            bottom = 400.px
+                            left = 33.px
                             width = 50.px
-                            height = 65.px
+                            height = 85.px
                             color = ColorSpartak.Red.color
+                            fontFamily = "Russo"
                             if (props.teamMember!!.teamRole == "К") {
-                                background = "linear-gradient(180deg, rgba(255, 215, 0, 0.55) 0%, #FFD700 92.71%)"
+                                background =
+                                        "linear-gradient(rgba(252,232,123,1),rgba(249,215,73,1))"
                             }
                             if (props.teamMember!!.teamRole == "А") {
                                 background =
-                                        "linear-gradient(180deg, rgba(0, 0, 0, 0.14) 0%, rgba(0, 0, 0, 0.29) 92.71%)"
+                                        "linear-gradient(rgba(219,219,219,1), rgba(181,181,181,1))"
                             }
                             display = Display.flex
                             justifyContent = JustifyContent.center

@@ -61,8 +61,8 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '71', '2003_71.jpg', 'Александр', 'Клюшниченко', 'strikers', '12.05.2003', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '73', '2003_73.jpg', 'Григорий', 'Зоринов', 'strikers', '07.02.2003', 'г. Череповец','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '77', '2003_77.jpg', 'Тимофей', 'Турзанов', 'strikers', '23.04.2004', 'г. Санкт-Петербург','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '83', '', 'Андрей', 'Петров', 'strikers', '05.01.2003', 'Нарьян-Мар','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '87', '', 'Александр', 'Комаров', 'strikers', '07.01.2003', 'г. Санкт-Петербург','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '83', 'defaultPhoto.jpg', 'Андрей', 'Петров', 'strikers', '05.01.2003', 'Нарьян-Мар','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2003', '87', 'defaultPhoto.jpg', 'Александр', 'Комаров', 'strikers', '07.01.2003', 'г. Санкт-Петербург','');
 
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '1', '2005_1.jpg', 'Глеб', 'Гусев', 'goalkeepers', '30.06.2005', 'г. Санкт-Петербург','');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '30', '2005_30.jpg', 'Даниил', 'Ваганов', 'goalkeepers', '14.10.2005', 'г. Санкт-Петербург','');
@@ -90,26 +90,26 @@ INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '96', '2005_96.jpg', 'Игорь', 'Иванов', 'strikers', '22.01.2005', 'г. Санкт-Петербург','А');
 INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2005', '97', '2005_97.jpg', 'Иван', 'Королев', 'strikers', '09.07.2005', 'г. Санкт-Петербург','К');
 
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '1', '', 'Даниил', 'Климин', 'goalkeepers', '03.04.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '41', '', 'Егор', 'Шпак', 'goalkeepers', '24.07.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '87', '', 'Артем', 'Покладок', 'goalkeepers', '17.05.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '4', '', 'Никита', 'Веселков', 'defenders', '30.09.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '13', '', 'Иван', 'Капылович', 'defenders', '13.01.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '18', '', 'Григорий', 'Шпак', 'defenders', '24.07.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '19', '', 'Егор', 'Чипкинян', 'defenders', '19.06.2007', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '25', '', 'Иван', 'Коновалов', 'defenders', '01.10.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '70', '', 'Федор', 'Бушляков', 'defenders', '07.08.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '81', '', 'Марк', 'Коннов', 'defenders', '26.02.2007', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '8', '', 'Андрей', 'Гассанов', 'strikers', '30.03.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '14', '', 'Варвара', 'Пазухина', 'strikers', '03.12.2005', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '23', '', 'Никита', 'Киселев', 'strikers', '03.08.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '27', '', 'Нил', 'Альбицкий', 'strikers', '09.07.2007', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '44', '', 'Святослав', 'Телегин', 'strikers', '23.12.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '66', '', 'Максим', 'Милаков', 'strikers', '10.08.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '77', '', 'Юлиан', 'Афанасьев', 'strikers', '31.07.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '88', '', 'Иван', 'Дерягин', 'strikers', '18.05.2006', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '98', '', 'Симеон', 'Дмитриев', 'strikers', '08.02.2007', '','');
-INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '99', '', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '1', 'defaultPhoto.jpg', 'Даниил', 'Климин', 'goalkeepers', '03.04.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '41', 'defaultPhoto.jpg', 'Егор', 'Шпак', 'goalkeepers', '24.07.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '87', 'defaultPhoto.jpg', 'Артем', 'Покладок', 'goalkeepers', '17.05.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '4', 'defaultPhoto.jpg', 'Никита', 'Веселков', 'defenders', '30.09.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '13', 'defaultPhoto.jpg', 'Иван', 'Капылович', 'defenders', '13.01.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '18', 'defaultPhoto.jpg', 'Григорий', 'Шпак', 'defenders', '24.07.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '19', 'defaultPhoto.jpg', 'Егор', 'Чипкинян', 'defenders', '19.06.2007', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '25', 'defaultPhoto.jpg', 'Иван', 'Коновалов', 'defenders', '01.10.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '70', 'defaultPhoto.jpg', 'Федор', 'Бушляков', 'defenders', '07.08.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '81', 'defaultPhoto.jpg', 'Марк', 'Коннов', 'defenders', '26.02.2007', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '8', 'defaultPhoto.jpg', 'Андрей', 'Гассанов', 'strikers', '30.03.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '14', 'defaultPhoto.jpg', 'Варвара', 'Пазухина', 'strikers', '03.12.2005', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '23', 'defaultPhoto.jpg', 'Никита', 'Киселев', 'strikers', '03.08.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '27', 'defaultPhoto.jpg', 'Нил', 'Альбицкий', 'strikers', '09.07.2007', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '44', 'defaultPhoto.jpg', 'Святослав', 'Телегин', 'strikers', '23.12.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '66', 'defaultPhoto.jpg', 'Максим', 'Милаков', 'strikers', '10.08.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '77', 'defaultPhoto.jpg', 'Юлиан', 'Афанасьев', 'strikers', '31.07.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '88', 'defaultPhoto.jpg', 'Иван', 'Дерягин', 'strikers', '18.05.2006', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '98', 'defaultPhoto.jpg', 'Симеон', 'Дмитриев', 'strikers', '08.02.2007', '','');
+INSERT INTO teammembers ("teamLink", "number", photo, "firstName", "lastName", "role", birthday, city, "teamRole") VALUES ('2006', '99', 'defaultPhoto.jpg', 'Кристоф', 'Муиссу Жоэ', 'strikers', '22.08.2006', '','');
 
 
 
