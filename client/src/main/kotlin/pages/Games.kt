@@ -1,8 +1,6 @@
 package pages
 
 import content
-import tableContent
-import tableHeader
 import grid
 import gridArea
 import gridTemplateAreas
@@ -23,6 +21,8 @@ import services.GameService
 import services.GamesNavigationService
 import services.TeamService
 import styled.*
+import tableContent
+import tableHeader
 
 val tableHeaders =
     mapOf(
@@ -282,39 +282,21 @@ class Games : RComponent<GamesProps, GamesState>() {
 
                     state.allGamesWithTeams?.forEach { game ->
                         tableContent {
-                            css {
-                                gridArea = "date"
-                            }
                             +game.date
                         }
                         tableContent {
-                            css {
-                                gridArea = "time"
-                            }
                             +game.time!!
                         }
                         tableContent {
-                            css {
-                                gridArea = "teamA"
-                            }
                             +game.teamA?.name!!
                         }
                         tableContent {
-                            css {
-                                gridArea = "teamB"
-                            }
                             +game.teamB?.name!!
                         }
                         tableContent {
-                            css {
-                                gridArea = "stadium"
-                            }
                             +game.stadium
                         }
                         tableContent {
-                            css {
-                                gridArea = "result"
-                            }
                             +game.result!!
                         }
 
