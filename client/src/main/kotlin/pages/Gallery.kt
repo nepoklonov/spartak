@@ -176,8 +176,9 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                         styledDiv {
                             css {
                                 display = Display.flex
-                                justifyContent = JustifyContent.spaceBetween
+                                justifyContent = JustifyContent.flexStart
                                 flexWrap = FlexWrap.wrap
+                                gap = Gap("15px 30px")
                             }
 
                             state.images!!.forEachIndexed { index, photo ->
@@ -191,8 +192,8 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                         backgroundImage = Image("url(/images/${photo.url})")
                                         backgroundRepeat = BackgroundRepeat.noRepeat
                                         backgroundSize = "cover"
+                                        width = 280.px
                                         backgroundPosition = "center"
-                                        width = 230.px
                                         height = 230.px
                                         margin = 10.px.toString()
                                     }

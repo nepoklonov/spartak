@@ -51,8 +51,9 @@ class FooterComponent : RComponent<RProps, RState>() {
             css {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceBetween
-                padding = 40.px.toString()
-                background = "linear-gradient(180deg, rgba(223, 221, 221, 0) 0%, #5E5555 100%)"
+                padding(0.px, 50.px)
+                marginTop = 50.px
+                background = "linear-gradient(180deg, rgba(223, 221, 221, 0) -10%, #333333 100%)"
             }
 
             styledDiv {

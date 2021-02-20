@@ -75,8 +75,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                     css{
                         textDecoration = TextDecoration.none
                         minWidth = 300.px
-                        width = 20.pct
-                        padding(1.pct)
+                        width = 25.pct
                     }
                     styledDiv {
                         css {
@@ -88,6 +87,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                         }
                         styledDiv {
                             css {
+                                padding(0.px, 20.px, 10.px, 20.px)
                                 height = 100.pct
                                 background = "linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0.71) 41.67%)"
                                 hover {
@@ -111,7 +111,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                                     }
                                     styledP {
                                         +it.content!!.let { it.substring(0, it.length-40) }
-                                        it.content!!.let { it.substring(it.length-40, it.length) }.forEachIndexed { index, c ->
+                                        it.content.let { it.substring(it.length-40, it.length) }.forEachIndexed { index, c ->
                                             styledSpan {
                                                 +c.toString()
                                                 css {
@@ -138,8 +138,8 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
             css{
                 display = Display.flex
                 flexWrap = FlexWrap.wrap
-                justifyContent = JustifyContent.spaceAround
-                margin = 20.px.toString()
+                justifyContent = JustifyContent.spaceBetween
+                margin(50.px)
             }
         }
 
