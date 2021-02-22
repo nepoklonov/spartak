@@ -7,7 +7,7 @@ import react.RComponent
 import react.RState
 import styled.css
 
-
+//TODO: не нужен здесь класс
 class ButtonSecondary : RComponent<ButtonProps, RState>() {
 
     override fun RBuilder.render() {

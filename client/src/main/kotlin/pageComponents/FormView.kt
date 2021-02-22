@@ -102,6 +102,9 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                                 if (target.value == "") {
                                     isRed = true
                                 }
+                                //TODO: кринжовый if
+                                // заменяется на isItTeamA = it.inputName == "teamA"
+                                // сам не стал исправлять, чтобы вы обратили внимание
                                 val isItTeamA = if (it.inputName == "teamA") {
                                     true
                                 } else {
@@ -114,6 +117,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                     }
                 }
             } else if (it.isDateTime) {
+                //TODO: опять повторение кода на 14 строчек
                 styledInput(type = InputType.dateTimeLocal) {
                     attrs {
                         name = it.inputName

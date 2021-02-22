@@ -150,7 +150,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
 
     override fun RBuilder.render() {
         grid {
-
             navigation {
                 if (state.navigationList != null) {
                     state.navigationList!!.forEach { teamsNavigation ->
@@ -298,6 +297,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         textAlign = TextAlign.center
                                         justifyContent = JustifyContent.center
                                         display = Display.flex
+                                        //TODO: опечатка?
                                         height == 100.pct
                                         padding = 50.px.toString()
                                     }
@@ -385,6 +385,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                     attrs.isTrainer = false
                                     attrs.teamMember = teamMember
                                 }
+                                //TODO: вынести в отдельную функцию
                                 if (document.cookie.contains("role=Admin")) {
                                     child(AdminButtonComponent::class) {
                                         attrs.updateState = {
@@ -521,3 +522,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
         }
     }
 }
+//TODO: в этом файле чёрт ногу сломит
+// , я тоже сломил.
+// Функции админские нужно отделить от обычных.
+// И провести большой рефакторинг.

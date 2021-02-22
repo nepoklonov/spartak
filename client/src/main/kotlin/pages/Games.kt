@@ -279,7 +279,10 @@ class Games : RComponent<GamesProps, GamesState>() {
                             +tableHeaders[key]!!
                         }
                     }
-
+                    //TODO: с этим тоже что-нибудь сделать бы..
+                    // JS точно умеет превращать объект в JSON,
+                    // а вам, по сути, нужен список полей
+                    // думаю, можно что-нибудь клёвое сделать
                     state.allGamesWithTeams?.forEach { game ->
                         tableContent {
                             +game.date

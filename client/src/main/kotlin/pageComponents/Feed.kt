@@ -1,4 +1,5 @@
 package pages
+//TODO: проверить правильность указанных пакетов
 
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -19,8 +20,8 @@ import styled.*
 import kotlin.js.Date
 import kotlin.collections.map as map
 
-
-inline fun <T> MutableList<T>.mapInPlace(mutator: (T)->T) {
+//TODO: зачем оно здесь?
+inline fun <T> MutableList<T>.mapInPlace(mutator: (T) -> T) {
     val iterate = this.listIterator()
     while (iterate.hasNext()) {
         val oldValue = iterate.next()
@@ -36,10 +37,11 @@ external interface FeedProps : RProps {
     var coroutineScope: CoroutineScope
 }
 
-class FeedState: RState {
+class FeedState : RState {
     var error: Throwable? = null
     val news: MutableList<ShortNews> = mutableListOf()
 }
+
 class Feed : RComponent<FeedProps, FeedState>() {
 
     private val coroutineContext
@@ -54,10 +56,12 @@ class Feed : RComponent<FeedProps, FeedState>() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
         props.coroutineScope.launch {
-            val newsHtml : MutableList<NewsDTO> = mutableListOf()
+            val newsHtml: MutableList<NewsDTO> = mutableListOf()
             try {
                 newsService.getLastNews().forEach { newsHtml.add(NewsDTO(it.id, htmlService.getHtml(it.url), it.date)) }
             } catch (e: Throwable) {
+                //TODO: либо не ловить здесь ошибку,
+                // либо сделать это чем-то более осмысленным
                 setState {
                     error = e
                 }
@@ -68,9 +72,9 @@ class Feed : RComponent<FeedProps, FeedState>() {
                 e.innerHTML = new.url
                 val img = e.getElementsByTagName("img")[0]
                 val h3 = e.getElementsByTagName("h3")[0]
-                val p = e.getElementsByTagName("p").asList().map{it.innerHTML}.joinToString(separator = "\n ")
+                val p = e.getElementsByTagName("p").asList().map { it.innerHTML }.joinToString(separator = "\n ")
                 setState {
-                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p.substring(0,400), new.id, new.date))
+                    news.add(ShortNews(h3?.innerHTML, img?.getAttribute("src"), p.substring(0, 400), new.id, new.date))
                 }
             }
         }
@@ -103,7 +107,7 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         css {
                             backgroundImage = Image("url('${it.imageSrc}')")
                             backgroundSize = "cover"
-                            if (i%2 == 0) float = Float.left
+                            if (i % 2 == 0) float = Float.left
                             else float = Float.right
                             height = 90.pct
                             width = 40.pct
@@ -126,7 +130,7 @@ class Feed : RComponent<FeedProps, FeedState>() {
                                     }
                                     attrs.type = "delete"
                                 }
-                                styledA (href = "/news/${it.id}") {
+                                styledA(href = "/news/${it.id}") {
                                     child(AdminButtonComponent::class) {
                                         attrs.type = "edit"
                                     }

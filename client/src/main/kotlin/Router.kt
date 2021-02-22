@@ -113,6 +113,7 @@ class Router : RComponent<RouterProps, RouterState>() {
     }
 
     override fun RBuilder.render() {
+        //TODO: вынести содержимое appWithRouter в render
         appWithRouter()
     }
 }

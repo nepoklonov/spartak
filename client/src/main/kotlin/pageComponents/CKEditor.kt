@@ -3,7 +3,7 @@ package pageComponents
 
 import react.RClass
 import react.RProps
-
+//TODO: вынести в отдельный пакет
 external interface CKEditorProps: RProps {
     var editor: dynamic
     var data: String

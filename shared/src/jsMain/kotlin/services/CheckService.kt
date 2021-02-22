@@ -11,3 +11,5 @@ actual class CheckService(coroutineContext: CoroutineContext) {
         return transport.get("getCheck", Check.serializer())
     }
 }
+
+//TODO: уже можно выпиливать)

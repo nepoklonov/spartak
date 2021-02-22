@@ -18,14 +18,14 @@ import kotlin.coroutines.CoroutineContext
 private class Application : CoroutineScope {
     override val coroutineContext: CoroutineContext = Job()
 
-
     fun start() {
         document.getElementById("react-app")?.let {
-            val SpartakContext = react.createContext("Basic")
-            SpartakContext.Provider
+            val spartakContext = react.createContext("Basic")
+            spartakContext.Provider
 
             render(buildElements {
                 browserRouter {
+                    //TODO: вынести в отдельный метод
                     styledDiv {
                         css {
                             position = Position.fixed
@@ -47,7 +47,9 @@ private class Application : CoroutineScope {
                             marginRight = 100.px
                             backgroundColor = rgba(255, 255, 255, 0.6)
                         }
-                        child(HeaderComponent::class) {}
+                        //TODO: перенести Header, Footer и др. в пакет structure
+                        child(HeaderComponent::class) { }
+                        //TODO: вынести в HeaderComponent
                         route<MainNavigationProps>("/:selectedString") { props ->
                             child(MainNavigationComponent::class) {
                                 attrs.selectedString = props.match.params.selectedString
@@ -56,7 +58,7 @@ private class Application : CoroutineScope {
                         child(Router::class) {
                             attrs.coroutineScope = this@Application
                         }
-                        child(FooterComponent::class) {}
+                        child(FooterComponent::class) { }
                     }
                 }
             }, it)

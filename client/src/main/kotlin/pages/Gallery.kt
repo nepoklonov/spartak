@@ -86,8 +86,8 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
             }
 
             navigation {
-                if (state.galleryNavigationList != null) {
-                    state.galleryNavigationList!!.forEach { galleryNavigation ->
+                state.galleryNavigationList?.let { galleryNavigationList ->
+                    galleryNavigationList.forEach { galleryNavigation ->
                         route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
                             child(SmallNavigation::class) {
                                 attrs.string = galleryNavigation.header
@@ -162,7 +162,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                             }
                         }
                     }
-                } else {
+                } ?: run {
                     +"Загрузка..."
                 }
             }

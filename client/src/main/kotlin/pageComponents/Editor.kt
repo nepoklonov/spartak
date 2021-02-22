@@ -25,6 +25,8 @@ external interface EditorProps : RProps {
 external interface EditorState : RState {
     var text: String?
 }
+//TODO: вынести вот это ^ в отдельный файл в тот же пакет, где будет CKEditor
+
 class CKEditorComponent: RComponent<EditorProps, EditorState>() {
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext

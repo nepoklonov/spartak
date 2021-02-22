@@ -102,6 +102,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                 }
                 if (state.recruitmentHtml != null) {
                     css {
+                        //TODO: проверить код:
                         child("div button") {
                             Styles.button
                             backgroundColor = ColorSpartak.Grey.color
@@ -149,6 +150,9 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                             }
                             if (formIsCompleted) {
                                 recruitmentService.addRecruitment(
+                                    //TODO: Идея пришла
+                                    // Мб тут надо делать своего рода десериализацию
+                                    // вместо вызова конструктора
                                     RecruitmentDTO(
                                         null,
                                         state.inputs["dates"]!!.inputValue,

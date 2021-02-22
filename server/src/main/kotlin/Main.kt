@@ -1,4 +1,4 @@
-@file:Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@file:Suppress("BlockingMethodInNonBlockingContext")
 
 import database.*
 import io.ktor.application.*
@@ -25,6 +25,8 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.util.*
 
+
+//TODO: мб пора этот файл разбить на несколько?
 private val globalCss = CSSBuilder().apply {
     fontFace {
         fontFamily = "Russo"
@@ -241,12 +243,13 @@ fun Application.main() {
                     when (part) {
                         is PartData.FileItem -> {
                             val uploadDir = "uploads"  // CREATED LINE
-                            val ext = File(part.originalFileName).extension
+                            val ext = File(part.originalFileName!!).extension
                             val file = File(uploadDir, "upload-${System.currentTimeMillis()}.$ext")
                             part.streamProvider().use { input ->
                                 file.outputStream().buffered().use { output -> input.copyToSuspend(output) }
                             }
                         }
+                        else -> TODO()
                     }
 
                     part.dispose()

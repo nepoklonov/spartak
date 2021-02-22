@@ -21,6 +21,7 @@ import tableContent
 import tableHeader
 import kotlin.js.Date
 
+//TODO: вынести в отдельный файл
 val months = mapOf(
     0 to " января",
     1 to " февраля",
@@ -51,6 +52,8 @@ external interface WorkoutsProps : RProps {
     var selectedWorkout: String
 }
 
+
+//TODO: remove duplicate fragments
 class WorkoutsState : RState {
     var error: Throwable? = null
     var workoutsNavigationList: List<NavigationDTO>? = null
@@ -292,6 +295,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                                     .toString(),
                                                                                 Date(state.inputs["endDatetime"]!!.inputValue).getHours()
                                                                                     .toString()
+//TODO: помогите, адская вложенность
                                                                                         + ":"
                                                                                         + Date(state.inputs["endDatetime"]!!.inputValue).getMinutes()
                                                                                     .toString(),
