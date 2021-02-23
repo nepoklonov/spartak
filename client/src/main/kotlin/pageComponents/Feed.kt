@@ -5,17 +5,14 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import kotlinx.html.js.onSubmitFunction
 import model.NewsDTO
 import org.w3c.dom.asList
 import org.w3c.dom.get
 import pageComponents.AdminButtonComponent
-import pageComponents.ButtonSecondary
-import pageComponents.CKEditorComponent
+import pageComponents.buttonSecondary
 import react.*
 import services.HtmlService
 import services.NewsService
-import services.TeamService
 import styled.*
 import kotlin.js.Date
 import kotlin.collections.map as map
@@ -163,9 +160,7 @@ class Feed : RComponent<FeedProps, FeedState>() {
                         }
                         styledDiv {
                             styledA(href = "/news/${it.id}") {
-                                child(ButtonSecondary::class) {
-                                    attrs.text = "Читать далее"
-                                }
+                                buttonSecondary("Читать далее")
                             }
                         }
                     }

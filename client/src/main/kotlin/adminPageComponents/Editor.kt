@@ -1,5 +1,7 @@
-package pageComponents
+package adminPageComponents
 
+import modules.CKEditor
+import modules.CKEditorProps
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.coroutines.CoroutineScope
@@ -7,13 +9,11 @@ import kotlinx.coroutines.launch
 import kotlinx.html.id
 import kotlinx.html.js.onSubmitFunction
 import org.w3c.dom.events.Event
+import pageComponents.buttonMain
 import react.*
 import react.dom.div
-import redButtonSpartak
-import services.AdminService
 import services.HtmlService
 import styled.styledForm
-import kotlin.coroutines.CoroutineContext
 
 @JsModule("@ckeditor/ckeditor5-build-decoupled-document")
 external val DecoupledEditor: RClass<CKEditorProps>
@@ -68,9 +68,7 @@ class CKEditorComponent: RComponent<EditorProps, EditorState>() {
                 attrs.onSubmitFunction = {
                     handleSubmit(props.url, state.text!!, htmlService, it)
                 }
-                child(ButtonMain::class) {
-                    attrs.text = "Отправить"
-                }
+                buttonMain("Отправить")
             }
         }
     }

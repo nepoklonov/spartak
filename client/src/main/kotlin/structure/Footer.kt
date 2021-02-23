@@ -1,6 +1,7 @@
-package pageComponents
+package structure
 
 import kotlinx.css.*
+import TextWithIcon
 import react.RBuilder
 import react.RComponent
 import react.RProps

@@ -1,16 +1,16 @@
+
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.css.*
 import kotlinx.html.id
-import pageComponents.FooterComponent
-import pageComponents.HeaderComponent
-import pageComponents.MainNavigationComponent
-import pageComponents.MainNavigationProps
 import react.buildElements
 import react.dom.render
 import react.router.dom.browserRouter
 import react.router.dom.route
+import structure.FooterComponent
+import structure.HeaderComponent
+import structure.MainNavigationProps
 import styled.css
 import styled.styledDiv
 import kotlin.coroutines.CoroutineContext
@@ -47,11 +47,8 @@ private class Application : CoroutineScope {
                             marginRight = 100.px
                             backgroundColor = rgba(255, 255, 255, 0.6)
                         }
-                        //TODO: перенести Header, Footer и др. в пакет structure
-                        child(HeaderComponent::class) { }
-                        //TODO: вынести в HeaderComponent
                         route<MainNavigationProps>("/:selectedString") { props ->
-                            child(MainNavigationComponent::class) {
+                            child(HeaderComponent::class) {
                                 attrs.selectedString = props.match.params.selectedString
                             }
                         }

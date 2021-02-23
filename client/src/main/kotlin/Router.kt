@@ -34,7 +34,7 @@ class Router : RComponent<RouterProps, RouterState>() {
         }
     }
 
-    fun RBuilder.appWithRouter() {
+    override fun RBuilder.render() {
         switch {
             redirect(from = "/", to = "/main", exact = true)
             route("/main") {
@@ -110,10 +110,5 @@ class Router : RComponent<RouterProps, RouterState>() {
                 }
             }
         }
-    }
-
-    override fun RBuilder.render() {
-        //TODO: вынести содержимое appWithRouter в render
-        appWithRouter()
     }
 }

@@ -1,3 +1,4 @@
+
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
@@ -5,71 +6,18 @@ import kotlinx.css.properties.boxShadow
 import kotlinx.html.BUTTON
 import kotlinx.html.DIV
 import kotlinx.html.H1
-import pageComponents.ColorSpartak
 import react.RBuilder
 import styled.*
-import kotlin.reflect.KProperty
-
-fun CSSBuilder.gridTemplateAreas(vararg s: String) {
-    gridTemplateAreas = GridTemplateAreas(s.joinToString("") { "\"$it\" " })
-}
-
-@Suppress("UNCHECKED_CAST")
-private class CSSProperty<T>(private val default: (() -> T)? = null) {
-    operator fun getValue(thisRef: StyledElement, property: KProperty<*>): T {
-        default?.let { default ->
-            if (!thisRef.declarations.containsKey(property.name)) {
-                thisRef.declarations[property.name] = default() as Any
-            }
-        }
-        return thisRef.declarations[property.name] as T
-    }
-
-    operator fun setValue(thisRef: StyledElement, property: KProperty<*>, value: T) {
-        thisRef.declarations[property.name] = value as Any
-    }
-}
-
-var StyledElement.gridArea: String by CSSProperty()
-
 
 object Styles : StyleSheet("main") {
-    val grid by css {
-        display = Display.grid
-        gridTemplateAreas(
-            ". header",
-            "navigation content",
-            ". content"
+
+    val shadowSpartak by css {
+        boxShadow(
+            color = rgba(0, 0, 0, 0.25),
+            offsetX = 0.px,
+            offsetY = 4.px,
+            blurRadius = 4.px
         )
-        gridTemplateRows = GridTemplateRows("auto auto")
-        gridTemplateColumns = GridTemplateColumns("325px auto")
-    }
-
-    val header by css {
-        fontSize = 32.pt
-        lineHeight = LineHeight.normal
-        gridArea = "header"
-    }
-
-    val navigation by css {
-        gridArea = "navigation"
-        position = Position.sticky
-        backgroundColor = Color.white
-        boxShadow(color = rgba(0, 0, 0, 0.25), offsetX = 0.px, offsetY = 4.px, blurRadius = 4.px)
-        position = Position.sticky
-        top = 30.px
-    }
-
-    val content by css {
-        gridArea = "content"
-        paddingLeft = 50.px
-        paddingRight = 50.px
-    }
-
-    val smallHeader by css {
-        textAlign = TextAlign.center
-        fontSize = 18.pt
-        lineHeight = LineHeight.normal
     }
 
     val button by css {
@@ -85,73 +33,56 @@ object Styles : StyleSheet("main") {
         cursor = Cursor.pointer
         margin(left = 0.px)
     }
-
-    val tableHeader by css {
-        height = 60.px
-//        width = 100.pct
-        marginTop = 3.px
-        backgroundColor = ColorSpartak.LightGrey.color
-        fontFamily = "Russo"
-        fontSize = 20.px
-        padding(10.px)
-        display = Display.flex
-        alignItems = Align.center
-        boxShadow(
-            color = rgba(0, 0, 0, 0.25),
-            offsetX = 0.px,
-            offsetY = 4.px,
-            blurRadius = 4.px
-        )
-    }
-
-    val tableContent by css {
-        minHeight = 70.px
-//        width = 100.pct
-        padding(10.px)
-        marginTop = 3.px
-        backgroundColor = Color.white
-        boxShadow(
-            color = rgba(0, 0, 0, 0.25),
-            offsetX = 0.px,
-            offsetY = 4.px,
-            blurRadius = 4.px
-        )
-        display = Display.flex
-        alignItems = Align.center
-    }
 }
 
 fun RBuilder.grid(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
-        +Styles.grid
+        display = Display.grid
+        gridTemplateAreas(
+            ". header",
+            "navigation content",
+            ". content"
+        )
+        gridTemplateRows = GridTemplateRows("auto auto")
+        gridTemplateColumns = GridTemplateColumns("325px auto")
     }
     block()
 }
 
 fun RBuilder.header(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 {
     css {
-        +Styles.header
+        fontSize = 32.pt
+        lineHeight = LineHeight.normal
+        gridArea = "header"
     }
     block()
 }
 
 fun RBuilder.content(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
-        +Styles.content
+        gridArea = "content"
+        paddingLeft = 50.px
+        paddingRight = 50.px
     }
     block()
 }
 
 fun RBuilder.navigation(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
-        +Styles.navigation
+        gridArea = "navigation"
+        backgroundColor = Color.white
+        position = Position.sticky
+        top = 30.px
+        +Styles.shadowSpartak
     }
     block()
 }
 
 fun RBuilder.smallHeaderText(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 {
     css {
-        +Styles.smallHeader
+        textAlign = TextAlign.center
+        fontSize = 18.pt
+        lineHeight = LineHeight.normal
     }
     block()
 }
@@ -175,14 +106,28 @@ fun RBuilder.greyButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = sty
 
 fun RBuilder.tableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
-        +Styles.tableHeader
+        height = 60.px
+        marginTop = 3.px
+        backgroundColor = ColorSpartak.LightGrey.color
+        fontFamily = "Russo"
+        fontSize = 20.px
+        padding(10.px)
+        display = Display.flex
+        alignItems = Align.center
+        +Styles.shadowSpartak
     }
     block()
 }
 
 fun RBuilder.tableContent(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
-        +Styles.tableContent
+        minHeight = 70.px
+        padding(10.px)
+        marginTop = 3.px
+        backgroundColor = Color.white
+        display = Display.flex
+        alignItems = Align.center
+        +Styles.shadowSpartak
     }
     block()
 }

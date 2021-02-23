@@ -19,6 +19,8 @@ import react.router.dom.route
 import services.TeamService
 import services.TrainerService
 import smallHeaderText
+import structure.SmallNavigation
+import structure.SmallNavigationProps
 import styled.*
 
 val roleMap = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари")

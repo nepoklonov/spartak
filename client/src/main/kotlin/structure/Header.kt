@@ -1,7 +1,8 @@
-package pageComponents
+package structure
 
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
+import TextWithIcon
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -12,7 +13,11 @@ import styled.styledDiv
 import styled.styledH1
 import styled.styledImg
 
-class HeaderComponent : RComponent<RProps, RState>() {
+external interface HeaderProps : RProps {
+    var selectedString: String
+}
+
+class HeaderComponent : RComponent<HeaderProps, RState>() {
     private fun RBuilder.addIcon(src: String) {
         styledImg(src = src) {
             css {
@@ -116,6 +121,11 @@ class HeaderComponent : RComponent<RProps, RState>() {
                     }
                 }
 
+            }
+        }
+        styledDiv {
+            child(MainNavigationComponent::class){
+                attrs.selectedString = props.selectedString
             }
         }
     }

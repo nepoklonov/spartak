@@ -4,7 +4,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import pageComponents.CKEditorComponent
+import adminPageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService

@@ -20,6 +20,8 @@ import react.router.dom.route
 import services.GameService
 import services.GamesNavigationService
 import services.TeamService
+import structure.SmallNavigation
+import structure.SmallNavigationProps
 import styled.*
 import tableContent
 import tableHeader

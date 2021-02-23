@@ -1,7 +1,8 @@
-package pageComponents
+package structure
 
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
+import ColorSpartak
 import pages.GalleryProps
 import react.RBuilder
 import react.RComponent

@@ -1,9 +1,9 @@
 @file:JsModule("@ckeditor/ckeditor5-react")
-package pageComponents
+package modules
 
 import react.RClass
 import react.RProps
-//TODO: вынести в отдельный пакет
+
 external interface CKEditorProps: RProps {
     var editor: dynamic
     var data: String

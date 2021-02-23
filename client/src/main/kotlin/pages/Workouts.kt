@@ -1,6 +1,7 @@
 package pages
 
 import content
+import daysOfWeek
 import grid
 import header
 import kotlinx.browser.document
@@ -10,42 +11,19 @@ import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import model.NavigationDTO
 import model.WorkoutDTO
+import months
 import navigation
 import pageComponents.*
 import react.*
 import react.router.dom.route
 import services.WorkoutsNavigationService
 import services.WorkoutsService
+import structure.SmallNavigation
+import structure.SmallNavigationProps
 import styled.*
 import tableContent
 import tableHeader
 import kotlin.js.Date
-
-//TODO: вынести в отдельный файл
-val months = mapOf(
-    0 to " января",
-    1 to " февраля",
-    2 to " марта",
-    3 to " апреля",
-    4 to " мая",
-    5 to " июня",
-    6 to " июля",
-    7 to " августа",
-    8 to " сентября",
-    9 to " октября",
-    10 to " ноября",
-    11 to " декабря",
-)
-
-val daysOfWeek = mapOf(
-    1 to "понедельник, ",
-    2 to "вторник, ",
-    3 to "среда, ",
-    4 to "четверг, ",
-    5 to "пятница, ",
-    6 to "суббота, ",
-    7 to "воскресенье, "
-)
 
 external interface WorkoutsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -228,7 +206,9 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
                             tableHeader {
                                 +daysOfWeek.value
+                                +", "
                                 +Date(monday + daysOfWeek.key * msInDay).getDate().toString()
+                                +" "
                                 +(months[Date(monday + daysOfWeek.key * msInDay).getMonth()] ?: error(""))
                             }
                             if (state.workouts != null) {

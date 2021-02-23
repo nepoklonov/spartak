@@ -1,6 +1,8 @@
 package pages
 
+import ColorSpartak
 import Styles
+import adminPageComponents.CKEditorComponent
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

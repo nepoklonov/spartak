@@ -16,6 +16,8 @@ import react.*
 import react.router.dom.route
 import services.GalleryNavigationService
 import services.PhotoService
+import structure.SmallNavigation
+import structure.SmallNavigationProps
 import styled.*
 
 

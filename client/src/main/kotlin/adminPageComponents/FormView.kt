@@ -1,5 +1,6 @@
 package pageComponents
 
+import ColorSpartak
 import kotlinx.css.*
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
@@ -102,14 +103,7 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
                                 if (target.value == "") {
                                     isRed = true
                                 }
-                                //TODO: кринжовый if
-                                // заменяется на isItTeamA = it.inputName == "teamA"
-                                // сам не стал исправлять, чтобы вы обратили внимание
-                                val isItTeamA = if (it.inputName == "teamA") {
-                                    true
-                                } else {
-                                    false
-                                }
+                                val isItTeamA = (it.inputName == "teamA")
                                 props.updateState(key, target.value, isRed)
                                 props.addOtherOption(isItTeamA, target.value)
                             }
@@ -155,8 +149,6 @@ class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentSt
         props.inputs.forEach {
             addStyledInput(it.value, it.key)
         }
-        child(ButtonMain::class){
-            attrs.text = "отправить"
-        }
+        buttonMain("Отправить")
     }
 }

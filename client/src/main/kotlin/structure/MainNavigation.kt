@@ -1,8 +1,9 @@
-package pageComponents
+package structure
 
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.boxShadow
+import ColorSpartak
 import react.RBuilder
 import react.RComponent
 import react.RProps

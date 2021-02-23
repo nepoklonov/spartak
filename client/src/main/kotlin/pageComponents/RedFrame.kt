@@ -1,5 +1,6 @@
 package pageComponents
 
+import ColorSpartak
 import kotlinx.css.*
 import model.TeamMemberDTO
 import model.TrainerDTO

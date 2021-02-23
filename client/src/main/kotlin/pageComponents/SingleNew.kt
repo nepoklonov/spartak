@@ -4,8 +4,8 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import pageComponents.ButtonSecondary
-import pageComponents.CKEditorComponent
+import adminPageComponents.CKEditorComponent
+import pageComponents.buttonSecondary
 import react.*
 import react.dom.InnerHTML
 import react.router.dom.navLink
@@ -118,19 +118,13 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
                 }
 
                 navLink<pages.NewsProps>(to = "/news/$previousNewsId") {
-                    child(ButtonSecondary::class) {
-                        attrs.text = "Предыдущая новость"
-                    }
+                    buttonSecondary("Предыдущая новость")
                 }
                 navLink<pages.NewsProps>(to = "/news/feed") {
-                    child(ButtonSecondary::class) {
-                        attrs.text = "Вернуться к ленте"
-                    }
+                    buttonSecondary("Вернуться к ленте")
                 }
                 navLink<pages.NewsProps>(to = "/news/$nextNewsId") {
-                    child(ButtonSecondary::class) {
-                        attrs.text = "Следующая новость"
-                    }
+                    buttonSecondary("Следующая новость")
                 }
             }
         }
