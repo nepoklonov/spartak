@@ -1,5 +1,6 @@
 package pages
 
+import adminPageComponents.*
 import content
 import daysOfWeek
 import grid
@@ -110,15 +111,14 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
         grid {
             navigation {
-                if (state.workoutsNavigationList != null) {
-                    state.workoutsNavigationList!!.forEach { workoutsNavigation ->
-                        route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
-                            child(SmallNavigation::class) {
-                                attrs.string = workoutsNavigation.header
-                                attrs.link = workoutsNavigation.link
-                                attrs.selectedLink = linkProps.match.params.selectedLink
-                            }
+                state.workoutsNavigationList?.let { workoutsNavigationList ->
+                    route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
+                        child(SmallNavigation::class) {
+                            attrs.strings = workoutsNavigationList
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
+                    }
+                    state.workoutsNavigationList!!.forEach { workoutsNavigation ->
                         if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -127,7 +127,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                         workoutsNavigationService.deleteWorkoutsSection(workoutsNavigation.id!!)
                                     }
                                 }
-                                attrs.type = "delete"
+                                attrs.type = AdminButtonType.Delete
                             }
                             if (state.editSmallNavigationForm != workoutsNavigation) {
                                 child(AdminButtonComponent::class) {
@@ -136,7 +136,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                             editSmallNavigationForm = workoutsNavigation
                                         }
                                     }
-                                    attrs.type = "edit"
+                                    attrs.type = AdminButtonType.Edit
                                 }
                             } else {
                                 child(SmallNavigationForm::class) {
@@ -165,7 +165,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                         smallNavigationForm = true
                                     }
                                 }
-                                attrs.type = "add"
+                                attrs.type = AdminButtonType.Add
                             }
                         } else {
                             child(SmallNavigationForm::class) {
@@ -185,7 +185,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                             }
                         }
                     }
-                } else {
+                } ?: run {
                     +"Загрузка..."
                 }
             }
@@ -236,7 +236,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                 timetableService.makeNotActual(workout.id!!, monday)
                                                             }
                                                         }
-                                                        attrs.type = "delete"
+                                                        attrs.type = AdminButtonType.Delete
                                                     }
                                                     if (state.editWorkoutForm != workout) {
                                                         child(AdminButtonComponent::class) {
@@ -245,7 +245,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                     editWorkoutForm = workout
                                                                 }
                                                             }
-                                                            attrs.type = "edit"
+                                                            attrs.type = AdminButtonType.Edit
                                                         }
                                                     } else {
                                                         styledForm {
@@ -320,7 +320,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                         addWorkoutForm = true
                                     }
                                 }
-                                attrs.type = "add"
+                                attrs.type = AdminButtonType.Add
                             }
                         } else {
                             styledForm {

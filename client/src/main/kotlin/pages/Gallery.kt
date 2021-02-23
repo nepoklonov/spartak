@@ -1,5 +1,8 @@
 package pages
 
+import adminPageComponents.AdminButtonComponent
+import adminPageComponents.AdminButtonType
+import adminPageComponents.SmallNavigationForm
 import content
 import grid
 import header
@@ -37,8 +40,6 @@ class GalleryState : RState {
 }
 
 class Gallery : RComponent<GalleryProps, GalleryState>() {
-
-
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
@@ -89,14 +90,14 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
 
             navigation {
                 state.galleryNavigationList?.let { galleryNavigationList ->
-                    galleryNavigationList.forEach { galleryNavigation ->
-                        route<SmallNavigationProps>("/gallery/:selectedLink") { linkProps ->
-                            child(SmallNavigation::class) {
-                                attrs.string = galleryNavigation.header
-                                attrs.link = galleryNavigation.link
-                                attrs.selectedLink = linkProps.match.params.selectedLink
-                            }
+
+                    route<SmallNavigationProps>("/gallery/:selectedLink") { selectedLink ->
+                        child(SmallNavigation::class) {
+                            attrs.strings = galleryNavigationList
+                            attrs.selectedLink = selectedLink.match.params.selectedLink
                         }
+                    }
+                    galleryNavigationList.forEach { galleryNavigation ->
                         if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -105,7 +106,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                         galleryNavigationService.deleteGallerySection(galleryNavigation.id!!)
                                     }
                                 }
-                                attrs.type = "delete"
+                                attrs.type = AdminButtonType.Add
                             }
 
                             if (state.editSmallNavigationForm != galleryNavigation) {
@@ -115,7 +116,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                             editSmallNavigationForm = galleryNavigation
                                         }
                                     }
-                                    attrs.type = "edit"
+                                    attrs.type = AdminButtonType.Edit
                                 }
                             } else {
                                 child(SmallNavigationForm::class) {
@@ -144,7 +145,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                         smallNavigationForm = true
                                     }
                                 }
-                                attrs.type = "add"
+                                attrs.type = AdminButtonType.Add
                             }
                         } else {
                             child(SmallNavigationForm::class) {
@@ -208,7 +209,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                                     photoService.deletePhoto(photo.id!!)
                                                 }
                                             }
-                                            attrs.type = "delete"
+                                            attrs.type = AdminButtonType.Delete
                                         }
                                     }
                                 }
@@ -225,7 +226,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
                                         photoForm = true
                                     }
                                 }
-                                attrs.type = "add"
+                                attrs.type = AdminButtonType.Add
                             }
                         } else {
                             styledButton {

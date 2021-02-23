@@ -1,5 +1,6 @@
 package pages
 
+import adminPageComponents.*
 import content
 import grid
 import gridArea
@@ -25,16 +26,7 @@ import structure.SmallNavigationProps
 import styled.*
 import tableContent
 import tableHeader
-
-val tableHeaders =
-    mapOf(
-        "date" to "Дата",
-        "time" to "Время",
-        "teamA" to "Команда А",
-        "teamB" to "Команда Б",
-        "stadium" to "Стадион",
-        "result" to "Результат"
-    )
+import tableHeaders
 
 data class GameWithTeams(
     val id: Int,
@@ -178,15 +170,14 @@ class Games : RComponent<GamesProps, GamesState>() {
     override fun RBuilder.render() {
         grid {
             navigation {
-                if (state.gamesNavigationList != null) {
-                    state.gamesNavigationList!!.forEach { gameNavigation ->
-                        route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
-                            child(SmallNavigation::class) {
-                                attrs.string = gameNavigation.header
-                                attrs.link = gameNavigation.link
-                                attrs.selectedLink = linkProps.match.params.selectedLink
-                            }
+                state.gamesNavigationList?.let { gameNavigationList ->
+                    route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
+                        child(SmallNavigation::class) {
+                            attrs.strings = gameNavigationList
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
+                    }
+                    state.gamesNavigationList!!.forEach { gameNavigation ->
                         if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -195,7 +186,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                         gameNavigationService.deleteGamesSection(gameNavigation.id!!)
                                     }
                                 }
-                                attrs.type = "delete"
+                                attrs.type = AdminButtonType.Add
                             }
                             if (state.editSmallNavigationForm != gameNavigation) {
                                 child(AdminButtonComponent::class) {
@@ -204,7 +195,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                             editSmallNavigationForm = gameNavigation
                                         }
                                     }
-                                    attrs.type = "edit"
+                                    attrs.type = AdminButtonType.Edit
                                 }
                             } else {
                                 child(SmallNavigationForm::class) {
@@ -233,7 +224,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                         smallNavigationForm = true
                                     }
                                 }
-                                attrs.type = "add"
+                                attrs.type = AdminButtonType.Add
                             }
                         } else {
                             child(SmallNavigationForm::class) {
@@ -253,7 +244,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                             }
                         }
                     }
-                } else {
+                } ?: run {
                     +"Загрузка..."
                 }
             }
@@ -314,7 +305,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                         gameService.deleteGame(game.id)
                                     }
                                 }
-                                attrs.type = "delete"
+                                attrs.type = AdminButtonType.Delete
                             }
                             if (state.editGameForm != game) {
                                 child(AdminButtonComponent::class) {
@@ -329,7 +320,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                             inputs["result"]!!.inputValue = game.result ?: ""
                                         }
                                     }
-                                    attrs.type = "edit"
+                                    attrs.type = AdminButtonType.Edit
                                 }
                             } else {
                                 styledDiv {
@@ -387,7 +378,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                     addGameForm = true
                                 }
                             }
-                            attrs.type = "add"
+                            attrs.type = AdminButtonType.Add
                         }
                     } else {
                         styledForm {

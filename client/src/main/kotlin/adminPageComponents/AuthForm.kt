@@ -1,4 +1,4 @@
-package pageComponents
+package adminPageComponents
 
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope

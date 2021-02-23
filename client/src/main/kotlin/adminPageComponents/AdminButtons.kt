@@ -1,4 +1,4 @@
-package pageComponents
+package adminPageComponents
 
 import kotlinx.css.Cursor
 import kotlinx.css.cursor
@@ -12,17 +12,21 @@ import react.RState
 import styled.css
 import styled.styledImg
 
-val Images = mapOf("add" to "/images/add.png", "edit" to "/images/edit.png", "delete" to "/images/delete.png")
+enum class AdminButtonType(val src: String){
+    Add("/images/add.png"),
+    Edit("/images/edit.png"),
+    Delete("/images/delete.png")
+}
 
 external interface AdminButtonComponentProps: RProps{
     var updateState: () -> Unit
-    var type: String
+    var type: AdminButtonType
 }
 
 
 class AdminButtonComponent: RComponent<AdminButtonComponentProps, RState>() {
     override fun RBuilder.render(){
-        styledImg(src = Images[props.type]){
+        styledImg(src = props.type.src){
             attrs.onClickFunction = { props.updateState() }
             css{
                 width = 20.px

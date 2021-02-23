@@ -1,4 +1,4 @@
-package pageComponents
+package adminPageComponents
 
 import kotlinx.html.js.onSubmitFunction
 import react.*

@@ -39,5 +39,15 @@ val daysOfWeek = mapOf(
     7 to "воскресенье"
 )
 
+val tableHeaders =
+    mapOf(
+        "date" to "Дата",
+        "time" to "Время",
+        "teamA" to "Команда А",
+        "teamB" to "Команда Б",
+        "stadium" to "Стадион",
+        "result" to "Результат"
+    )
+
 
 

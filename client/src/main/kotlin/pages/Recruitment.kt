@@ -2,7 +2,7 @@ package pages
 
 import ColorSpartak
 import Styles
-import adminPageComponents.CKEditorComponent
+import adminPageComponents.*
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -196,7 +196,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                                             recruitmentService.deleteRecruitment(dto.id!!)
                                         }
                                     }
-                                    attrs.type = "delete"
+                                    attrs.type = AdminButtonType.Delete
                                 }
                             }
                         }

@@ -1,5 +1,6 @@
 package pages
 
+import adminPageComponents.*
 import content
 import grid
 import header
@@ -153,15 +154,14 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     override fun RBuilder.render() {
         grid {
             navigation {
-                if (state.navigationList != null) {
-                    state.navigationList!!.forEach { teamsNavigation ->
-                        route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
-                            child(SmallNavigation::class) {
-                                attrs.string = teamsNavigation.header
-                                attrs.link = teamsNavigation.link
-                                attrs.selectedLink = linkProps.match.params.selectedLink
-                            }
+                state.navigationList?.let { navigationList ->
+                    route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
+                        child(SmallNavigation::class) {
+                            attrs.strings = navigationList
+                            attrs.selectedLink = linkProps.match.params.selectedLink
                         }
+                    }
+                    state.navigationList!!.forEach { teamsNavigation ->
                         if (document.cookie.contains("role=admin")) {
                             child(AdminButtonComponent::class) {
                                 attrs.updateState = {
@@ -170,7 +170,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         teamService.deleteTeam(teamsNavigation.id!!)
                                     }
                                 }
-                                attrs.type = "delete"
+                                attrs.type = AdminButtonType.Delete
                             }
                             if (state.editSmallNavigationForm != teamsNavigation) {
                                 child(AdminButtonComponent::class) {
@@ -179,7 +179,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                             editSmallNavigationForm = teamsNavigation
                                         }
                                     }
-                                    attrs.type = "edit"
+                                    attrs.type = AdminButtonType.Edit
                                 }
                             } else {
                                 child(SmallNavigationForm::class) {
@@ -209,7 +209,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                             smallNavigationForm = true
                                         }
                                     }
-                                    attrs.type = "add"
+                                    attrs.type = AdminButtonType.Add
                                 }
                             } else {
                                 styledForm {
@@ -263,6 +263,8 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
 
                         }
                     }
+                }?: run {
+                    +"Загрузка"
                 }
             }
 
@@ -299,8 +301,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                         textAlign = TextAlign.center
                                         justifyContent = JustifyContent.center
                                         display = Display.flex
-                                        //TODO: опечатка?
-                                        height == 100.pct
+                                        height = 100.pct
                                         padding = 50.px.toString()
                                     }
                                     +trainer?.info!!
@@ -315,7 +316,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                             trainerService.deleteTrainer(trainer!!.id!!)
                                         }
                                     }
-                                    attrs.type = "delete"
+                                    attrs.type = AdminButtonType.Delete
                                 }
                                 if (state.editTrainerForm != trainer) {
                                     child(AdminButtonComponent::class) {
@@ -326,7 +327,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                 state.trainerInputs["info"]!!.inputValue = trainer.info
                                             }
                                         }
-                                        attrs.type = "edit"
+                                        attrs.type = AdminButtonType.Edit
                                     }
                                 } else {
                                     styledForm {
@@ -396,7 +397,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                 teamService.deleteTeamMember(teamMember.id!!)
                                             }
                                         }
-                                        attrs.type = "delete"
+                                        attrs.type = AdminButtonType.Delete
                                     }
 
                                     if (state.editTeamMemberForm != teamMember) {
@@ -414,7 +415,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                     teamMemberInputs["teamRole"]!!.inputValue = teamMember.number
                                                 }
                                             }
-                                            attrs.type = "edit"
+                                            attrs.type = AdminButtonType.Edit
                                         }
                                     } else {
                                         styledForm {
@@ -474,7 +475,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                     addTeamMemberForm = true
                                 }
                             }
-                            attrs.type = "add"
+                            attrs.type = AdminButtonType.Add
                         }
                     } else {
                         styledForm {

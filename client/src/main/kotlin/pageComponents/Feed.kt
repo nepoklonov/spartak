@@ -1,6 +1,7 @@
-package pages
-//TODO: проверить правильность указанных пакетов
+package pageComponents
 
+import adminPageComponents.AdminButtonComponent
+import adminPageComponents.AdminButtonType
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -8,14 +9,12 @@ import kotlinx.css.*
 import model.NewsDTO
 import org.w3c.dom.asList
 import org.w3c.dom.get
-import pageComponents.AdminButtonComponent
-import pageComponents.buttonSecondary
+import pages.ShortNews
 import react.*
 import services.HtmlService
 import services.NewsService
 import styled.*
 import kotlin.js.Date
-import kotlin.collections.map as map
 
 //TODO: зачем оно здесь?
 inline fun <T> MutableList<T>.mapInPlace(mutator: (T) -> T) {
@@ -125,11 +124,11 @@ class Feed : RComponent<FeedProps, FeedState>() {
                                             newsService.deleteNews(it.id!!)
                                         }
                                     }
-                                    attrs.type = "delete"
+                                    attrs.type = AdminButtonType.Delete
                                 }
                                 styledA(href = "/news/${it.id}") {
                                     child(AdminButtonComponent::class) {
-                                        attrs.type = "edit"
+                                        attrs.type = AdminButtonType.Edit
                                     }
                                 }
                             }

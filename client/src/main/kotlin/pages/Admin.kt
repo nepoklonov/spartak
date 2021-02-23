@@ -1,9 +1,9 @@
 package pages
 
+import adminPageComponents.AuthFormComponent
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.html.js.onClickFunction
-import pageComponents.AuthFormComponent
 import react.RBuilder
 import react.RComponent
 import react.RProps
