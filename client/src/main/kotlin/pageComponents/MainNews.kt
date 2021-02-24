@@ -1,4 +1,4 @@
-package pages
+package pageComponents
 
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +30,18 @@ class MainNewsState : RState {
     var error: Throwable? = null
     val news: MutableList<ShortNews> = mutableListOf()
 }
+fun RBuilder.fadingText(text: String){
+    +text.let { it.substring(0, it.length-40) }
+    text.let { it.substring(it.length-40, it.length) }.forEachIndexed { index, c ->
+        styledSpan {
+            +c.toString()
+            css {
+                opacity = 1 - 0.025 * index
+            }
+        }
+    }
+
+}
 
 class MainNews : RComponent<MainNewsProps, MainNewsState>() {
 
@@ -40,7 +52,6 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
     init {
         state = MainNewsState()
     }
-
     override fun componentDidMount() {
         val htmlService = HtmlService(coroutineContext)
         val newsService = NewsService(coroutineContext)
@@ -110,15 +121,7 @@ class MainNews : RComponent<MainNewsProps, MainNewsState>() {
                                         +Date(it.date).getFullYear().toString()
                                     }
                                     styledP {
-                                        +it.content!!.let { it.substring(0, it.length-40) }
-                                        it.content.let { it.substring(it.length-40, it.length) }.forEachIndexed { index, c ->
-                                            styledSpan {
-                                                +c.toString()
-                                                css {
-                                                    opacity = 1 - 0.025 * index
-                                                }
-                                            }
-                                        }
+                                        fadingText(it.content!!)
 
                                     }
                                     css {

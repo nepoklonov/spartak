@@ -96,13 +96,13 @@ fun RBuilder.redButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = styl
     block()
 }
 
-fun RBuilder.greyButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = styledButton {
-    css {
-        backgroundColor = ColorSpartak.Grey.color
-        +Styles.button
-    }
-    block()
-}
+//fun RBuilder.greyButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = styledButton {
+//    css {
+//        backgroundColor = ColorSpartak.Grey.color
+//        +Styles.button
+//    }
+//    block()
+//}
 
 fun RBuilder.tableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {

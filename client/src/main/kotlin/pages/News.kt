@@ -7,7 +7,7 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.RState
-import view.SingleNew
+import pageComponents.SingleNew
 
 external interface NewsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -15,10 +15,6 @@ external interface NewsProps : RProps {
 }
 
 class News : RComponent<NewsProps, RState>() {
-    private val coroutineContext
-        get() = props.coroutineScope.coroutineContext
-
-
     override fun RBuilder.render() {
 
         header { +"Новости" }
@@ -32,8 +28,6 @@ class News : RComponent<NewsProps, RState>() {
                 attrs.coroutineScope = props.coroutineScope
                 attrs.selectedNewsId = props.selectedNewsId.toInt()
             }
-
-
         }
     }
 }

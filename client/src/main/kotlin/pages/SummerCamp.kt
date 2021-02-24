@@ -27,16 +27,8 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
         val htmlService = HtmlService(coroutineContext)
 
         props.coroutineScope.launch {
-            val summerCampHtml = try {
-                htmlService.getHtml("htmlPages/SummerCamp.html")
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-
-            setState() {
+            val summerCampHtml = htmlService.getHtml("htmlPages/SummerCamp.html")
+            setState{
                 this.summerCampHtml = summerCampHtml
             }
         }

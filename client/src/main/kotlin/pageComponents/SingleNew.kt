@@ -1,11 +1,10 @@
-package view
+package pageComponents
 
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import adminPageComponents.CKEditorComponent
-import pageComponents.buttonSecondary
 import react.*
 import react.dom.InnerHTML
 import react.router.dom.navLink
@@ -31,8 +30,6 @@ data class LongNews(
 )
 
 class SingleNew : RComponent<NewsProps, NewsState>() {
-    private val coroutineContext
-        get() = props.coroutineScope.coroutineContext
 
 
         init {
@@ -42,17 +39,9 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
         props.coroutineScope.launch {
             val htmlService = HtmlService(coroutineContext)
             val newsService = NewsService(coroutineContext)
-            var newsHtml: LongNews
-            try {
-                newsHtml = newsService.getNewsTripleById(props.selectedNewsId.toInt()).let{
+            val newsHtml = newsService.getNewsTripleById(props.selectedNewsId).let{
                     LongNews(htmlService.getHtml(it.url), it.date, it.prevId, it.nextId)
                 }
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
             setState {
                 longNews = newsHtml
             }

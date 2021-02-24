@@ -3,8 +3,8 @@ package pages
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.css.*
 import adminPageComponents.CKEditorComponent
+import pageComponents.MainNews
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -29,15 +29,7 @@ class Main : RComponent<MainProps, MainState>() {
         val htmlService = HtmlService(coroutineContext)
 
         props.coroutineScope.launch {
-            val mainHtml = try {
-                htmlService.getHtml("htmlPages/Main.html")
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-
+            val mainHtml = htmlService.getHtml("htmlPages/Main.html")
             setState {
                 this.mainHtml = mainHtml
             }

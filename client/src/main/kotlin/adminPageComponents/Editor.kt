@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.id
 import kotlinx.html.js.onSubmitFunction
+import org.w3c.dom.Node
 import org.w3c.dom.events.Event
 import pageComponents.buttonMain
 import react.*
@@ -56,11 +57,11 @@ class CKEditorComponent: RComponent<EditorProps, EditorState>() {
                     )
                     attrs.onReady = {
                         val toolbar = it.ui.view.toolbar.element
-                        document.getElementById("editor-toolbar")!!.appendChild(toolbar)
+                        document.getElementById("editor-toolbar")!!.appendChild(toolbar as Node)
                     }
                     attrs.onChange = fun(_, editor) {
                         state.text=attrs.data
-                        localStorage.setItem("draftText", editor.getData())
+                        localStorage.setItem("draftText", editor.getData() as String)
                     }
                 }
             }
