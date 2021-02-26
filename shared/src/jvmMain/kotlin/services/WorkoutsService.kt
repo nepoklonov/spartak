@@ -17,7 +17,7 @@ actual class WorkoutsService : RPCService {
         database {
             Workouts.select {
                 (Workouts.sectionLink eq sectionLink) and (Workouts.actualFromDate lessEq beginningOfTheWeek) and (Workouts.actualToDate greaterEq  endOfTheWeek)
-            }.orderBy(Workouts.startTime to SortOrder.ASC).forEach() {
+            }.orderBy(Workouts.startTime to SortOrder.ASC).forEach {
                 listOfWorkoutDTO += WorkoutDTO(
                     it[Workouts.id].value,
                     it[Workouts.startTime],

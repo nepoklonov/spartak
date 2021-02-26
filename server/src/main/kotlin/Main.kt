@@ -194,7 +194,6 @@ fun Application.main() {
 
 
         route("/api") {
-            rpc(CheckService::class)
             rpc(GameService::class)
             rpc(TeamService::class)
             rpc(WorkoutsService::class)

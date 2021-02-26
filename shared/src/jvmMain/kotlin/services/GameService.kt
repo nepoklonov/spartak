@@ -3,18 +3,15 @@ package services
 import database.Games
 import database.database
 import model.GameDTO
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
-import org.jetbrains.exposed.sql.update
 import rpc.RPCService
 
 actual class GameService: RPCService {
     actual suspend fun getAllGamesByYear(year: String): List<GameDTO> {
         val listOfGamesByYear: MutableList<GameDTO> = mutableListOf()
         database {
-            Games.select { Games.year eq year }.forEach() {
+            Games.select { Games.year eq year }.orderBy(Games.id to SortOrder.ASC).forEach {
                 listOfGamesByYear += GameDTO(
                         it[Games.id].value,
                         it[Games.date],

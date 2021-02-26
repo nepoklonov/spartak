@@ -5,8 +5,8 @@ import react.*
 import styled.styledForm
 
 external interface SmallNavigationFormProps : RProps {
-    var addSection: (List<String>) -> Unit
     var inputValues: List<String>
+    var onSubmitFunction: (List<String>) -> Unit
 }
 
 class SmallNavigationFormState : RState {
@@ -47,7 +47,7 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
                     state.inputs.values.forEach {
                         listOfInputValues += it.inputValue
                     }
-                    props.addSection(listOfInputValues)
+                    props.onSubmitFunction(listOfInputValues)
                 }
             }
             child(FormViewComponent::class) {

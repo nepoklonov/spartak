@@ -196,7 +196,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                                             recruitmentService.deleteRecruitment(dto.id!!)
                                         }
                                     }
-                                    attrs.type = AdminButtonType.Delete
+                                    attrs.button = AdminButtonType.Delete
                                 }
                             }
                         }

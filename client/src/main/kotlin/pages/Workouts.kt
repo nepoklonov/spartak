@@ -42,9 +42,7 @@ class WorkoutsState : RState {
         "endDatetime" to Input("Конец", "endDatetime", isDateTime = true),
         "text" to Input("Текст", "text"),
     )
-    var smallNavigationForm: Boolean = false
     var addWorkoutForm: Boolean = false
-    var editSmallNavigationForm: NavigationDTO? = null
     var editWorkoutForm: WorkoutDTO? = null
 }
 
@@ -111,76 +109,37 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
 
         grid {
             navigation {
+                val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
                 state.workoutsNavigationList?.let { workoutsNavigationList ->
-                    route<SmallNavigationProps>("/workouts/:selectedLink") { linkProps ->
+                    route<SmallNavigationProps>("/workouts/:selectedLineLink") { selectedLineLink ->
                         child(SmallNavigation::class) {
-                            attrs.strings = workoutsNavigationList
-                            attrs.selectedLink = linkProps.match.params.selectedLink
-                        }
-                    }
-                    state.workoutsNavigationList!!.forEach { workoutsNavigation ->
-                        if (document.cookie.contains("role=admin")) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        workoutsNavigationService.deleteWorkoutsSection(workoutsNavigation.id!!)
-                                    }
-                                }
-                                attrs.type = AdminButtonType.Delete
-                            }
-                            if (state.editSmallNavigationForm != workoutsNavigation) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        setState {
-                                            editSmallNavigationForm = workoutsNavigation
-                                        }
-                                    }
-                                    attrs.type = AdminButtonType.Edit
-                                }
-                            } else {
-                                child(SmallNavigationForm::class) {
-                                    attrs.inputValues = listOf(workoutsNavigation.header, workoutsNavigation.link)
-                                    attrs.addSection = { listOfInputValues ->
-                                        val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            workoutsNavigationService.editWorkoutsSection(
-                                                NavigationDTO(
-                                                    workoutsNavigation.id,
-                                                    listOfInputValues[0],
-                                                    listOfInputValues[1]
-                                                )
-                                            )
-                                        }
-                                    }
+                            attrs.navLines = workoutsNavigationList
+                            attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
+                            attrs.deleteFunction = { id: Int ->
+                                props.coroutineScope.launch {
+                                    workoutsNavigationService.deleteWorkoutsSection(id)
                                 }
                             }
-                        }
-                    }
-                    if (document.cookie.contains("role=admin")) {
-                        if (!state.smallNavigationForm) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    setState {
-                                        smallNavigationForm = true
-                                    }
-                                }
-                                attrs.type = AdminButtonType.Add
-                            }
-                        } else {
-                            child(SmallNavigationForm::class) {
-                                attrs.inputValues = listOf("", "")
-                                attrs.addSection = { listOfInputValues ->
-                                    val workoutsNavigationService = WorkoutsNavigationService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        workoutsNavigationService.addWorkoutsSection(
-                                            NavigationDTO(
-                                                null,
-                                                listOfInputValues[0],
-                                                listOfInputValues[1]
-                                            )
+                            attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
+                                props.coroutineScope.launch {
+                                    workoutsNavigationService.editWorkoutsSection(
+                                        NavigationDTO(
+                                            id,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1]
                                         )
-                                    }
+                                    )
+                                }
+                            }
+                            attrs.addFunction = { listOfInputValues ->
+                                props.coroutineScope.launch {
+                                    workoutsNavigationService.addWorkoutsSection(
+                                        NavigationDTO(
+                                            null,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1]
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -236,7 +195,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                 timetableService.makeNotActual(workout.id!!, monday)
                                                             }
                                                         }
-                                                        attrs.type = AdminButtonType.Delete
+                                                        attrs.button = AdminButtonType.Delete
                                                     }
                                                     if (state.editWorkoutForm != workout) {
                                                         child(AdminButtonComponent::class) {
@@ -245,7 +204,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                                                     editWorkoutForm = workout
                                                                 }
                                                             }
-                                                            attrs.type = AdminButtonType.Edit
+                                                            attrs.button = AdminButtonType.Edit
                                                         }
                                                     } else {
                                                         styledForm {
@@ -320,7 +279,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                                         addWorkoutForm = true
                                     }
                                 }
-                                attrs.type = AdminButtonType.Add
+                                attrs.button = AdminButtonType.Add
                             }
                         } else {
                             styledForm {

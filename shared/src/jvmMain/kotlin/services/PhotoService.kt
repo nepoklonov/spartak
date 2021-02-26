@@ -3,6 +3,7 @@ package services
 import database.Photos
 import database.database
 import model.PhotoDTO
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
@@ -12,7 +13,7 @@ actual class PhotoService: RPCService {
     actual suspend fun getAllPhotosBySection(section: String): List<PhotoDTO> {
         val listOfPhotosUrl = mutableListOf<PhotoDTO>()
         database {
-            Photos.select { Photos.gallerySection eq section }.forEach {
+            Photos.select { Photos.gallerySection eq section }.orderBy(Photos.id to SortOrder.ASC).forEach {
                 listOfPhotosUrl += PhotoDTO(
                     it[Photos.id].value,
                     it[Photos.url],
