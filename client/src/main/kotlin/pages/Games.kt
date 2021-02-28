@@ -104,7 +104,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                 return@launch
             }
 
-            val allGamesWithTeams: MutableList<GameWithTeams> = mutableListOf<GameWithTeams>()
+            val allGamesWithTeams: MutableList<GameWithTeams> = mutableListOf()
 
             allGames.forEach {
                 val teamA = try {
@@ -145,7 +145,7 @@ class Games : RComponent<GamesProps, GamesState>() {
             }
 
 
-            setState() {
+            setState {
                 this.allGamesWithTeams = allGamesWithTeams
                 this.gamesNavigationList = gamesNavigationList
                 this.inputs["teamA"]!!.options = teamMap
@@ -228,7 +228,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                 fontFamily = "Russo"
                                 fontSize = 20.px
                             }
-                            +tableHeaders[key]!!
+                            +(tableHeaders[key] ?: error(""))
                         }
                     }
                     //TODO: с этим тоже что-нибудь сделать бы..

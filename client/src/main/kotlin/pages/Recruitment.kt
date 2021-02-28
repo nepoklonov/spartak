@@ -47,7 +47,17 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     init {
         state = RecruitmentState()
     }
-
+    fun RBuilder.inputsState(){
+        child(FormViewComponent::class) {
+            attrs.inputs = state.inputs
+            attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                setState {
+                    state.inputs[key]!!.inputValue = value
+                    state.inputs[key]!!.isRed = isRed
+                }
+            }
+        }
+    }
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
