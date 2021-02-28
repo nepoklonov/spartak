@@ -3,17 +3,14 @@ package services
 import database.GamesSections
 import database.database
 import model.NavigationDTO
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 import rpc.RPCService
 
 actual class GamesNavigationService: RPCService {
     actual suspend fun getGamesNavigationList(): List<NavigationDTO> {
         val navigationList = mutableListOf<NavigationDTO>()
         database {
-            GamesSections.selectAll().forEach {
+            GamesSections.selectAll().orderBy(GamesSections.id to SortOrder.ASC).forEach {
                 navigationList += NavigationDTO(
                     it[GamesSections.id].value,
                     it[GamesSections.header],

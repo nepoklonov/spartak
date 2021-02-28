@@ -114,11 +114,11 @@ class Feed : RComponent<FeedProps, FeedState>() {
                                             newsService.deleteNews(it.id!!)
                                         }
                                     }
-                                    attrs.type = AdminButtonType.Delete
+                                    attrs.button = AdminButtonType.Delete
                                 }
                                 styledA(href = "/news/${it.id}") {
                                     child(AdminButtonComponent::class) {
-                                        attrs.type = AdminButtonType.Edit
+                                        attrs.button = AdminButtonType.Edit
                                     }
                                 }
                             }

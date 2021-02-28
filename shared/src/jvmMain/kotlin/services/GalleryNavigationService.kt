@@ -3,17 +3,14 @@ package services
 import database.GallerySections
 import database.database
 import model.NavigationDTO
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 import rpc.RPCService
 
 actual class GalleryNavigationService : RPCService {
     actual suspend fun getGalleryNavigationList(): List<NavigationDTO> {
         val navigationList = mutableListOf<NavigationDTO>()
         database {
-            GallerySections.selectAll().forEach {
+            GallerySections.selectAll().orderBy(GallerySections.id to SortOrder.ASC).forEach {
                 navigationList += NavigationDTO(
                     it[GallerySections.id].value,
                     it[GallerySections.header],

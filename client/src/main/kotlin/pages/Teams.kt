@@ -42,7 +42,7 @@ class TeamsState : RState {
         "teamLink" to Input("Ссылка", "teamlink"),
         "year" to Input("Год рождения участников", "year"),
         "name" to Input("ФИО тренера", "name"),
-        "info" to Input("Информация о тренере", "info", isNessesary = false),
+        "info" to Input("Информация о тренере", "info", isNecessary = false),
     )
     var trainerInputs: MutableMap<String, Input> = mutableMapOf(
         "name" to Input("ФИО", "name"),
@@ -57,8 +57,8 @@ class TeamsState : RState {
             options = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари"),
             allowOtherOption = true
         ),
-        "birthday" to Input("Дата рождения", "birthday", isNessesary = false),
-        "city" to Input("Город", "city", isNessesary = false),
+        "birthday" to Input("Дата рождения", "birthday", isNecessary = false),
+        "city" to Input("Город", "city", isNecessary = false),
         "teamRole" to Input(
             "к/а",
             "teamRole",
@@ -66,10 +66,8 @@ class TeamsState : RState {
             options = mapOf("к" to "к", "а" to "а", "null" to "нет")
         )
     )
-    var smallNavigationForm: Boolean = false
     var addTrainerForm: Boolean = false
     var addTeamMemberForm: Boolean = false
-    var editSmallNavigationForm: NavigationDTO? = null
     var editTrainerForm: TrainerDTO? = null
     var editTeamMemberForm: TeamMemberDTO? = null
 }
@@ -154,117 +152,57 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     override fun RBuilder.render() {
         grid {
             navigation {
-                state.navigationList?.let { navigationList ->
-                    route<SmallNavigationProps>("/teams/:selectedLink") { linkProps ->
-                        child(SmallNavigation::class) {
-                            attrs.strings = navigationList
-                            attrs.selectedLink = linkProps.match.params.selectedLink
-                        }
-                    }
-                    state.navigationList!!.forEach { teamsNavigation ->
-                        if (document.cookie.contains("role=admin")) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    val teamService = TeamService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        teamService.deleteTeam(teamsNavigation.id!!)
-                                    }
-                                }
-                                attrs.type = AdminButtonType.Delete
-                            }
-                            if (state.editSmallNavigationForm != teamsNavigation) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        setState {
-                                            editSmallNavigationForm = teamsNavigation
-                                        }
-                                    }
-                                    attrs.type = AdminButtonType.Edit
-                                }
-                            } else {
-                                child(SmallNavigationForm::class) {
-                                    attrs.inputValues = listOf(teamsNavigation.header, teamsNavigation.link)
-                                    attrs.addSection = { listOfInputValues ->
-                                        val teamService = TeamService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            teamService.editTeam(
-                                                TeamDTO(
-                                                    teamsNavigation.id,
-                                                    listOfInputValues[0],
-                                                    listOfInputValues[1],
-                                                    true,
-                                                    props.selectedTeam,
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (document.cookie.contains("role=admin")) {
-                            if (!state.smallNavigationForm) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        setState {
-                                            smallNavigationForm = true
-                                        }
-                                    }
-                                    attrs.type = AdminButtonType.Add
-                                }
-                            } else {
-                                styledForm {
-                                    attrs.onSubmitFunction = { event ->
-                                        event.preventDefault()
-                                        event.stopPropagation()
-                                        val trainerService = TrainerService(coroutineContext)
-                                        val teamService = TeamService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            var formIsCompleted = true
-                                            state.trainerInputs.values.forEach {
-                                                if (it.isRed) {
-                                                    formIsCompleted = false
-                                                }
-                                            }
-                                            if (formIsCompleted) {
-                                                props.coroutineScope.launch {
-                                                    teamService.addTeam(
-                                                        TeamDTO(
-                                                            null,
-                                                            state.teamInputs["teamName"]!!.inputValue,
-                                                            state.teamInputs["teamLink"]!!.inputValue,
-                                                            true,
-                                                            state.teamInputs["year"]!!.inputValue,
-                                                        )
-                                                    )
-                                                }
-                                                trainerService.addTrainer(
-                                                    TrainerDTO(
-                                                        null,
-                                                        state.teamInputs["teamLink"]!!.inputValue,
-                                                        "address.png",
-                                                        state.teamInputs["name"]!!.inputValue,
-                                                        state.teamInputs["info"]!!.inputValue,
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                    child(FormViewComponent::class) {
-                                        attrs.inputs = state.teamInputs
-                                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                            setState {
-                                                state.teamInputs[key]!!.inputValue = value
-                                                state.teamInputs[key]!!.isRed = isRed
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                val teamService = TeamService(coroutineContext)
 
+                state.navigationList?.let { navigationList ->
+                    route<SmallNavigationProps>("/teams/:selectedLineLink") { selectedLineLink ->
+                        child(SmallNavigation::class) {
+                            attrs.navLines = navigationList
+                            attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
+                            attrs.deleteFunction = { id: Int ->
+                                props.coroutineScope.launch {
+                                    teamService.deleteTeam(id)
+                                }
+                            }
+                            attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
+                                props.coroutineScope.launch {
+                                    teamService.editTeam(
+                                        TeamDTO(
+                                            id,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1],
+                                            true,
+                                            props.selectedTeam
+                                        )
+                                    )
+                                }
+                            }
+                            attrs.addFunction = { listOfInputValues ->
+//                                props.coroutineScope.launch {
+//                                    teamService.addTeam(
+//                                        TeamDTO(
+//                                            null,
+//                                            listOfInputValues[0],
+//                                            listOfInputValues[1],
+//                                            true,
+//
+//                                        )
+//                                    )
+//                                trainerService.addTrainer(
+//                                    TrainerDTO(
+//                                        null,
+//                                        state.teamInputs["teamLink"]!!.inputValue,
+//                                        "address.png",
+//                                        state.teamInputs["name"]!!.inputValue,
+//                                        state.teamInputs["info"]!!.inputValue,
+//                                    )
+//                                )
+//                                }
+                            }
                         }
                     }
-                }?: run {
-                    +"Загрузка"
+                } ?: run {
+                    +"Загрузка..."
                 }
             }
 
@@ -316,7 +254,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                             trainerService.deleteTrainer(trainer!!.id!!)
                                         }
                                     }
-                                    attrs.type = AdminButtonType.Delete
+                                    attrs.button = AdminButtonType.Delete
                                 }
                                 if (state.editTrainerForm != trainer) {
                                     child(AdminButtonComponent::class) {
@@ -327,7 +265,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                 state.trainerInputs["info"]!!.inputValue = trainer.info
                                             }
                                         }
-                                        attrs.type = AdminButtonType.Edit
+                                        attrs.button = AdminButtonType.Edit
                                     }
                                 } else {
                                     styledForm {
@@ -397,7 +335,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                 teamService.deleteTeamMember(teamMember.id!!)
                                             }
                                         }
-                                        attrs.type = AdminButtonType.Delete
+                                        attrs.button = AdminButtonType.Delete
                                     }
 
                                     if (state.editTeamMemberForm != teamMember) {
@@ -415,7 +353,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                     teamMemberInputs["teamRole"]!!.inputValue = teamMember.number
                                                 }
                                             }
-                                            attrs.type = AdminButtonType.Edit
+                                            attrs.button = AdminButtonType.Edit
                                         }
                                     } else {
                                         styledForm {
@@ -475,7 +413,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                     addTeamMemberForm = true
                                 }
                             }
-                            attrs.type = AdminButtonType.Add
+                            attrs.button = AdminButtonType.Add
                         }
                     } else {
                         styledForm {

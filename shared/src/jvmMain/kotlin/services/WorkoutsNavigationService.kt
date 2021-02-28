@@ -4,17 +4,14 @@ package services
 import database.WorkoutsSections
 import database.database
 import model.NavigationDTO
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.*
 import rpc.RPCService
 
 actual class WorkoutsNavigationService : RPCService {
     actual suspend fun getWorkoutsNavigationList(): List<NavigationDTO> {
         val navigationList = mutableListOf<NavigationDTO>()
         database {
-            WorkoutsSections.selectAll().forEach {
+            WorkoutsSections.selectAll().orderBy(WorkoutsSections.id to SortOrder.ASC).forEach {
                 navigationList += NavigationDTO(
                     it[WorkoutsSections.id].value,
                     it[WorkoutsSections.header],

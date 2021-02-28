@@ -3,7 +3,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.css.*
-import kotlinx.html.id
+import pageComponents.background
 import react.buildElements
 import react.dom.render
 import react.router.dom.browserRouter
@@ -25,22 +25,9 @@ private class Application : CoroutineScope {
 
             render(buildElements {
                 browserRouter {
-                    //TODO: вынести в отдельный метод
+                    background()
                     styledDiv {
-                        css {
-                            position = Position.fixed
-                            backgroundImage = Image("url(/images/background.jpg)")
-                            backgroundSize = "cover"
-                            opacity = 0.8
-                            width = 100.pct
-                            height = 100.pct
-                            child("div") {
-                                fontFamily = "PT"
-                            }
-                        }
-                    }
-                    styledDiv {
-                        attrs.id = "root"
+//                        attrs.id = "root"
                         css {
                             position = Position.relative
                             marginLeft = 100.px

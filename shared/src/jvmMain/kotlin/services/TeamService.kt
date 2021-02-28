@@ -74,7 +74,7 @@ actual class TeamService : RPCService {
     actual suspend fun getNavigationList(): List<NavigationDTO> {
         val navigationList = mutableListOf<NavigationDTO>()
         database {
-            Teams.select{Teams.isOur eq true}.forEach() {
+            Teams.select{Teams.isOur eq true}.orderBy(Teams.id to SortOrder.ASC).forEach() {
                 navigationList += NavigationDTO(it[Teams.id].value, it[name], it[link])
             }
         }
@@ -98,7 +98,11 @@ actual class TeamService : RPCService {
     actual suspend fun getTeamMemberByRoleAndTeam(role: String, teamLink: String): List<TeamMemberDTO> {
         val liftOfTeamMembers = mutableListOf<TeamMemberDTO>()
         database {
-            TeamMembers.select { (TeamMembers.teamLink eq teamLink) and (TeamMembers.role eq role) }.forEach {
+            TeamMembers.select {
+                (TeamMembers.teamLink eq teamLink) and (TeamMembers.role eq role)
+            }.orderBy(
+                TeamMembers.id to SortOrder.ASC
+            ).forEach {
                 liftOfTeamMembers += TeamMembers.getTeamMemberDtoFromDatabase(it)
             }
         }

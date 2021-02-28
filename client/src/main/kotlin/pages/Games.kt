@@ -48,8 +48,8 @@ class GamesState : RState {
     var gamesNavigationList: List<NavigationDTO>? = null
     var allGamesWithTeams: List<GameWithTeams>? = null
     var inputs: MutableMap<String, Input> = mutableMapOf(
-        "date" to Input("Дата", "date", isNessesary = false),
-        "time" to Input("Время", "time", isNessesary = false),
+        "date" to Input("Дата", "date", isNecessary = false),
+        "time" to Input("Время", "time", isNecessary = false),
         "teamA" to Input(
             "Команда А",
             "teamAId",
@@ -64,11 +64,9 @@ class GamesState : RState {
             options = mapOf(),
             allowOtherOption = true
         ),
-        "stadium" to Input("Стадион", "stadium", isNessesary = false),
-        "result" to Input("Результат", "result", isNessesary = false),
+        "stadium" to Input("Стадион", "stadium", isNecessary = false),
+        "result" to Input("Результат", "result", isNecessary = false),
     )
-    var smallNavigationForm: Boolean = false
-    var editSmallNavigationForm: NavigationDTO? = null
     var addGameForm: Boolean = false
     var editGameForm: GameWithTeams? = null
 }
@@ -170,76 +168,37 @@ class Games : RComponent<GamesProps, GamesState>() {
     override fun RBuilder.render() {
         grid {
             navigation {
-                state.gamesNavigationList?.let { gameNavigationList ->
-                    route<SmallNavigationProps>("/games/:selectedLink") { linkProps ->
+                val gamesNavigationService = GamesNavigationService(coroutineContext)
+                state.gamesNavigationList?.let { gamesNavigationList ->
+                    route<SmallNavigationProps>("/games/:selectedLineLink") { selectedLineLink ->
                         child(SmallNavigation::class) {
-                            attrs.strings = gameNavigationList
-                            attrs.selectedLink = linkProps.match.params.selectedLink
-                        }
-                    }
-                    state.gamesNavigationList!!.forEach { gameNavigation ->
-                        if (document.cookie.contains("role=admin")) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    val gameNavigationService = GamesNavigationService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        gameNavigationService.deleteGamesSection(gameNavigation.id!!)
-                                    }
-                                }
-                                attrs.type = AdminButtonType.Add
-                            }
-                            if (state.editSmallNavigationForm != gameNavigation) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        setState {
-                                            editSmallNavigationForm = gameNavigation
-                                        }
-                                    }
-                                    attrs.type = AdminButtonType.Edit
-                                }
-                            } else {
-                                child(SmallNavigationForm::class) {
-                                    attrs.inputValues = listOf(gameNavigation.header, gameNavigation.link)
-                                    attrs.addSection = { listOfInputValues ->
-                                        val gamesNavigationService = GamesNavigationService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            gamesNavigationService.editGamesSection(
-                                                NavigationDTO(
-                                                    gameNavigation.id,
-                                                    listOfInputValues[0],
-                                                    listOfInputValues[1]
-                                                )
-                                            )
-                                        }
-                                    }
+                            attrs.navLines = gamesNavigationList
+                            attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
+                            attrs.deleteFunction = { id: Int ->
+                                props.coroutineScope.launch {
+                                    gamesNavigationService.deleteGamesSection(id)
                                 }
                             }
-                        }
-                    }
-                    if (document.cookie.contains("role=admin")) {
-                        if (!state.smallNavigationForm) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    setState {
-                                        smallNavigationForm = true
-                                    }
-                                }
-                                attrs.type = AdminButtonType.Add
-                            }
-                        } else {
-                            child(SmallNavigationForm::class) {
-                                attrs.inputValues = listOf("", "")
-                                attrs.addSection = { listOfInputValues ->
-                                    val gamesNavigationService = GamesNavigationService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        gamesNavigationService.addGamesSection(
-                                            NavigationDTO(
-                                                null,
-                                                listOfInputValues[0],
-                                                listOfInputValues[1]
-                                            )
+                            attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
+                                props.coroutineScope.launch {
+                                    gamesNavigationService.editGamesSection(
+                                        NavigationDTO(
+                                            id,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1]
                                         )
-                                    }
+                                    )
+                                }
+                            }
+                            attrs.addFunction = { listOfInputValues ->
+                                props.coroutineScope.launch {
+                                    gamesNavigationService.addGamesSection(
+                                        NavigationDTO(
+                                            null,
+                                            listOfInputValues[0],
+                                            listOfInputValues[1]
+                                        )
+                                    )
                                 }
                             }
                         }
@@ -305,7 +264,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                         gameService.deleteGame(game.id)
                                     }
                                 }
-                                attrs.type = AdminButtonType.Delete
+                                attrs.button = AdminButtonType.Delete
                             }
                             if (state.editGameForm != game) {
                                 child(AdminButtonComponent::class) {
@@ -320,7 +279,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                             inputs["result"]!!.inputValue = game.result ?: ""
                                         }
                                     }
-                                    attrs.type = AdminButtonType.Edit
+                                    attrs.button = AdminButtonType.Edit
                                 }
                             } else {
                                 styledDiv {
@@ -378,7 +337,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                     addGameForm = true
                                 }
                             }
-                            attrs.type = AdminButtonType.Add
+                            attrs.button = AdminButtonType.Add
                         }
                     } else {
                         styledForm {
