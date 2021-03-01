@@ -1,7 +1,8 @@
 package pageComponents
 
-import adminPageComponents.AdminButtonComponent
 import adminPageComponents.AdminButtonType
+import adminPageComponents.adminButton
+import isAdmin
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -106,19 +107,16 @@ class Feed : RComponent<FeedProps, FeedState>() {
                             styledH3 {
                                 +it.header!!
                             }
-                            if (document.cookie.contains("role=admin")) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        val newsService = NewsService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            newsService.deleteNews(it.id!!)
-                                        }
+                            if (isAdmin) {
+                                adminButton(AdminButtonType.Delete){
+                                    val newsService = NewsService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        newsService.deleteNews(it.id!!)
                                     }
-                                    attrs.button = AdminButtonType.Delete
                                 }
                                 styledA(href = "/news/${it.id}") {
-                                    child(AdminButtonComponent::class) {
-                                        attrs.button = AdminButtonType.Edit
+                                    adminButton(AdminButtonType.Edit){
+                                        //TODO
                                     }
                                 }
                             }

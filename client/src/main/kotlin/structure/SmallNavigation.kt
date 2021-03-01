@@ -1,13 +1,12 @@
 package structure
 
-import ColorSpartak
 import adminPageComponents.AdminButtonType
 import adminPageComponents.SmallNavigationForm
 import adminPageComponents.adminButton
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import model.NavigationDTO
-import pages.GalleryProps
+import pages.Gallery.GalleryProps
 import react.*
 import react.dom.h2
 import react.router.dom.navLink

@@ -1,32 +1,22 @@
 package adminPageComponents
 
-import modules.CKEditor
-import modules.CKEditorProps
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.id
 import kotlinx.html.js.onSubmitFunction
+import modules.CKEditor
+import modules.DecoupledEditor
+import modules.EditorProps
+import modules.EditorState
 import org.w3c.dom.Node
 import org.w3c.dom.events.Event
 import pageComponents.buttonMain
-import react.*
+import react.RBuilder
+import react.RComponent
 import react.dom.div
 import services.HtmlService
 import styled.styledForm
-
-@JsModule("@ckeditor/ckeditor5-build-decoupled-document")
-external val DecoupledEditor: RClass<CKEditorProps>
-external interface EditorProps : RProps {
-    var text: String?
-    var url: String
-    var coroutineScope: CoroutineScope
-}
-external interface EditorState : RState {
-    var text: String?
-}
-//TODO: вынести вот это ^ в отдельный файл в тот же пакет, где будет CKEditor
 
 class CKEditorComponent: RComponent<EditorProps, EditorState>() {
     private val coroutineContext

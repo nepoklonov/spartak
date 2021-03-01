@@ -1,6 +1,14 @@
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import pages.*
+import pages.Gallery.Gallery
+import pages.Gallery.GalleryProps
+import pages.Games.Games
+import pages.Games.GamesProps
+import pages.Teams.Teams
+import pages.Teams.TeamsProps
+import pages.Workouts.Workouts
+import pages.Workouts.WorkoutsProps
 import react.*
 import react.router.dom.redirect
 import react.router.dom.route

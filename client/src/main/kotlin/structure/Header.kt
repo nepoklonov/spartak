@@ -2,7 +2,7 @@ package structure
 
 import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
-import TextWithIcon
+import Consts.TextWithIcon
 import react.RBuilder
 import react.RComponent
 import react.RProps

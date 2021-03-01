@@ -1,6 +1,5 @@
 package adminPageComponents
 
-import ColorSpartak
 import kotlinx.css.color
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
@@ -33,7 +32,7 @@ class FormViewComponentState : RState {
     var otherOption: Boolean = false
 }
 
-class FormViewComponent : RComponent<FormViewComponentProps, FormViewComponentState>() {
+class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>() {
     private fun RBuilder.selectInput(it: Input, key: String){
         styledSelect {
             attrs {

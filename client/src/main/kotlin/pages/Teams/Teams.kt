@@ -1,30 +1,30 @@
-package pages
+package pages.Teams
 
-import adminPageComponents.*
+import Consts.roleMap
+import adminPageComponents.AdminButtonType
+import adminPageComponents.FormComponent
+import adminPageComponents.Input
+import adminPageComponents.adminButton
 import content
 import grid
 import header
-import kotlinx.browser.document
+import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
-import model.NavigationDTO
 import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
 import navigation
-import pageComponents.*
+import pageComponents.RedFrameComponent
 import react.*
-import react.router.dom.route
 import services.TeamService
 import services.TrainerService
 import smallHeaderText
-import structure.SmallNavigation
-import structure.SmallNavigationProps
-import styled.*
-
-val roleMap = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари")
+import styled.css
+import styled.styledDiv
+import styled.styledForm
 
 external interface TeamsProps : RProps {
     var coroutineScope: CoroutineScope
@@ -32,40 +32,12 @@ external interface TeamsProps : RProps {
 }
 
 class TeamsState : RState {
-    var error: Throwable? = null
-    var navigationList: List<NavigationDTO>? = null
     var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
     var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
-    var teamInputs: MutableMap<String, Input> = mutableMapOf(
-        "teamName" to Input("Название команды", "teamName"),
-        "teamLink" to Input("Ссылка", "teamlink"),
-        "year" to Input("Год рождения участников", "year"),
-        "name" to Input("ФИО тренера", "name"),
-        "info" to Input("Информация о тренере", "info", isNecessary = false),
-    )
-    var trainerInputs: MutableMap<String, Input> = mutableMapOf(
-        "name" to Input("ФИО", "name"),
-        "info" to Input("Информация", "info"),
-    )
-    var teamMemberInputs: MutableMap<String, Input> = mutableMapOf(
-        "number" to Input("Номер", "number"),
-        "firstName" to Input("Имя", "firstName"),
-        "lastName" to Input("Фамилия", "lastName"),
-        "role" to Input(
-            "Амплуа", "role", isSelect = true,
-            options = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари"),
-            allowOtherOption = true
-        ),
-        "birthday" to Input("Дата рождения", "birthday", isNecessary = false),
-        "city" to Input("Город", "city", isNecessary = false),
-        "teamRole" to Input(
-            "к/а",
-            "teamRole",
-            isSelect = true,
-            options = mapOf("к" to "к", "а" to "а", "null" to "нет")
-        )
-    )
+    var teamInputs: MutableMap<String, Input> = Consts.teamInputs
+    var trainerInputs: MutableMap<String, Input> = Consts.trainerInputs
+    var teamMemberInputs: MutableMap<String, Input> = Consts.teamMemberInputs
     var addTrainerForm: Boolean = false
     var addTeamMemberForm: Boolean = false
     var editTrainerForm: TrainerDTO? = null
@@ -85,53 +57,23 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
         val teamService = TeamService(coroutineContext)
 
         coroutineScope.launch {
-            val navigationList = try {
-                teamService.getNavigationList()
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-            val team = try {
-                teamService.getTeamByLink(selectedTeam)
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-            if (team.id != null) {
-                val trainer = try {
-                    if (team.link != null) {
-                        trainerService.getTrainerByLink(team.link!!)
-                    } else {
-                        null
-                    }
-                } catch (e: Throwable) {
-                    setState {
-                        error = e
-                    }
-                    return@launch
-                }
+            val team = teamService.getTeamByLink(selectedTeam)
 
+            if (team.id != null) {
+                val trainer = if (team.link != null) {
+                    trainerService.getTrainerByLink(team.link!!)
+                } else {
+                    null
+                }
                 val teamMembersWithRoles = mutableMapOf<String, List<TeamMemberDTO>>()
 
                 roleMap.forEach { role ->
-                    val teamMembers = try {
-                        teamService.getTeamMemberByRoleAndTeam(role.key, team.link!!)
-                    } catch (e: Throwable) {
-                        console.log(e)
-                        setState {
-                            error = e
-                        }
-                        return@launch
-                    }
+                    val teamMembers = teamService.getTeamMemberByRoleAndTeam(role.key, team.link!!)
                     teamMembersWithRoles[role.value] = teamMembers
                 }
+
                 setState {
                     this.team = team
-                    this.navigationList = navigationList
                     this.teamMembersWithRoles = teamMembersWithRoles
                     this.trainer = trainer
                 }
@@ -152,57 +94,9 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
     override fun RBuilder.render() {
         grid {
             navigation {
-                val teamService = TeamService(coroutineContext)
-
-                state.navigationList?.let { navigationList ->
-                    route<SmallNavigationProps>("/teams/:selectedLineLink") { selectedLineLink ->
-                        child(SmallNavigation::class) {
-                            attrs.navLines = navigationList
-                            attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
-                            attrs.deleteFunction = { id: Int ->
-                                props.coroutineScope.launch {
-                                    teamService.deleteTeam(id)
-                                }
-                            }
-                            attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
-                                props.coroutineScope.launch {
-                                    teamService.editTeam(
-                                        TeamDTO(
-                                            id,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1],
-                                            true,
-                                            props.selectedTeam
-                                        )
-                                    )
-                                }
-                            }
-                            attrs.addFunction = { listOfInputValues ->
-//                                props.coroutineScope.launch {
-//                                    teamService.addTeam(
-//                                        TeamDTO(
-//                                            null,
-//                                            listOfInputValues[0],
-//                                            listOfInputValues[1],
-//                                            true,
-//
-//                                        )
-//                                    )
-//                                trainerService.addTrainer(
-//                                    TrainerDTO(
-//                                        null,
-//                                        state.teamInputs["teamLink"]!!.inputValue,
-//                                        "address.png",
-//                                        state.teamInputs["name"]!!.inputValue,
-//                                        state.teamInputs["info"]!!.inputValue,
-//                                    )
-//                                )
-//                                }
-                            }
-                        }
-                    }
-                } ?: run {
-                    +"Загрузка..."
+                child(TeamsNavigation::class){
+                    attrs.coroutineScope = props.coroutineScope
+                    attrs.selectedTeam = props.selectedTeam
                 }
             }
 
@@ -211,11 +105,6 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
             }
 
             content {
-
-                val error = state.error
-                if (error != null) {
-                    throw error
-                }
                 styledDiv {
                     css {
                         overflow = Overflow.hidden
@@ -246,26 +135,20 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 }
 
                             }
-                            if (document.cookie.contains("role=admin")) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        val trainerService = TrainerService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            trainerService.deleteTrainer(trainer!!.id!!)
-                                        }
+                            if (isAdmin) {
+                                adminButton(AdminButtonType.Delete) {
+                                    val trainerService = TrainerService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        trainerService.deleteTrainer(trainer!!.id!!)
                                     }
-                                    attrs.button = AdminButtonType.Delete
                                 }
                                 if (state.editTrainerForm != trainer) {
-                                    child(AdminButtonComponent::class) {
-                                        attrs.updateState = {
-                                            setState {
-                                                editTrainerForm = trainer
-                                                state.trainerInputs["name"]!!.inputValue = trainer!!.name
-                                                state.trainerInputs["info"]!!.inputValue = trainer.info
-                                            }
+                                    adminButton(AdminButtonType.Edit) {
+                                        setState {
+                                            editTrainerForm = trainer
+                                            state.trainerInputs["name"]!!.inputValue = trainer!!.name
+                                            state.trainerInputs["info"]!!.inputValue = trainer.info
                                         }
-                                        attrs.button = AdminButtonType.Edit
                                     }
                                 } else {
                                     styledForm {
@@ -293,7 +176,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                 }
                                             }
                                         }
-                                        child(FormViewComponent::class) {
+                                        child(FormComponent::class) {
                                             attrs.inputs = state.trainerInputs
                                             attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                                 setState {
@@ -311,7 +194,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                     }
                 }
                 if (state.teamMembersWithRoles != null) {
-                    state.teamMembersWithRoles!!.forEach() { teamMembers ->
+                    state.teamMembersWithRoles!!.forEach { teamMembers ->
                         smallHeaderText {
                             +teamMembers.key
                         }
@@ -327,33 +210,26 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                     attrs.teamMember = teamMember
                                 }
                                 //TODO: вынести в отдельную функцию
-                                if (document.cookie.contains("role=Admin")) {
-                                    child(AdminButtonComponent::class) {
-                                        attrs.updateState = {
-                                            val teamService = TeamService(coroutineContext)
-                                            props.coroutineScope.launch {
-                                                teamService.deleteTeamMember(teamMember.id!!)
-                                            }
+                                if (isAdmin) {
+                                    adminButton(AdminButtonType.Delete) {
+                                        val teamService = TeamService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            teamService.deleteTeamMember(teamMember.id!!)
                                         }
-                                        attrs.button = AdminButtonType.Delete
                                     }
 
                                     if (state.editTeamMemberForm != teamMember) {
-                                        child(AdminButtonComponent::class) {
-                                            attrs.updateState = {
-                                                setState {
-                                                    editTeamMemberForm = teamMember
-                                                    teamMemberInputs["number"]!!.inputValue = teamMember.number
-                                                    teamMemberInputs["firstName"]!!.inputValue =
-                                                        teamMember.firstName
-                                                    teamMemberInputs["lastName"]!!.inputValue = teamMember.lastName
-                                                    teamMemberInputs["role"]!!.inputValue = teamMember.role
-                                                    teamMemberInputs["birthday"]!!.inputValue = teamMember.birthday
-                                                    teamMemberInputs["city"]!!.inputValue = teamMember.city
-                                                    teamMemberInputs["teamRole"]!!.inputValue = teamMember.number
-                                                }
+                                        adminButton(AdminButtonType.Edit) {
+                                            setState {
+                                                editTeamMemberForm = teamMember
+                                                teamMemberInputs["number"]!!.inputValue = teamMember.number
+                                                teamMemberInputs["firstName"]!!.inputValue = teamMember.firstName
+                                                teamMemberInputs["lastName"]!!.inputValue = teamMember.lastName
+                                                teamMemberInputs["role"]!!.inputValue = teamMember.role
+                                                teamMemberInputs["birthday"]!!.inputValue = teamMember.birthday
+                                                teamMemberInputs["city"]!!.inputValue = teamMember.city
+                                                teamMemberInputs["teamRole"]!!.inputValue = teamMember.number
                                             }
-                                            attrs.button = AdminButtonType.Edit
                                         }
                                     } else {
                                         styledForm {
@@ -387,7 +263,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                                     }
                                                 }
                                             }
-                                            child(FormViewComponent::class) {
+                                            child(FormComponent::class) {
                                                 attrs.inputs = state.teamMemberInputs
                                                 attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                                     setState {
@@ -405,15 +281,12 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                 } else {
                     +"Загрузка..."
                 }
-                if (document.cookie.contains("role=admin")) {
+                if (isAdmin) {
                     if (!state.addTeamMemberForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    addTeamMemberForm = true
-                                }
+                        adminButton(AdminButtonType.Add) {
+                            setState {
+                                addTeamMemberForm = true
                             }
-                            attrs.button = AdminButtonType.Add
                         }
                     } else {
                         styledForm {
@@ -447,7 +320,7 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                     }
                                 }
                             }
-                            child(FormViewComponent::class) {
+                            child(FormComponent::class) {
                                 attrs.inputs = state.teamMemberInputs
                                 attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                     setState {

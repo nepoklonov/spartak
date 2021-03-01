@@ -1,32 +1,32 @@
-package pages
+package pages.Games
 
-import adminPageComponents.*
+import Consts.gameInputs
+import Consts.tableHeaders
+import adminPageComponents.AdminButtonType
+import adminPageComponents.FormComponent
+import adminPageComponents.Input
+import adminPageComponents.adminButton
 import content
 import grid
 import gridArea
 import gridTemplateAreas
 import header
-import kotlinx.browser.document
+import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import model.GameDTO
-import model.NavigationDTO
 import model.TeamDTO
 import navigation
-import pageComponents.*
 import react.*
-import react.router.dom.route
 import services.GameService
-import services.GamesNavigationService
 import services.TeamService
-import structure.SmallNavigation
-import structure.SmallNavigationProps
-import styled.*
+import styled.css
+import styled.styledDiv
+import styled.styledForm
 import tableContent
 import tableHeader
-import tableHeaders
 
 data class GameWithTeams(
     val id: Int,
@@ -44,29 +44,8 @@ external interface GamesProps : RProps {
 }
 
 class GamesState : RState {
-    var error: Throwable? = null
-    var gamesNavigationList: List<NavigationDTO>? = null
     var allGamesWithTeams: List<GameWithTeams>? = null
-    var inputs: MutableMap<String, Input> = mutableMapOf(
-        "date" to Input("Дата", "date", isNecessary = false),
-        "time" to Input("Время", "time", isNecessary = false),
-        "teamA" to Input(
-            "Команда А",
-            "teamAId",
-            isSelect = true,
-            options = mapOf(),
-            allowOtherOption = true
-        ),
-        "teamB" to Input(
-            "Команда Б",
-            "teamBId",
-            isSelect = true,
-            options = mapOf(),
-            allowOtherOption = true
-        ),
-        "stadium" to Input("Стадион", "stadium", isNecessary = false),
-        "result" to Input("Результат", "result", isNecessary = false),
-    )
+    var inputs: MutableMap<String, Input> = gameInputs
     var addGameForm: Boolean = false
     var editGameForm: GameWithTeams? = null
 }
@@ -82,61 +61,21 @@ class Games : RComponent<GamesProps, GamesState>() {
     private fun getState(year: String, coroutineScope: CoroutineScope) {
         val gameService = GameService(coroutineContext)
         val teamsService = TeamService(coroutineContext)
-        val gamesNavigationService = GamesNavigationService(coroutineContext)
 
         coroutineScope.launch {
-            val gamesNavigationList = try {
-                gamesNavigationService.getGamesNavigationList()
-            } catch (e: Throwable) {
-                console.log(e)
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-            val allGames = try {
-                gameService.getAllGamesByYear(year)
-            } catch (e: Throwable) {
-                console.log(e)
-                setState {
-                    error = e
-                }
-                return@launch
-            }
+
+            val allGames = gameService.getAllGamesByYear(year)
 
             val allGamesWithTeams: MutableList<GameWithTeams> = mutableListOf()
 
             allGames.forEach {
-                val teamA = try {
-                    teamsService.getTeamById(it.teamAId)
-                } catch (e: Throwable) {
-                    console.log(e)
-                    setState {
-                        error = e
-                    }
-                    return@launch
-                }
-                val teamB = try {
-                    teamsService.getTeamById(it.teamBId)
-                } catch (e: Throwable) {
-                    console.log(e)
-                    setState {
-                        error = e
-                    }
-                    return@launch
-                }
+                val teamA = teamsService.getTeamById(it.teamAId)
+                val teamB = teamsService.getTeamById(it.teamBId)
 
                 allGamesWithTeams += GameWithTeams(it.id!!, it.date, it.time, teamA, teamB, it.stadium, it.result)
             }
 
-            val teamList = try {
-                teamsService.getNavigationList()
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
+            val teamList = teamsService.getNavigationList()
 
             var teamMap = mapOf<String, String>()
 
@@ -147,7 +86,6 @@ class Games : RComponent<GamesProps, GamesState>() {
 
             setState {
                 this.allGamesWithTeams = allGamesWithTeams
-                this.gamesNavigationList = gamesNavigationList
                 this.inputs["teamA"]!!.options = teamMap
                 this.inputs["teamB"]!!.options = teamMap
             }
@@ -167,49 +105,15 @@ class Games : RComponent<GamesProps, GamesState>() {
 
     override fun RBuilder.render() {
         grid {
-            navigation {
-                val gamesNavigationService = GamesNavigationService(coroutineContext)
-                state.gamesNavigationList?.let { gamesNavigationList ->
-                    route<SmallNavigationProps>("/games/:selectedLineLink") { selectedLineLink ->
-                        child(SmallNavigation::class) {
-                            attrs.navLines = gamesNavigationList
-                            attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
-                            attrs.deleteFunction = { id: Int ->
-                                props.coroutineScope.launch {
-                                    gamesNavigationService.deleteGamesSection(id)
-                                }
-                            }
-                            attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
-                                props.coroutineScope.launch {
-                                    gamesNavigationService.editGamesSection(
-                                        NavigationDTO(
-                                            id,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1]
-                                        )
-                                    )
-                                }
-                            }
-                            attrs.addFunction = { listOfInputValues ->
-                                props.coroutineScope.launch {
-                                    gamesNavigationService.addGamesSection(
-                                        NavigationDTO(
-                                            null,
-                                            listOfInputValues[0],
-                                            listOfInputValues[1]
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                } ?: run {
-                    +"Загрузка..."
-                }
-            }
 
             header {
                 +"Расписание игр"
+            }
+
+            navigation {
+                child(GamesNavigation::class){
+                   attrs.coroutineScope = props.coroutineScope
+                }
             }
 
             content {
@@ -256,30 +160,24 @@ class Games : RComponent<GamesProps, GamesState>() {
                         }
 
 
-                        if (document.cookie.contains("role=admin")) {
-                            child(AdminButtonComponent::class) {
-                                attrs.updateState = {
-                                    val gameService = GameService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        gameService.deleteGame(game.id)
-                                    }
+                        if (isAdmin) {
+                            adminButton(AdminButtonType.Delete){
+                                val gameService = GameService(coroutineContext)
+                                props.coroutineScope.launch {
+                                    gameService.deleteGame(game.id)
                                 }
-                                attrs.button = AdminButtonType.Delete
                             }
                             if (state.editGameForm != game) {
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        setState {
-                                            editGameForm = game
-                                            inputs["date"]!!.inputValue = game.date
-                                            inputs["time"]!!.inputValue = game.time ?: ""
-                                            inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
-                                            inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
-                                            inputs["stadium"]!!.inputValue = game.stadium
-                                            inputs["result"]!!.inputValue = game.result ?: ""
-                                        }
+                                adminButton(AdminButtonType.Edit){
+                                    setState {
+                                        editGameForm = game
+                                        inputs["date"]!!.inputValue = game.date
+                                        inputs["time"]!!.inputValue = game.time ?: ""
+                                        inputs["teamA"]!!.inputValue = game.teamA?.link ?: ""
+                                        inputs["teamB"]!!.inputValue = game.teamB?.link ?: ""
+                                        inputs["stadium"]!!.inputValue = game.stadium
+                                        inputs["result"]!!.inputValue = game.result ?: ""
                                     }
-                                    attrs.button = AdminButtonType.Edit
                                 }
                             } else {
                                 styledDiv {
@@ -311,7 +209,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                                 }
                                             }
                                         }
-                                        child(FormViewComponent::class) {
+                                        child(FormComponent::class) {
                                             console.log(state.inputs)
                                             attrs.inputs = state.inputs
                                             attrs.updateState =
@@ -329,15 +227,12 @@ class Games : RComponent<GamesProps, GamesState>() {
                     }
                 }
 
-                if (document.cookie.contains("role=admin")) {
+                if (isAdmin) {
                     if (!state.addGameForm) {
-                        child(AdminButtonComponent::class) {
-                            attrs.updateState = {
-                                setState {
-                                    addGameForm = true
-                                }
+                        adminButton(AdminButtonType.Add){
+                            setState {
+                                addGameForm = true
                             }
-                            attrs.button = AdminButtonType.Add
                         }
                     } else {
                         styledForm {
@@ -368,7 +263,7 @@ class Games : RComponent<GamesProps, GamesState>() {
                                     }
                                 }
                             }
-                            child(FormViewComponent::class) {
+                            child(FormComponent::class) {
                                 attrs.inputs = state.inputs
                                 attrs.updateState = { key: String, value: String, isRed: Boolean ->
                                     setState {

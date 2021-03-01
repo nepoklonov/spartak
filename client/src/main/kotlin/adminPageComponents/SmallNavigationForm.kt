@@ -50,7 +50,7 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
                     props.onSubmitFunction(listOfInputValues)
                 }
             }
-            child(FormViewComponent::class) {
+            child(FormComponent::class) {
                 attrs.inputs = state.inputs
                 attrs.updateState = { key: String, value: String, isRed: Boolean ->
                     setState {

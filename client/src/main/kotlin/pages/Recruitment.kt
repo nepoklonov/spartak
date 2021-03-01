@@ -1,6 +1,7 @@
 package pages
 
 import ColorSpartak
+import Consts.recruitmentInputs
 import Styles
 import adminPageComponents.*
 import kotlinx.browser.document
@@ -24,23 +25,7 @@ class RecruitmentState : RState {
     var error: Throwable? = null
     var recruitmentHtml: String? = null
     var recruitments: List<RecruitmentDTO>? = null
-    var inputs: MutableMap<String, Input> = mutableMapOf(
-        "dates" to Input("Желаемые даты просмотровых сборов", "dates"),
-        "name" to Input("Ф.И.О. хоккеиста", "name"),
-        "birthday" to Input("Дата рождения  (дд.мм.гг.)", "birthday"),
-        "role" to Input(
-            "Амплуа",
-            "role",
-            isSelect = true,
-            options = mapOf("Защитник" to "Защитник", "Вратарь" to "Вратарь", "Нападающий" to "Нападающий")
-        ),
-        "stickGrip" to Input("Хват клюшки", "stickGrip"),
-        "params" to Input("Рост - Вес", "params"),
-        "previousSchool" to Input("Хоккейная школа в предыдущем сезоне", "previousSchool"),
-        "city" to Input("Место жительства (город)", "city"),
-        "phone" to Input("Контактный телефон", "phone"),
-        "email" to Input("E-mail", "email")
-    )
+    var inputs: MutableMap<String, Input> = recruitmentInputs
 }
 
 class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
@@ -48,7 +33,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
         state = RecruitmentState()
     }
     fun RBuilder.inputsState(){
-        child(FormViewComponent::class) {
+        child(FormComponent::class) {
             attrs.inputs = state.inputs
             attrs.updateState = { key: String, value: String, isRed: Boolean ->
                 setState {
@@ -182,7 +167,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                             }
                         }
                     }
-                    child(FormViewComponent::class) {
+                    child(FormComponent::class) {
                         attrs.inputs = state.inputs
                         attrs.updateState = { key: String, value: String, isRed: Boolean ->
                             setState {
@@ -199,14 +184,11 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         state.recruitments!!.forEach { dto ->
                             styledDiv {
                                 +dto.toString()
-                                child(AdminButtonComponent::class) {
-                                    attrs.updateState = {
-                                        val recruitmentService = RecruitmentService(coroutineContext)
-                                        props.coroutineScope.launch {
-                                            recruitmentService.deleteRecruitment(dto.id!!)
-                                        }
+                                adminButton(AdminButtonType.Delete){
+                                    val recruitmentService = RecruitmentService(coroutineContext)
+                                    props.coroutineScope.launch {
+                                        recruitmentService.deleteRecruitment(dto.id!!)
                                     }
-                                    attrs.button = AdminButtonType.Delete
                                 }
                             }
                         }

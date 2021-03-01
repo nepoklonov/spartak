@@ -9,6 +9,12 @@ import kotlinx.html.H1
 import react.RBuilder
 import styled.*
 
+enum class ColorSpartak(val color: Color){
+    Red(Color("#9D0707")),
+    Grey(Color("#484444")),
+    LightGrey(Color("#E0DEDF"))
+}
+
 object Styles : StyleSheet("main") {
 
     val shadowSpartak by css {

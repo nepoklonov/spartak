@@ -7,9 +7,6 @@ import kotlinx.css.px
 import kotlinx.css.width
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
-import react.RComponent
-import react.RProps
-import react.RState
 import styled.css
 import styled.styledImg
 
@@ -30,26 +27,3 @@ fun RBuilder.adminButton(button: AdminButtonType, updateState: () -> Unit) {
         }
     }
 }
-
-
-//TODO: удолить
-
-external interface AdminButtonComponentProps : RProps {
-    var updateState: () -> Unit
-    var button: AdminButtonType
-}
-
-
-
-class AdminButtonComponent : RComponent<AdminButtonComponentProps, RState>() {
-    override fun RBuilder.render() {
-        styledImg(src = props.button.src) {
-            attrs.onClickFunction = { props.updateState() }
-            css {
-                width = 20.px
-                cursor = Cursor.pointer
-            }
-        }
-    }
-}
-
