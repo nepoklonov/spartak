@@ -1,4 +1,4 @@
-package pages.Teams
+package pages.teams
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

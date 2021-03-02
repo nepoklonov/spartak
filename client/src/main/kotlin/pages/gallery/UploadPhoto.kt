@@ -1,4 +1,4 @@
-package pages.Gallery
+package pages.gallery
 
 import adminPageComponents.AdminButtonType
 import adminPageComponents.adminButton

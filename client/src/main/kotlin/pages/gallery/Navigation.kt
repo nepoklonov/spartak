@@ -1,58 +1,58 @@
-package pages.Games
+package pages.gallery
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.NavigationDTO
 import react.*
 import react.router.dom.route
-import services.GamesNavigationService
+import services.GalleryNavigationService
 import structure.SmallNavigation
 import structure.SmallNavigationProps
 
-external interface GamesNavigationProps : RProps {
+external interface GalleryNavigationProps : RProps {
     var coroutineScope: CoroutineScope
 }
 
-class GamesNavigationState : RState {
-    var gamesNavigationList: List<NavigationDTO>? = null
+class GalleryNavigationState : RState {
+    var galleryNavigationList: List<NavigationDTO>? = null
 }
 
-class GamesNavigation: RComponent<GamesNavigationProps, GamesNavigationState>() {
+class GalleryNavigation : RComponent<GalleryNavigationProps, GalleryNavigationState>() {
     init {
-        state = GamesNavigationState()
+        state = GalleryNavigationState()
     }
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
     override fun componentDidMount() {
-        val gamesNavigationService = GamesNavigationService(coroutineContext)
-
+        val galleryNavigationService = GalleryNavigationService(coroutineContext)
         props.coroutineScope.launch {
+            val galleryNavigationList = galleryNavigationService.getGalleryNavigationList()
 
-            val gamesNavigationList = gamesNavigationService.getGamesNavigationList()
 
-            setState{
-                this.gamesNavigationList = gamesNavigationList
+            setState {
+                this.galleryNavigationList = galleryNavigationList
             }
         }
     }
 
-    override fun RBuilder.render(){
-        val gamesNavigationService = GamesNavigationService(coroutineContext)
-        state.gamesNavigationList?.let { gamesNavigationList ->
-            route<SmallNavigationProps>("/games/:selectedLineLink") { selectedLineLink ->
+
+    override fun RBuilder.render() {
+        val galleryNavigationService = GalleryNavigationService(coroutineContext)
+        state.galleryNavigationList?.let { galleryNavigationList ->
+            route<SmallNavigationProps>("/gallery/:selectedLineLink") { selectedLineLink ->
                 child(SmallNavigation::class) {
-                    attrs.navLines = gamesNavigationList
+                    attrs.navLines = galleryNavigationList
                     attrs.selectedLineLink = selectedLineLink.match.params.selectedLineLink
                     attrs.deleteFunction = { id: Int ->
                         props.coroutineScope.launch {
-                            gamesNavigationService.deleteGamesSection(id)
+                            galleryNavigationService.deleteGallerySection(id)
                         }
                     }
                     attrs.editFunction = { id: Int, listOfInputValues: List<String> ->
                         props.coroutineScope.launch {
-                            gamesNavigationService.editGamesSection(
+                            galleryNavigationService.editGallerySection(
                                 NavigationDTO(
                                     id,
                                     listOfInputValues[0],
@@ -63,7 +63,7 @@ class GamesNavigation: RComponent<GamesNavigationProps, GamesNavigationState>() 
                     }
                     attrs.addFunction = { listOfInputValues ->
                         props.coroutineScope.launch {
-                            gamesNavigationService.addGamesSection(
+                            galleryNavigationService.addGallerySection(
                                 NavigationDTO(
                                     null,
                                     listOfInputValues[0],

@@ -1,8 +1,6 @@
-package pages.Workouts
+package pages.workouts
 
 import Consts.*
-import pages.WorkoutsAdminFunctions.AddForm
-import pages.WorkoutsAdminFunctions.AdminTd
 import adminPageComponents.Input
 import content
 import grid
@@ -30,7 +28,6 @@ external interface WorkoutsProps : RProps {
     var selectedWorkout: String
 }
 
-//TODO: remove duplicate fragments
 class WorkoutsState : RState {
     var workouts: List<WorkoutDTO>? = null
     var inputs: MutableMap<String, Input> = workoutsInputs
@@ -63,7 +60,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
             }
 
             navigation {
-                child(WorkoutsNavigation::class){
+                child(WorkoutsNavigation::class) {
                     attrs.coroutineScope = props.coroutineScope
                 }
             }
@@ -75,7 +72,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                     }
                 }
                 if (isAdmin) {
-                    child(AddForm::class){
+                    child(AddForm::class) {
                         attrs.coroutineScope = props.coroutineScope
                         attrs.selectedWorkout = props.selectedWorkout
                     }
@@ -103,6 +100,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
             state.workouts?.forEach { workout ->
 
                 if (dayNumber % 7 == workout.dayOfWeek) {
+                    //TODO: заменить на grid
                     tableContent {
                         styledTd {
                             css {
@@ -115,7 +113,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                         styledTd {
                             +workout.text
                         }
-                        child(AdminTd::class){
+                        child(AdminTd::class) {
                             attrs.coroutineScope = props.coroutineScope
                             attrs.selectedWorkout = props.selectedWorkout
                             attrs.workout = workout

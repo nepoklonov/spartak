@@ -6,7 +6,7 @@ import adminPageComponents.adminButton
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import model.NavigationDTO
-import pages.Gallery.GalleryProps
+import pages.gallery.GalleryProps
 import react.*
 import react.dom.h2
 import react.router.dom.navLink
