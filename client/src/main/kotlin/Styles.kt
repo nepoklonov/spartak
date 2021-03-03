@@ -3,16 +3,18 @@ import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.boxShadow
-import kotlinx.html.BUTTON
 import kotlinx.html.DIV
 import kotlinx.html.H1
 import react.RBuilder
 import styled.*
 
-enum class ColorSpartak(val color: Color){
-    Red(Color("#9D0707")),
-    Grey(Color("#484444")),
-    LightGrey(Color("#E0DEDF"))
+object SpartakColors{
+    val red = Color("#9D0707")
+    val mainButton = SpartakColors.red
+    val mainButtonHover = Color("#660c0c")
+    val secondaryButton = Color("#484444")
+    val secondaryButtonHover = Color("#382828")
+    val tableHeader = Color("#E0DEDF")
 }
 
 object Styles : StyleSheet("main") {
@@ -93,28 +95,37 @@ fun RBuilder.smallHeaderText(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 
     block()
 }
 
-fun RBuilder.redButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = styledButton {
-    css {
-        backgroundColor = ColorSpartak.Red.color
-        +Styles.button
-
+fun RBuilder.buttonMain(text: String) {
+    styledButton {
+        +text
+        css {
+            +Styles.button
+            backgroundColor = SpartakColors.mainButton
+            hover {
+                backgroundColor = SpartakColors.mainButtonHover
+            }
+        }
     }
-    block()
 }
 
-//fun RBuilder.greyButtonSpartak(block: StyledDOMBuilder<BUTTON>.() -> Unit) = styledButton {
-//    css {
-//        backgroundColor = ColorSpartak.Grey.color
-//        +Styles.button
-//    }
-//    block()
-//}
+fun RBuilder.buttonSecondary(text: String) {
+    styledButton {
+        +text
+        css {
+            +Styles.button
+            backgroundColor = SpartakColors.secondaryButton
+            hover {
+                backgroundColor = SpartakColors.secondaryButtonHover
+            }
+        }
+    }
+}
 
 fun RBuilder.tableHeader(block: StyledDOMBuilder<DIV>.() -> Unit) = styledDiv {
     css {
         height = 60.px
         marginTop = 3.px
-        backgroundColor = ColorSpartak.LightGrey.color
+        backgroundColor = SpartakColors.tableHeader
         fontFamily = "Russo"
         fontSize = 20.px
         padding(10.px)

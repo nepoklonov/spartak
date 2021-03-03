@@ -1,5 +1,7 @@
 package structure
 
+
+import SpartakColors
 import adminPageComponents.AdminButtonType
 import adminPageComponents.SmallNavigationForm
 import adminPageComponents.adminButton
@@ -91,7 +93,7 @@ class SmallNavigation : RComponent<SmallNavigationProps, SmallNavigationState>()
                 textAlign = TextAlign.center
                 fontSize = 25.px
                 if (string.link == selectedLine) {
-                    borderLeftColor = ColorSpartak.Red.color
+                    borderLeftColor = SpartakColors.red
                     borderLeftWidth = 5.px
                     borderLeftStyle = BorderStyle.solid
                 }
@@ -99,7 +101,7 @@ class SmallNavigation : RComponent<SmallNavigationProps, SmallNavigationState>()
                     textDecoration = TextDecoration.none
                     color = Color.black
                     if (string.link == selectedLine) {
-                        color = ColorSpartak.Red.color
+                        color = SpartakColors.red
 
                     }
                 }

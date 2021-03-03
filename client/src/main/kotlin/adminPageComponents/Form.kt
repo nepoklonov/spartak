@@ -1,11 +1,12 @@
 package adminPageComponents
 
+import SpartakColors
+import buttonMain
 import kotlinx.css.color
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
-import pageComponents.buttonMain
 import react.*
 import styled.*
 
@@ -120,7 +121,7 @@ class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>
             styledH3 {
                 css {
                     if (it.isRed) {
-                        color = ColorSpartak.Red.color
+                        color = SpartakColors.red
                     }
                 }
                 +it.header

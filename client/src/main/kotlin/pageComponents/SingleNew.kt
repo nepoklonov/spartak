@@ -1,16 +1,19 @@
 package pageComponents
 
+import adminPageComponents.CKEditorComponent
+import buttonSecondary
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
-import adminPageComponents.CKEditorComponent
 import react.*
 import react.dom.InnerHTML
 import react.router.dom.navLink
 import services.HtmlService
 import services.NewsService
-import styled.*
+import styled.css
+import styled.styledDiv
+import styled.styledH5
 import kotlin.js.Date
 
 external interface NewsProps : RProps {

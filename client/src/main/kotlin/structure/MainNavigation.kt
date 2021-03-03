@@ -33,7 +33,7 @@ class MainNavigationComponent : RComponent<MainNavigationProps, RState>() {
         styledDiv {
             css {
                 height = 70.px
-                backgroundColor = ColorSpartak.Red.color
+                backgroundColor = SpartakColors.red
                 display = Display.flex
                 justifyContent = JustifyContent.spaceAround
                 textAlign = TextAlign.center

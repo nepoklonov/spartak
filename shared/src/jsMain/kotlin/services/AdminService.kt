@@ -1,7 +1,6 @@
 package services
 
 import kotlinx.serialization.builtins.serializer
-import model.Check
 import rpc.Transport
 import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.coroutineContext

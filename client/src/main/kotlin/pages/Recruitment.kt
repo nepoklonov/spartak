@@ -1,10 +1,8 @@
 package pages
 
-import ColorSpartak
 import Consts.recruitmentInputs
-import Styles
 import adminPageComponents.*
-import kotlinx.browser.document
+import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
@@ -32,7 +30,8 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     init {
         state = RecruitmentState()
     }
-    fun RBuilder.inputsState(){
+
+    fun RBuilder.inputsState() {
         child(FormComponent::class) {
             attrs.inputs = state.inputs
             attrs.updateState = { key: String, value: String, isRed: Boolean ->
@@ -43,6 +42,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
             }
         }
     }
+
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
@@ -77,117 +77,109 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
 
     override fun RBuilder.render() {
         styledDiv {
-            css{
+            css {
                 display = Display.flex
                 justifyContent = JustifyContent.center
                 flexWrap = FlexWrap.wrap
             }
-
-            if (document.cookie.contains("role=admin") && (state.recruitmentHtml != null)) {
-                child(CKEditorComponent::class) {
-                    attrs.text = state.recruitmentHtml!!
-                    attrs.coroutineScope = props.coroutineScope
-                    attrs.url = "htmlPages/Recruitment.html"
-                }
-            }
-            styledDiv {
-                css {
-                    margin(top = 13.px)
-                    textAlign = TextAlign.center
-                    fontSize = 16.pt
-                    fontWeight = FontWeight.bold
-                }
-                if (state.recruitmentHtml != null) {
-                    css {
-                        //TODO: проверить код:
-                        child("div button") {
-                            Styles.button
-                            backgroundColor = ColorSpartak.Grey.color
-                        }
+            state.recruitmentHtml?.let {
+                if (isAdmin) {
+                    child(CKEditorComponent::class) {
+                        attrs.text = it
+                        attrs.coroutineScope = props.coroutineScope
+                        attrs.url = "htmlPages/Recruitment.html"
                     }
-                    attrs["dangerouslySetInnerHTML"] = InnerHTML(state.recruitmentHtml!!)
-                } else {
-                    +"загрузка..."
                 }
-            }
-
-            styledDiv {
-                css {
-                    backgroundColor = Color("#F5F5F5")
-                    width = 80.pct
-                    borderRadius = 10.px
-                }
-                styledForm {
-                    css {
-                        display = Display.flex
-                        justifyContent = JustifyContent.spaceAround
-                        flexWrap = FlexWrap.wrap
-                        child("div") {
-                            float = Float.left
-                            width = 45.pct
-                            child("h3"){
-                                fontFamily = "PT"
-                            }
-                            child("input"){
-                                width = 95.pct
-//                                height = 40.px
-                            }
+                    styledDiv {
+                        css {
+                            margin(top = 13.px)
+                            textAlign = TextAlign.center
+                            fontSize = 16.pt
+                            fontWeight = FontWeight.bold
                         }
+                        attrs["dangerouslySetInnerHTML"] = InnerHTML(it)
                     }
-                    attrs.onSubmitFunction = { event ->
-                        event.preventDefault()
-                        event.stopPropagation()
-                        val recruitmentService = RecruitmentService(coroutineContext)
-                        props.coroutineScope.launch {
-                            var formIsCompleted = true
-                            state.inputs.values.forEach {
-                                if (it.isRed) {
-                                    formIsCompleted = false
+                } ?: run {
+                    +"Загрузка..."
+                }
+
+                styledDiv {
+                    css {
+                        backgroundColor = Color("#F5F5F5")
+                        width = 80.pct
+                        borderRadius = 10.px
+                    }
+                    styledForm {
+                        css {
+                            display = Display.flex
+                            justifyContent = JustifyContent.spaceAround
+                            flexWrap = FlexWrap.wrap
+                            child("div") {
+                                float = Float.left
+                                width = 45.pct
+                                child("h3") {
+                                    fontFamily = "PT"
+                                }
+                                child("input") {
+                                    width = 95.pct
                                 }
                             }
-                            if (formIsCompleted) {
-                                recruitmentService.addRecruitment(
-                                    //TODO: Идея пришла
-                                    // Мб тут надо делать своего рода десериализацию
-                                    // вместо вызова конструктора
-                                    RecruitmentDTO(
-                                        null,
-                                        state.inputs["dates"]!!.inputValue,
-                                        state.inputs["name"]!!.inputValue,
-                                        state.inputs["birthday"]!!.inputValue,
-                                        state.inputs["role"]!!.inputValue,
-                                        state.inputs["stickGrip"]!!.inputValue,
-                                        state.inputs["params"]!!.inputValue,
-                                        state.inputs["previousSchool"]!!.inputValue,
-                                        state.inputs["city"]!!.inputValue,
-                                        state.inputs["phone"]!!.inputValue,
-                                        state.inputs["email"]!!.inputValue,
+                        }
+                        attrs.onSubmitFunction = { event ->
+                            event.preventDefault()
+                            event.stopPropagation()
+                            val recruitmentService = RecruitmentService(coroutineContext)
+                            props.coroutineScope.launch {
+                                var formIsCompleted = true
+                                state.inputs.values.forEach {
+                                    if (it.isRed) {
+                                        formIsCompleted = false
+                                    }
+                                }
+                                if (formIsCompleted) {
+                                    recruitmentService.addRecruitment(
+                                        //TODO: Идея пришла
+                                        // Мб тут надо делать своего рода десериализацию
+                                        // вместо вызова конструктора
+                                        RecruitmentDTO(
+                                            null,
+                                            state.inputs["dates"]!!.inputValue,
+                                            state.inputs["name"]!!.inputValue,
+                                            state.inputs["birthday"]!!.inputValue,
+                                            state.inputs["role"]!!.inputValue,
+                                            state.inputs["stickGrip"]!!.inputValue,
+                                            state.inputs["params"]!!.inputValue,
+                                            state.inputs["previousSchool"]!!.inputValue,
+                                            state.inputs["city"]!!.inputValue,
+                                            state.inputs["phone"]!!.inputValue,
+                                            state.inputs["email"]!!.inputValue,
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
-                    }
-                    child(FormComponent::class) {
-                        attrs.inputs = state.inputs
-                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                            setState {
-                                state.inputs[key]!!.inputValue = value
-                                state.inputs[key]!!.isRed = isRed
+                        child(FormComponent::class) {
+                            attrs.inputs = state.inputs
+                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
+                                setState {
+                                    state.inputs[key]!!.inputValue = value
+                                    state.inputs[key]!!.isRed = isRed
+                                }
                             }
                         }
                     }
                 }
-            }
-            if (document.cookie.contains("role=admin")) {
-                styledDiv {
-                    if (state.recruitments != null) {
-                        state.recruitments!!.forEach { dto ->
-                            styledDiv {
-                                +dto.toString()
-                                adminButton(AdminButtonType.Delete){
-                                    val recruitmentService = RecruitmentService(coroutineContext)
-                                    props.coroutineScope.launch {
-                                        recruitmentService.deleteRecruitment(dto.id!!)
+                if (isAdmin) {
+                    styledDiv {
+                        if (state.recruitments != null) {
+                            state.recruitments!!.forEach { dto ->
+                                styledDiv {
+                                    +dto.toString()
+                                    adminButton(AdminButtonType.Delete) {
+                                        val recruitmentService = RecruitmentService(coroutineContext)
+                                        props.coroutineScope.launch {
+                                            recruitmentService.deleteRecruitment(dto.id!!)
+                                        }
                                     }
                                 }
                             }
@@ -197,4 +189,3 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
             }
         }
     }
-}

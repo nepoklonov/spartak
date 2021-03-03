@@ -2,6 +2,7 @@ package pageComponents
 
 import adminPageComponents.AdminButtonType
 import adminPageComponents.adminButton
+import buttonSecondary
 import isAdmin
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope

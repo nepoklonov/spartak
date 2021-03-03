@@ -1,5 +1,6 @@
 package pageComponents
 
+import SpartakColors
 import kotlinx.css.*
 import model.TeamMemberDTO
 import model.TrainerDTO
@@ -21,7 +22,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
     override fun RBuilder.render() {
         styledDiv {
             css {
-                backgroundColor = ColorSpartak.Red.color
+                backgroundColor = SpartakColors.red
                 color = Color.white
                 margin(25.px)
                 if (props.isTrainer) {
@@ -115,7 +116,7 @@ class RedFrameComponent : RComponent<RedFrameProps, RState>() {
                             left = 33.px
                             width = 50.px
                             height = 85.px
-                            color = ColorSpartak.Red.color
+                            color = SpartakColors.red
                             fontFamily = "Russo"
                             if (props.teamMember!!.teamRole == "К") {
                                 background =

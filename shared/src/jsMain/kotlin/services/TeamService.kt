@@ -1,6 +1,5 @@
 package services
 
-import Annotations.RequireRole
 import kotlinx.serialization.builtins.serializer
 import model.NavigationDTO
 import model.TeamDTO
@@ -45,7 +44,7 @@ actual class TeamService(coroutineContext: CoroutineContext) {
     }
 
     actual suspend fun deleteTeam(teamId: Int): Boolean {
-        transport.post("deleteTeam", Boolean.serializer(), "team" to teamId)
+        transport.post("deleteTeam", Boolean.serializer(), "teamId" to teamId)
         return true
     }
 

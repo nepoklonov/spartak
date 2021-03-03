@@ -4,9 +4,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import model.NavigationDTO
 import model.TeamDTO
+import model.TrainerDTO
 import react.*
 import react.router.dom.route
 import services.TeamService
+import services.TrainerService
 import structure.SmallNavigation
 import structure.SmallNavigationProps
 
@@ -41,6 +43,7 @@ class TeamsNavigation : RComponent<TeamsNavigationProps, TeamsNavigationState>()
 
     override fun RBuilder.render() {
         val teamService = TeamService(coroutineContext)
+        val trainerService = TrainerService(coroutineContext)
 
         state.navigationList?.let { navigationList ->
             route<SmallNavigationProps>("/teams/:selectedLineLink") { selectedLineLink ->
@@ -66,26 +69,26 @@ class TeamsNavigation : RComponent<TeamsNavigationProps, TeamsNavigationState>()
                         }
                     }
                     attrs.addFunction = { listOfInputValues ->
-//                                props.coroutineScope.launch {
-//                                    teamService.addTeam(
-//                                        TeamDTO(
-//                                            null,
-//                                            listOfInputValues[0],
-//                                            listOfInputValues[1],
-//                                            true,
-//
-//                                        )
-//                                    )
-//                                trainerService.addTrainer(
-//                                    TrainerDTO(
-//                                        null,
-//                                        state.teamInputs["teamLink"]!!.inputValue,
-//                                        "address.png",
-//                                        state.teamInputs["name"]!!.inputValue,
-//                                        state.teamInputs["info"]!!.inputValue,
-//                                    )
-//                                )
-//                                }
+                        props.coroutineScope.launch {
+                            teamService.addTeam(
+                                TeamDTO(
+                                    null,
+                                    listOfInputValues[0],
+                                    listOfInputValues[1],
+                                    true,
+                                    null
+                                    )
+                            )
+                                trainerService.addTrainer(
+                                    TrainerDTO(
+                                        null,
+                                        listOfInputValues[1],
+                                        "",
+                                        "",
+                                        ""
+                                    )
+                                )
+                        }
                     }
                 }
             }
