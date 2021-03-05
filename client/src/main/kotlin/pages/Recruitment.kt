@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
+import loading
 import model.RecruitmentDTO
 import pageComponents.*
 import react.*
@@ -99,9 +100,7 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         }
                         attrs["dangerouslySetInnerHTML"] = InnerHTML(it)
                     }
-                } ?: run {
-                    +"Загрузка..."
-                }
+                } ?: run { loading() }
 
                 styledDiv {
                     css {

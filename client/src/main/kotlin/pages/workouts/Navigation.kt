@@ -2,6 +2,7 @@ package pages.workouts
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import loading
 import model.NavigationDTO
 import react.*
 import react.router.dom.route
@@ -72,8 +73,6 @@ class WorkoutsNavigation : RComponent<WorkoutsNavigationProps, WorkoutsNavigatio
                     }
                 }
             }
-        } ?: run {
-            +"Загрузка..."
-        }
+        } ?: run { loading() }
     }
 }

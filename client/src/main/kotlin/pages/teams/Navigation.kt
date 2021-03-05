@@ -2,6 +2,7 @@ package pages.teams
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import loading
 import model.NavigationDTO
 import model.TeamDTO
 import model.TrainerDTO
@@ -92,8 +93,6 @@ class TeamsNavigation : RComponent<TeamsNavigationProps, TeamsNavigationState>()
                     }
                 }
             }
-        } ?: run {
-            +"Загрузка..."
-        }
+        } ?: run { loading() }
     }
 }

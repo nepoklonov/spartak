@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
+import loading
 import model.PhotoDTO
 import navigation
 import react.*
@@ -56,7 +57,7 @@ class Gallery : RComponent<GalleryProps, GalleryState>() {
     private fun RBuilder.galleryView() {
         styledDiv {
             if (state.images == null) {
-                +"загрузка..."
+                loading()
             } else {
                 styledDiv {
                     css {

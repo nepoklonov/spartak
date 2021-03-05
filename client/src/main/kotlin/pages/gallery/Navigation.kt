@@ -2,6 +2,7 @@ package pages.gallery
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import loading
 import model.NavigationDTO
 import react.*
 import react.router.dom.route
@@ -74,8 +75,6 @@ class GalleryNavigation : RComponent<GalleryNavigationProps, GalleryNavigationSt
                     }
                 }
             }
-        } ?: run {
-            +"Загрузка..."
-        }
+        } ?: run { loading() }
     }
 }

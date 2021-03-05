@@ -2,6 +2,7 @@ package pages.games
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import loading
 import model.NavigationDTO
 import react.*
 import react.router.dom.route
@@ -74,8 +75,6 @@ class GamesNavigation: RComponent<GamesNavigationProps, GamesNavigationState>() 
                     }
                 }
             }
-        } ?: run {
-            +"Загрузка..."
-        }
+        } ?: run { loading() }
     }
 }

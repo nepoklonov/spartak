@@ -8,10 +8,9 @@ import header
 import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.css.marginLeft
-import kotlinx.css.marginRight
 import kotlinx.css.px
 import kotlinx.css.width
+import loading
 import model.WorkoutDTO
 import navigation
 import react.*
@@ -84,11 +83,6 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
     private fun RBuilder.dailyTimetable(dayNumber: Int, header: String) {
 
         styledDiv {
-            css {
-                marginRight = 32.px
-                marginLeft = 32.px
-            }
-
             tableHeader {
                 +header
                 +", "
@@ -100,7 +94,6 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
             state.workouts?.forEach { workout ->
 
                 if (dayNumber % 7 == workout.dayOfWeek) {
-                    //TODO: заменить на grid
                     tableContent {
                         styledTd {
                             css {
@@ -120,7 +113,7 @@ class Workouts : RComponent<WorkoutsProps, WorkoutsState>() {
                         }
                     }
                 }
-            } ?: run { +"Загрузка..." }
+            } ?: run { loading() }
         }
     }
 }

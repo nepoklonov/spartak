@@ -1,9 +1,10 @@
 package pages
 
+import adminPageComponents.CKEditorComponent
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import adminPageComponents.CKEditorComponent
+import loading
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -43,11 +44,9 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
             }
         }
         styledDiv {
-            if (state.summerCampHtml != null) {
+            state.summerCampHtml?.let {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.summerCampHtml!!)
-            } else {
-                +"загрузка..."
-            }
+            } ?: run { loading() }
         }
     }
 }

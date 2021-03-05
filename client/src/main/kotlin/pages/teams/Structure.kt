@@ -9,6 +9,7 @@ import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
+import loading
 import model.TeamDTO
 import model.TeamMemberDTO
 import model.TrainerDTO
@@ -165,16 +166,12 @@ class Teams : RComponent<TeamsProps, TeamsState>() {
                                 attrs.trainer = trainer
                             }
                         }
-                    } ?: run {
-                        +"Загрузка..."
-                    }
+                    } ?: run { loading() }
                 }
 
                 state.teamMembersWithRoles?.forEach { teamMembers ->
                     teamMembers(teamMembers)
-                } ?: run {
-                    +"Загрузка..."
-                }
+                } ?: run { loading() }
                 if (isAdmin) {
                     child(AddTeamMemberForm::class) {
                         attrs.coroutineScope = props.coroutineScope
