@@ -1,6 +1,6 @@
 package pages
 
-import adminPageComponents.CKEditorComponent
+import adminPageComponents.EditorComponent
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
 
     override fun RBuilder.render() {
         if (document.cookie.contains("role=admin") && (state.summerCampHtml != null)) {
-            child(CKEditorComponent::class) {
+            child(EditorComponent::class) {
                 attrs.text = state.summerCampHtml!!
                 attrs.coroutineScope = props.coroutineScope
                 attrs.url = "htmlPages/SummerCamp.html"

@@ -11,7 +11,6 @@ external interface CKEditorProps: RProps {
     var onReady: (dynamic) -> Unit
     var onChange: (dynamic, dynamic) -> Unit
     var title: String
-//    var author: String
     var text: String
 }
 

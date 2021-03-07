@@ -84,8 +84,3 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
         }
     }
 }
-
-
-
-
-

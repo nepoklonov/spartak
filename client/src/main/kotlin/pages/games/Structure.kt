@@ -76,10 +76,11 @@ class Games : RComponent<GamesProps, GamesState>() {
             }
 
 
+            console.log(allGamesWithTeams, teamMap)
             setState {
                 this.allGamesWithTeams = allGamesWithTeams
-                this.inputs["teamA"]!!.options = teamMap
-                this.inputs["teamB"]!!.options = teamMap
+                this.inputs["teamAId"]!!.options = teamMap
+                this.inputs["teamBId"]!!.options = teamMap
             }
         }
     }

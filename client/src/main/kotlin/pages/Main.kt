@@ -3,7 +3,7 @@ package pages
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import adminPageComponents.CKEditorComponent
+import adminPageComponents.EditorComponent
 import pageComponents.MainNews
 import react.*
 import react.dom.InnerHTML
@@ -38,7 +38,7 @@ class Main : RComponent<MainProps, MainState>() {
 
     override fun RBuilder.render() {
         if (document.cookie.contains("role=admin") && (state.mainHtml != null)) {
-            child(CKEditorComponent::class) {
+            child(EditorComponent::class) {
                 attrs.text = state.mainHtml!!
                 attrs.url = "htmlPages/Main.html"
                 attrs.coroutineScope = props.coroutineScope

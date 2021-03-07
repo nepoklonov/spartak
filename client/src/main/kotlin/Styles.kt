@@ -3,6 +3,7 @@ import kotlinx.css.*
 import kotlinx.css.properties.LineHeight
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.boxShadow
+import kotlinx.html.BUTTON
 import kotlinx.html.DIV
 import kotlinx.html.H1
 import react.RBuilder
@@ -39,7 +40,6 @@ object Styles : StyleSheet("main") {
         paddingLeft = 50.px
         paddingRight = 50.px
         cursor = Cursor.pointer
-        margin(left = 0.px)
     }
 }
 
@@ -95,27 +95,26 @@ fun RBuilder.smallHeaderText(block: StyledDOMBuilder<H1>.() -> Unit) = styledH1 
     block()
 }
 
-fun RBuilder.buttonMain(text: String) {
-    styledButton {
-        +text
-        css {
-            +Styles.button
-            backgroundColor = SpartakColors.mainButton
-            hover {
-                backgroundColor = SpartakColors.mainButtonHover
-            }
-        }
-    }
-}
+fun RBuilder.buttonMain(text: String) =
+    customButton(text, SpartakColors.mainButton)
 
-fun RBuilder.buttonSecondary(text: String) {
+fun RBuilder.buttonSecondary(text: String) =
+    customButton(text, SpartakColors.secondaryButton)
+
+fun RBuilder.customButton(text: String, background: Color, block: StyledDOMBuilder<BUTTON>.() -> Unit = { }) {
     styledButton {
         +text
+        block()
         css {
             +Styles.button
-            backgroundColor = SpartakColors.secondaryButton
+            backgroundColor = background
             hover {
-                backgroundColor = SpartakColors.secondaryButtonHover
+                backgroundColor = background.darken(10)
+            }
+            active {
+                backgroundColor = background.darken(20)
+                position = Position.relative
+                top = 1.px
             }
         }
     }

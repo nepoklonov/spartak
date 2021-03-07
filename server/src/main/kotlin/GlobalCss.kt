@@ -42,6 +42,7 @@ val globalCss = CSSBuilder().apply {
         fontSize = 20.px
         lineHeight = 24.px.lh
     }
+    //TODO: убрать дублирование здесь и в Styles.kt
     button {
         backgroundColor = Color("#9D0707")
         hover {
@@ -56,7 +57,7 @@ val globalCss = CSSBuilder().apply {
         paddingLeft = 50.px
         paddingRight = 50.px
         cursor = Cursor.pointer
-        margin = 10.px.toString()
+        margin(10.px, 0.px)
     }
     rule(".news-img") {
         width = 32.pct

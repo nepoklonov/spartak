@@ -1,6 +1,6 @@
 package pageComponents
 
-import adminPageComponents.CKEditorComponent
+import adminPageComponents.EditorComponent
 import buttonSecondary
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
@@ -62,7 +62,7 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
 
     override fun RBuilder.render() {
         if (document.cookie.contains("role=admin")&& (state.longNews?.news != null)) {
-            child(CKEditorComponent::class) {
+            child(EditorComponent::class) {
                 attrs.text = state.longNews?.news!!
                 attrs.coroutineScope = props.coroutineScope
                 attrs.url = "newsHtml/${props.selectedNewsId}.html"
