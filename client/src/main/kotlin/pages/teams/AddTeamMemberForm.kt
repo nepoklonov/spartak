@@ -1,14 +1,19 @@
 package pages.teams
 
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
+import consts.teamMemberInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.TeamMemberDTO
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.TeamService
 import styled.styledForm
 
@@ -17,9 +22,9 @@ external interface AddTeamMemberFormProps : RProps {
     var selectedTeam: String
 }
 
-class AddTeamMemberFormState : RState {
+class AddTeamMemberFormState : FormState {
     var addTeamMemberForm: Boolean = false
-    var teamMemberInputs: MutableMap<String, Input> = Consts.teamMemberInputs
+    override var inputs: MutableMap<String, Input> = teamMemberInputs
 }
 
 class AddTeamMemberForm : RComponent<AddTeamMemberFormProps, AddTeamMemberFormState>() {
@@ -28,7 +33,8 @@ class AddTeamMemberForm : RComponent<AddTeamMemberFormProps, AddTeamMemberFormSt
         get() = props.coroutineScope.coroutineContext
 
     init {
-        state = AddTeamMemberFormState()
+        state.addTeamMemberForm = false
+        state.inputs = teamMemberInputs
     }
 
     override fun RBuilder.render() {
@@ -40,14 +46,14 @@ class AddTeamMemberForm : RComponent<AddTeamMemberFormProps, AddTeamMemberFormSt
             }
         } else {
             styledForm {
+                console.log(state.inputs)
                 attrs.onSubmitFunction = { event ->
-                    console.log(state.teamMemberInputs)
                     event.preventDefault()
                     event.stopPropagation()
                     val teamService = TeamService(coroutineContext)
                     props.coroutineScope.launch {
                         var formIsCompleted = true
-                        state.teamMemberInputs.values.forEach {
+                        state.inputs.values.forEach {
                             if (it.isRed) {
                                 formIsCompleted = false
                             }
@@ -57,28 +63,20 @@ class AddTeamMemberForm : RComponent<AddTeamMemberFormProps, AddTeamMemberFormSt
                                 TeamMemberDTO(
                                     null,
                                     props.selectedTeam,
-                                    state.teamMemberInputs["number"]!!.inputValue,
+                                    state.inputs["number"]!!.inputValue,
                                     "address.png",
-                                    state.teamMemberInputs["firstName"]!!.inputValue,
-                                    state.teamMemberInputs["lastName"]!!.inputValue,
-                                    state.teamMemberInputs["role"]!!.inputValue,
-                                    state.teamMemberInputs["birthday"]!!.inputValue,
-                                    state.teamMemberInputs["city"]!!.inputValue,
-                                    state.teamMemberInputs["teamRole"]!!.inputValue
+                                    state.inputs["firstName"]!!.inputValue,
+                                    state.inputs["lastName"]!!.inputValue,
+                                    state.inputs["role"]!!.inputValue,
+                                    state.inputs["birthday"]!!.inputValue,
+                                    state.inputs["city"]!!.inputValue,
+                                    state.inputs["teamRole"]!!.inputValue
                                 )
                             )
                         }
                     }
                 }
-                child(FormComponent::class) {
-                    attrs.inputs = state.teamMemberInputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.teamMemberInputs[key]!!.inputValue = value
-                            state.teamMemberInputs[key]!!.isRed = isRed
-                        }
-                    }
-                }
+                formComponent(this)
             }
         }
     }

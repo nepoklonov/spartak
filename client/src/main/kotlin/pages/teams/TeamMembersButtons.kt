@@ -1,14 +1,18 @@
 package pages.teams
 
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.TeamMemberDTO
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.TeamService
 import styled.styledForm
 
@@ -18,14 +22,15 @@ external interface TeamMembersButtonsProps : RProps {
     var selectedTeam: String
 }
 
-class TeamMembersButtonsState : RState {
-    var teamMemberInputs: MutableMap<String, Input> = Consts.teamMemberInputs
+class TeamMembersButtonsState : FormState {
+    override var inputs: MutableMap<String, Input> = consts.teamMemberInputs
     var editTeamMemberForm: TeamMemberDTO? = null
 }
 
 class TeamMembersButtons: RComponent<TeamMembersButtonsProps, TeamMembersButtonsState>() {
     init{
-        state = TeamMembersButtonsState()
+        state.inputs = consts.teamMemberInputs
+        state.editTeamMemberForm = null
     }
 
     private val coroutineContext
@@ -43,25 +48,25 @@ class TeamMembersButtons: RComponent<TeamMembersButtonsProps, TeamMembersButtons
             adminButton(AdminButtonType.Edit) {
                 setState {
                     editTeamMemberForm = props.teamMember
-                    teamMemberInputs["number"]!!.inputValue = props.teamMember.number
-                    teamMemberInputs["firstName"]!!.inputValue = props.teamMember.firstName
-                    teamMemberInputs["lastName"]!!.inputValue = props.teamMember.lastName
-                    teamMemberInputs["role"]!!.inputValue = props.teamMember.role
-                    teamMemberInputs["birthday"]!!.inputValue = props.teamMember.birthday
-                    teamMemberInputs["city"]!!.inputValue = props.teamMember.city
-                    teamMemberInputs["teamRole"]!!.inputValue = props.teamMember.number
+                    inputs["number"]!!.inputValue = props.teamMember.number
+                    inputs["firstName"]!!.inputValue = props.teamMember.firstName
+                    inputs["lastName"]!!.inputValue = props.teamMember.lastName
+                    inputs["role"]!!.inputValue = props.teamMember.role
+                    inputs["birthday"]!!.inputValue = props.teamMember.birthday
+                    inputs["city"]!!.inputValue = props.teamMember.city
+                    inputs["teamRole"]!!.inputValue = props.teamMember.number
                 }
             }
         } else {
             styledForm {
                 attrs.onSubmitFunction = { event ->
-                    console.log(state.teamMemberInputs)
+                    console.log(state.inputs)
                     event.preventDefault()
                     event.stopPropagation()
                     val teamService = TeamService(coroutineContext)
                     props.coroutineScope.launch {
                         var formIsCompleted = true
-                        state.teamMemberInputs.values.forEach {
+                        state.inputs.values.forEach {
                             if (it.isRed) {
                                 formIsCompleted = false
                             }
@@ -71,28 +76,20 @@ class TeamMembersButtons: RComponent<TeamMembersButtonsProps, TeamMembersButtons
                                 TeamMemberDTO(
                                     props.teamMember.id,
                                     props.selectedTeam,
-                                    state.teamMemberInputs["number"]!!.inputValue,
+                                    state.inputs["number"]!!.inputValue,
                                     "address.png",
-                                    state.teamMemberInputs["firstName"]!!.inputValue,
-                                    state.teamMemberInputs["lastName"]!!.inputValue,
-                                    state.teamMemberInputs["role"]!!.inputValue,
-                                    state.teamMemberInputs["birthday"]!!.inputValue,
-                                    state.teamMemberInputs["city"]!!.inputValue,
-                                    state.teamMemberInputs["teamRole"]!!.inputValue
+                                    state.inputs["firstName"]!!.inputValue,
+                                    state.inputs["lastName"]!!.inputValue,
+                                    state.inputs["role"]!!.inputValue,
+                                    state.inputs["birthday"]!!.inputValue,
+                                    state.inputs["city"]!!.inputValue,
+                                    state.inputs["teamRole"]!!.inputValue
                                 )
                             )
                         }
                     }
                 }
-                child(FormComponent::class) {
-                    attrs.inputs = state.teamMemberInputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.teamMemberInputs[key]!!.inputValue = value
-                            state.teamMemberInputs[key]!!.isRed = isRed
-                        }
-                    }
-                }
+                formComponent(this)
             }
         }
     }

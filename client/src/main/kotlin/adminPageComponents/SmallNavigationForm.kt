@@ -1,7 +1,14 @@
 package adminPageComponents
 
+import consts.Input
+import consts.navigationInputs
 import kotlinx.html.js.onSubmitFunction
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import styled.styledForm
 
 external interface SmallNavigationFormProps : RProps {
@@ -9,16 +16,13 @@ external interface SmallNavigationFormProps : RProps {
     var onSubmitFunction: (List<String>) -> Unit
 }
 
-class SmallNavigationFormState : RState {
-    val inputs: MutableMap<String, Input> = mutableMapOf(
-        "sectionName" to Input("Название раздела", "sectionName"),
-        "sectionLink" to Input("Ссылка", "sectionLink")
-    )
+class SmallNavigationFormState : FormState {
+    override var inputs: MutableMap<String, Input> = navigationInputs
 }
 
 class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigationFormState>() {
     init {
-        state = SmallNavigationFormState()
+        state.inputs = navigationInputs
     }
 
     override fun componentDidMount(){
@@ -50,15 +54,7 @@ class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigation
                     props.onSubmitFunction(listOfInputValues)
                 }
             }
-            child(FormComponent::class) {
-                attrs.inputs = state.inputs
-                attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                    setState {
-                        state.inputs[key]!!.inputValue = value
-                        state.inputs[key]!!.isRed = isRed
-                    }
-                }
-            }
+            formComponent(this)
         }
     }
 }

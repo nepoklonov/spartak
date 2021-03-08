@@ -1,7 +1,7 @@
 package structure
 
 import kotlinx.css.*
-import Consts.TextWithIcon
+import consts.TextWithIcon
 import react.RBuilder
 import react.RComponent
 import react.RProps

@@ -1,8 +1,8 @@
 package pages.games
 
-import Consts.gameInputs
-import Consts.tableHeaders
-import adminPageComponents.Input
+import consts.Input
+import consts.gameInputs
+import consts.tableHeaders
 import content
 import grid
 import gridArea

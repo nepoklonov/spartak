@@ -1,7 +1,7 @@
 package pages.teams
 
-import Consts.roleMap
-import adminPageComponents.Input
+import consts.Input
+import consts.roleMap
 import content
 import grid
 import header
@@ -31,9 +31,9 @@ class TeamsState : RState {
     var team: TeamDTO? = null
     var trainer: TrainerDTO? = null
     var teamMembersWithRoles: Map<String, List<TeamMemberDTO>>? = null
-    var teamInputs: MutableMap<String, Input> = Consts.teamInputs
-    var trainerInputs: MutableMap<String, Input> = Consts.trainerInputs
-    var teamMemberInputs: MutableMap<String, Input> = Consts.teamMemberInputs
+    var teamInputs: MutableMap<String, Input> = consts.teamInputs
+    var trainerInputs: MutableMap<String, Input> = consts.trainerInputs
+    var teamMemberInputs: MutableMap<String, Input> = consts.teamMemberInputs
     var addTrainerForm: Boolean = false
     var addTeamMemberForm: Boolean = false
     var editTrainerForm: TrainerDTO? = null

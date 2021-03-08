@@ -1,14 +1,18 @@
 package pages.teams
 
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.TrainerDTO
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.TrainerService
 import styled.styledForm
 
@@ -18,14 +22,15 @@ external interface TrainerButtonsProps : RProps {
     var selectedTeam: String
 }
 
-class TrainerButtonsState : RState {
-    var trainerInputs: MutableMap<String, Input> = Consts.trainerInputs
+class TrainerButtonsState : FormState {
+    override var inputs: MutableMap<String, Input> = consts.trainerInputs
     var editTrainerForm: TrainerDTO? = null
 }
 
 class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
     init {
-        state = TrainerButtonsState()
+        state.inputs = consts.trainerInputs
+        state.editTrainerForm = null
     }
 
     private val coroutineContext
@@ -42,8 +47,8 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
             adminButton(AdminButtonType.Edit) {
                 setState {
                     editTrainerForm = props.trainer
-                    state.trainerInputs["name"]!!.inputValue = props.trainer.name
-                    state.trainerInputs["info"]!!.inputValue = props.trainer.info
+                    state.inputs["name"]!!.inputValue = props.trainer.name
+                    state.inputs["info"]!!.inputValue = props.trainer.info
                 }
             }
         } else {
@@ -54,7 +59,7 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                     val trainerService = TrainerService(coroutineContext)
                     props.coroutineScope.launch {
                         var formIsCompleted = true
-                        state.trainerInputs.values.forEach {
+                        state.inputs.values.forEach {
                             if (it.isRed) {
                                 formIsCompleted = false
                             }
@@ -65,22 +70,14 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                                     props.trainer.id,
                                     props.selectedTeam,
                                     "address.png",
-                                    state.trainerInputs["name"]!!.inputValue,
-                                    state.trainerInputs["info"]!!.inputValue,
+                                    state.inputs["name"]!!.inputValue,
+                                    state.inputs["info"]!!.inputValue,
                                 )
                             )
                         }
                     }
                 }
-                child(FormComponent::class) {
-                    attrs.inputs = state.trainerInputs
-                    attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                        setState {
-                            state.trainerInputs[key]!!.inputValue = value
-                            state.trainerInputs[key]!!.isRed = isRed
-                        }
-                    }
-                }
+                formComponent(this)
             }
         }
 

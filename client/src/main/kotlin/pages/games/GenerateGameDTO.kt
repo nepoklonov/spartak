@@ -1,6 +1,6 @@
 package pages.games
 
-import adminPageComponents.Input
+import consts.Input
 import model.GameDTO
 
 fun generateGameDTO(inputs: MutableMap<String, Input>, id: Int?, selectedChampionship: String): GameDTO {
@@ -9,8 +9,8 @@ fun generateGameDTO(inputs: MutableMap<String, Input>, id: Int?, selectedChampio
         inputs["date"]!!.inputValue,
         inputs["time"]!!.inputValue,
         selectedChampionship,
-        inputs["teamA"]!!.inputValue.toInt(),
-        inputs["teamB"]!!.inputValue.toInt(),
+        inputs["teamAId"]!!.inputValue.toInt(),
+        inputs["teamBId"]!!.inputValue.toInt(),
         inputs["stadium"]!!.inputValue,
         inputs["result"]!!.inputValue,
     )

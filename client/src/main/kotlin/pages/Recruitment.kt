@@ -1,7 +1,9 @@
 package pages
 
-import Consts.recruitmentInputs
-import adminPageComponents.*
+import adminPageComponents.AdminButtonType
+import adminPageComponents.EditorComponent
+import adminPageComponents.adminButton
+import consts.recruitmentInputs
 import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -9,23 +11,24 @@ import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import loading
 import model.RecruitmentDTO
-import pageComponents.*
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
 import react.dom.InnerHTML
+import react.setState
 import services.HtmlService
 import services.RecruitmentService
-import styled.*
+import styled.css
+import styled.styledDiv
+import styled.styledForm
 
 external interface RecruitmentProps : RProps {
     var coroutineScope: CoroutineScope
 }
 
-interface FormState : RState {
-    var inputs: MutableMap<String, Input>
-}
-
 class RecruitmentState : FormState {
-    var error: Throwable? = null
     var recruitmentHtml: String? = null
     var recruitments: List<RecruitmentDTO>? = null
     override var inputs = recruitmentInputs
@@ -33,7 +36,6 @@ class RecruitmentState : FormState {
 
 class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
     init {
-        state.error = null
         state.recruitmentHtml = null
         state.recruitments = null
         state.inputs = recruitmentInputs
@@ -49,23 +51,8 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
         val recruitmentService = RecruitmentService(coroutineContext)
 
         props.coroutineScope.launch {
-
-            val recruitmentHtml = try {
-                htmlService.getHtml("htmlPages/Recruitment.html")
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
-            val recruitments = try {
-                recruitmentService.getAllRecruitments()
-            } catch (e: Throwable) {
-                setState {
-                    error = e
-                }
-                return@launch
-            }
+            val recruitmentHtml = htmlService.getHtml("htmlPages/Recruitment.html")
+            val recruitments = recruitmentService.getAllRecruitments()
             setState {
                 this.recruitmentHtml = recruitmentHtml
                 this.recruitments = recruitments
@@ -155,15 +142,6 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         }
                     }
                     formComponent(this)
-//                    child(FormComponent::class) {
-//                        attrs.inputs = state.inputs
-//                        attrs.updateState = { key: String, value: String, isRed: Boolean ->
-//                            setState {
-//                                state.inputs[key]!!.inputValue = value
-//                                state.inputs[key]!!.isRed = isRed
-//                            }
-//                        }
-//                    }
                 }
             }
             if (isAdmin) {
@@ -182,18 +160,6 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         }
                     }
                 }
-            }
-        }
-    }
-}
-
-fun Recruitment.formComponent(builder: RBuilder) {
-    builder.child(FormComponent::class) {
-        attrs.inputs = state.inputs
-        attrs.updateState = { key: String, value: String, isRed: Boolean ->
-            setState {
-                state.inputs[key]!!.inputValue = value
-                state.inputs[key]!!.isRed = isRed
             }
         }
     }

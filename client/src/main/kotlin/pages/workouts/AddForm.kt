@@ -1,14 +1,18 @@
 package pages.workouts
 
-import Consts.workoutsInputs
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
+import consts.workoutsInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.WorkoutsService
 import styled.styledDiv
 import styled.styledForm
@@ -18,9 +22,9 @@ external interface AddFormProps : RProps {
     var selectedWorkout: String
 }
 
-class AddFormState : RState {
+class AddFormState : FormState {
     var addForm: Boolean = false
-    var inputs: MutableMap<String, Input> = workoutsInputs
+    override var inputs: MutableMap<String, Input> = workoutsInputs
 }
 
 class AddForm: RComponent<AddFormProps, AddFormState>() {
@@ -29,7 +33,8 @@ class AddForm: RComponent<AddFormProps, AddFormState>() {
         get() = props.coroutineScope.coroutineContext
 
     init {
-        state = AddFormState()
+        state.addForm = false
+        state.inputs = workoutsInputs
     }
 
     private fun RBuilder.addForm() {
@@ -52,15 +57,7 @@ class AddForm: RComponent<AddFormProps, AddFormState>() {
                     }
                 }
             }
-            child(FormComponent::class) {
-                attrs.inputs = state.inputs
-                attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                    setState {
-                        state.inputs[key]!!.inputValue = value
-                        state.inputs[key]!!.isRed = isRed
-                    }
-                }
-            }
+            formComponent(this)
         }
     }
 

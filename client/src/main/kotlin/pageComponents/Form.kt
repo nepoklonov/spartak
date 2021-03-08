@@ -1,7 +1,8 @@
-package adminPageComponents
+package pageComponents
 
 import SpartakColors
 import buttonMain
+import consts.Input
 import kotlinx.css.color
 import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
@@ -10,18 +11,9 @@ import org.w3c.dom.HTMLSelectElement
 import react.*
 import styled.*
 
-data class Input(
-    val header: String,
-    val inputName: String,
-    var inputValue: String = "",
-    var isRed: Boolean = false,
-    val isSelect: Boolean = false,
-    var options: Map<String, String> = mapOf(),
-    val allowOtherOption: Boolean = false,
-    var otherOption: Boolean = false,
-    val isDateTime: Boolean = false,
-    val isNecessary: Boolean = true
-)
+interface FormState : RState {
+    var inputs: MutableMap<String, Input>
+}
 
 external interface FormViewComponentProps : RProps {
     var inputs: MutableMap<String, Input>
@@ -31,6 +23,18 @@ external interface FormViewComponentProps : RProps {
 
 class FormViewComponentState : RState {
     var otherOption: Boolean = false
+}
+
+fun RComponent<out RProps, out FormState>.formComponent(builder: RBuilder) {
+    builder.child(FormComponent::class) {
+        attrs.inputs = state.inputs
+        attrs.updateState = { key: String, value: String, isRed: Boolean ->
+            setState {
+                state.inputs[key]!!.inputValue = value
+                state.inputs[key]!!.isRed = isRed
+            }
+        }
+    }
 }
 
 class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>() {
@@ -116,6 +120,24 @@ class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>
         }
     }
 
+    private fun RBuilder.fileInput(it: Input,  key: String){
+        styledInput(type = InputType.file) {
+            attrs {
+                name = it.inputName
+                value = it.inputValue
+                console.log(it.inputValue)
+                onChangeFunction = { event ->
+                    val target = event.target as HTMLInputElement
+                    var isRed = false
+                    if (target.value == "") {
+                        isRed = true
+                    }
+                    props.updateState(key, target.value, isRed)
+                }
+            }
+        }
+    }
+
     private fun RBuilder.addStyledInput(it: Input, key: String) {
         styledDiv {
             styledH3 {
@@ -132,6 +154,9 @@ class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>
                 }
                 it.isDateTime -> {
                     datetimeOrTextInput(it, InputType.dateTimeLocal, key)
+                }
+                it.isFile -> {
+                    fileInput(it, key)
                 }
                 else -> {
                     datetimeOrTextInput(it, InputType.text, key)

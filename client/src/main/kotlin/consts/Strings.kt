@@ -1,4 +1,4 @@
-package Consts
+package consts
 
 enum class TextWithIcon(val header: String, val iconSrc: String, val text: String, val isLinked: Boolean) {
     Phone("Телефон:", "/images/phone-call.png", "8\u2011999\u2011064\u201173\u201163", false),

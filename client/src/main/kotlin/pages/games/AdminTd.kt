@@ -1,14 +1,18 @@
 package pages.games
 
-import Consts.gameInputs
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
+import consts.gameInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.GameService
 import styled.styledDiv
 import styled.styledForm
@@ -19,14 +23,15 @@ external interface AdminTdProps : RProps {
     var selectedChampionship: String
 }
 
-class AdminTdState : RState {
-    var inputs: MutableMap<String, Input> = gameInputs
+class AdminTdState : FormState {
+    override var inputs: MutableMap<String, Input> = gameInputs
     var editGameForm: GameWithTeams? = null
 }
 
 class AdminTd : RComponent<AdminTdProps, AdminTdState>() {
     init {
-        state = AdminTdState()
+        state.inputs = gameInputs
+        state.editGameForm = null
     }
 
     private val coroutineContext
@@ -46,8 +51,8 @@ class AdminTd : RComponent<AdminTdProps, AdminTdState>() {
                     editGameForm = props.game
                     inputs["date"]!!.inputValue = props.game.date
                     inputs["time"]!!.inputValue = props.game.time ?: ""
-                    inputs["teamA"]!!.inputValue = props.game.teamA?.link ?: ""
-                    inputs["teamB"]!!.inputValue = props.game.teamB?.link ?: ""
+                    inputs["teamAId"]!!.inputValue = props.game.teamA?.link ?: ""
+                    inputs["teamBId"]!!.inputValue = props.game.teamB?.link ?: ""
                     inputs["stadium"]!!.inputValue = props.game.stadium
                     inputs["result"]!!.inputValue = props.game.result ?: ""
                 }
@@ -73,17 +78,7 @@ class AdminTd : RComponent<AdminTdProps, AdminTdState>() {
                             }
                         }
                     }
-                    child(FormComponent::class) {
-                        console.log(state.inputs)
-                        attrs.inputs = state.inputs
-                        attrs.updateState =
-                            { key: String, value: String, isRed: Boolean ->
-                                setState {
-                                    state.inputs[key]!!.inputValue = value
-                                    state.inputs[key]!!.isRed = isRed
-                                }
-                            }
-                    }
+                    formComponent(this)
                 }
             }
         }

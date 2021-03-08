@@ -1,21 +1,24 @@
 package pages.workouts
 
-import Consts.monday
-import Consts.workoutsInputs
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
+import consts.monday
+import consts.workoutsInputs
 import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.WorkoutDTO
-import react.*
+import pageComponents.FormState
+import pageComponents.formComponent
+import react.RBuilder
+import react.RComponent
+import react.RProps
+import react.setState
 import services.WorkoutsService
 import styled.styledForm
 import styled.styledTd
-import kotlin.js.Date
 
 external interface AdminTdProps : RProps {
     var coroutineScope: CoroutineScope
@@ -23,14 +26,15 @@ external interface AdminTdProps : RProps {
     var selectedWorkout: String
 }
 
-class AdminTdState : RState {
-    var inputs: MutableMap<String, Input> = workoutsInputs
+class AdminTdState : FormState {
+    override var inputs: MutableMap<String, Input> = workoutsInputs
     var editWorkoutForm: WorkoutDTO? = null
 }
 
 class AdminTd: RComponent<AdminTdProps, AdminTdState>() {
     init{
-        state = AdminTdState()
+        state.inputs = workoutsInputs
+        state.editWorkoutForm = null
     }
 
     private val coroutineContext
@@ -75,15 +79,7 @@ class AdminTd: RComponent<AdminTdProps, AdminTdState>() {
                                 }
                             }
                         }
-                        child(FormComponent::class) {
-                            attrs.inputs = state.inputs
-                            attrs.updateState = { key: String, value: String, isRed: Boolean ->
-                                setState {
-                                    state.inputs[key]!!.inputValue = value
-                                    state.inputs[key]!!.isRed = isRed
-                                }
-                            }
-                        }
+                        formComponent(this)
                     }
                 }
             }

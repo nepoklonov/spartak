@@ -1,13 +1,13 @@
 package pages.games
 
 import adminPageComponents.AdminButtonType
-import adminPageComponents.FormComponent
-import adminPageComponents.Input
 import adminPageComponents.adminButton
+import consts.Input
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.TeamDTO
+import pageComponents.FormComponent
 import react.*
 import services.GameService
 import services.TeamService
@@ -20,7 +20,7 @@ external interface AddFormProps : RProps {
 
 class AddFormState : RState {
     var addGameForm: Boolean = false
-    var inputs: MutableMap<String, Input> = Consts.gameInputs
+    var inputs: MutableMap<String, Input> = consts.gameInputs
 }
 
 class AddForm: RComponent<AddFormProps, AddFormState>() {
@@ -81,9 +81,9 @@ class AddForm: RComponent<AddFormProps, AddFormState>() {
                             team.id = id
                             setState {
                                 if (isItTeamA) {
-                                    inputs["teamA"]!!.inputValue = id.toString()
+                                    inputs["teamAId"]!!.inputValue = id.toString()
                                 } else {
-                                    inputs["teamB"]!!.inputValue = id.toString()
+                                    inputs["teamBId"]!!.inputValue = id.toString()
                                 }
                             }
                         }

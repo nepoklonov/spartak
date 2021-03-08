@@ -1,6 +1,27 @@
-package Consts
+package consts
 
-import adminPageComponents.Input
+data class Input(
+    val header: String,
+    val inputName: String,
+    var inputValue: String = "",
+    var isRed: Boolean = false,
+    val isSelect: Boolean = false,
+    var options: Map<String, String> = mapOf(),
+    val allowOtherOption: Boolean = false,
+    var otherOption: Boolean = false,
+    val isDateTime: Boolean = false,
+    val isNecessary: Boolean = true,
+    val isFile: Boolean = false
+)
+
+val galleryInputs = listOf(
+    Input("Фото", "photo", isFile = true),
+).associateBy { it.inputName }.toMutableMap()
+
+val navigationInputs = listOf(
+    Input("Название раздела", "sectionName"),
+    Input("Ссылка", "sectionLink")
+).associateBy { it.inputName }.toMutableMap()
 
 val gameInputs = listOf(
     Input("Дата", "date", isNecessary = false),
@@ -31,7 +52,7 @@ val recruitmentInputs = listOf(
         "Амплуа",
         "role",
         isSelect = true,
-        options = roleMap
+        options = mapOf("defenders" to "Защитники", "strikers" to "Нападающие", "goalkeepers" to "Вратари")
     ),
     Input("Хват клюшки", "stickGrip"),
     Input("Рост - Вес", "params"),
@@ -45,10 +66,10 @@ val teamMemberInputs = listOf(
     Input("Номер", "number"),
     Input("Имя", "firstName"),
     Input("Фамилия", "lastName"),
+    Input("Фото", "photo", isFile = true),
     Input(
         "Амплуа", "role", isSelect = true,
-        options = roleMap,
-        allowOtherOption = true
+        options = roleMap
     ),
     Input("Дата рождения", "birthday", isNecessary = false),
     Input("Город", "city", isNecessary = false),
@@ -62,6 +83,7 @@ val teamMemberInputs = listOf(
 
 val trainerInputs = listOf(
     Input("ФИО", "name"),
+    Input("Фото", "photo", isFile = true),
     Input("Информация", "info"),
 ).associateBy { it.inputName }.toMutableMap()
 

@@ -1,7 +1,7 @@
 package pages.workouts
 
-import Consts.monday
-import adminPageComponents.Input
+import consts.Input
+import consts.monday
 import model.WorkoutDTO
 import kotlin.js.Date
 

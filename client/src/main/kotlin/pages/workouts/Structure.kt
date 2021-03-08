@@ -1,7 +1,6 @@
 package pages.workouts
 
-import Consts.*
-import adminPageComponents.Input
+import consts.*
 import content
 import grid
 import header
