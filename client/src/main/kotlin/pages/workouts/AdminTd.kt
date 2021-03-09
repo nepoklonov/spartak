@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.WorkoutDTO
+import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
 import react.RBuilder
@@ -29,6 +30,7 @@ external interface AdminTdProps : RProps {
 class AdminTdState : FormState {
     override var inputs: MutableMap<String, Input> = workoutsInputs
     var editWorkoutForm: WorkoutDTO? = null
+    override var file: File? = null
 }
 
 class AdminTd: RComponent<AdminTdProps, AdminTdState>() {

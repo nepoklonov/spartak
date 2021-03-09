@@ -79,7 +79,7 @@ class AuthFormComponent : RComponent<AuthFormProps, AuthFormState>() {
             }
             styledInput {
                 attrs.type = InputType.submit
-                attrs.value = "Submit"
+                attrs.value = "Войти"
             }
         }
     }

@@ -1,5 +1,6 @@
 package structure
 
+import SpartakColors
 import kotlinx.css.*
 import kotlinx.css.properties.TextDecoration
 import kotlinx.css.properties.boxShadow
@@ -15,12 +16,14 @@ import styled.styledDiv
 enum class Pages(val header: String, val link: String) {
     Main("Главная", "/main"),
     News("Новости", "/news"),
-    Games("Игры", "/games"),
+    Games("Матчи", "/games"),
     Teams("Команды", "/teams"),
     Recruitment("Набор", "/recruitment"),
     Workouts("Тренировки", "/workouts"),
     SummerCamp("Летние Сборы", "/summerCamp"),
-    Gallery("Галерея", "/gallery")
+    Gallery("Галерея", "/gallery"),
+    About("О клубе", "/about"),
+    Products("Товары", "/products")
 }
 
 external interface MainNavigationProps : RProps {

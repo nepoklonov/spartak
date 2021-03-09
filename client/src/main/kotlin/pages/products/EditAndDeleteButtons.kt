@@ -1,12 +1,13 @@
-package pages.teams
+package pages.products
 
 import adminPageComponents.AdminButtonType
 import adminPageComponents.adminButton
 import consts.Input
+import consts.productInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
-import model.TrainerDTO
+import model.ProductDTO
 import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
@@ -14,43 +15,45 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.setState
-import services.TrainerService
+import services.ProductService
 import styled.styledForm
 
-external interface TrainerButtonsProps : RProps {
+external interface EditAndDeleteButtonsProps : RProps {
     var coroutineScope: CoroutineScope
-    var trainer: TrainerDTO
-    var selectedTeam: String
+    var product: ProductDTO
 }
 
-class TrainerButtonsState : FormState {
-    override var inputs: MutableMap<String, Input> = consts.trainerInputs
-    var editTrainerForm: TrainerDTO? = null
+class EditAndDeleteButtonsState : FormState {
+    override var inputs: MutableMap<String, Input> = productInputs
+    var editProduct: ProductDTO? = null
     override var file: File? = null
 }
 
-class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
+class EditAndDeleteButtons : RComponent<EditAndDeleteButtonsProps, EditAndDeleteButtonsState>() {
     init {
-        state.inputs = consts.trainerInputs
-        state.editTrainerForm = null
+        state.inputs = productInputs
+        state.editProduct = null
+        state.file = null
     }
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
+
     override fun RBuilder.render() {
         adminButton(AdminButtonType.Delete) {
-            val trainerService = TrainerService(coroutineContext)
+            val productService = ProductService(coroutineContext)
             props.coroutineScope.launch {
-                trainerService.deleteTrainer(props.trainer.id!!)
+                productService.deleteProduct(props.product.id!!)
             }
         }
-        if (state.editTrainerForm != props.trainer) {
+        if (state.editProduct != props.product) {
             adminButton(AdminButtonType.Edit) {
                 setState {
-                    editTrainerForm = props.trainer
-                    state.inputs["name"]!!.inputValue = props.trainer.name
-                    state.inputs["info"]!!.inputValue = props.trainer.info
+                    editProduct = props.product
+                    inputs["name"]!!.inputValue = props.product.name
+                    inputs["cost"]!!.inputValue = props.product.cost
+                    inputs["photo"]!!.inputValue = props.product.photo
                 }
             }
         } else {
@@ -58,7 +61,7 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                 attrs.onSubmitFunction = { event ->
                     event.preventDefault()
                     event.stopPropagation()
-                    val trainerService = TrainerService(coroutineContext)
+                    val productService = ProductService(coroutineContext)
                     props.coroutineScope.launch {
                         var formIsCompleted = true
                         state.inputs.values.forEach {
@@ -67,13 +70,12 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                             }
                         }
                         if (formIsCompleted) {
-                            trainerService.editTrainer(
-                                TrainerDTO(
-                                    props.trainer.id,
-                                    props.selectedTeam,
-                                    "address.png",
+                            productService.editProduct(
+                                ProductDTO(
+                                    props.product.id,
                                     state.inputs["name"]!!.inputValue,
-                                    state.inputs["info"]!!.inputValue,
+                                    state.inputs["cost"]!!.inputValue,
+                                    state.inputs["photo"]!!.inputValue,
                                 )
                             )
                         }
@@ -82,6 +84,5 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                 formComponent(this)
             }
         }
-
     }
 }

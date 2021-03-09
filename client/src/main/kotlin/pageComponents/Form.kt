@@ -8,17 +8,21 @@ import kotlinx.html.InputType
 import kotlinx.html.js.onChangeFunction
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLSelectElement
+import org.w3c.files.File
+import org.w3c.files.get
 import react.*
 import styled.*
 
 interface FormState : RState {
     var inputs: MutableMap<String, Input>
+    var file: File?
 }
 
 external interface FormViewComponentProps : RProps {
     var inputs: MutableMap<String, Input>
     var updateState: (String, String, Boolean) -> Unit
     var addOtherOption: (Boolean, String) -> Unit
+    var getFile: (File?)-> Unit
 }
 
 class FormViewComponentState : RState {
@@ -30,8 +34,13 @@ fun RComponent<out RProps, out FormState>.formComponent(builder: RBuilder) {
         attrs.inputs = state.inputs
         attrs.updateState = { key: String, value: String, isRed: Boolean ->
             setState {
-                state.inputs[key]!!.inputValue = value
-                state.inputs[key]!!.isRed = isRed
+                inputs[key]!!.inputValue = value
+                inputs[key]!!.isRed = isRed
+            }
+        }
+        attrs.getFile = {
+            setState{
+                file = it
             }
         }
     }
@@ -124,8 +133,6 @@ class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>
         styledInput(type = InputType.file) {
             attrs {
                 name = it.inputName
-                value = it.inputValue
-                console.log(it.inputValue)
                 onChangeFunction = { event ->
                     val target = event.target as HTMLInputElement
                     var isRed = false
@@ -133,6 +140,7 @@ class FormComponent : RComponent<FormViewComponentProps, FormViewComponentState>
                         isRed = true
                     }
                     props.updateState(key, target.value, isRed)
+                    props.getFile(target.files?.get(0))
                 }
             }
         }

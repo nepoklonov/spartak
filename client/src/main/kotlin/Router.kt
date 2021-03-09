@@ -5,6 +5,7 @@ import pages.gallery.Gallery
 import pages.gallery.GalleryProps
 import pages.games.Games
 import pages.games.GamesProps
+import pages.products.Products
 import pages.teams.Teams
 import pages.teams.TeamsProps
 import pages.workouts.Workouts
@@ -115,6 +116,18 @@ class Router : RComponent<RouterProps, RouterState>() {
                 child(Gallery::class) {
                     attrs.coroutineScope = props.coroutineScope
                     attrs.selectedGallerySection = galleryProps.match.params.selectedGallerySection
+                }
+            }
+
+            route("/about") {
+                child(About::class) {
+                    attrs.coroutineScope = props.coroutineScope
+                }
+            }
+
+            route("/products") {
+                child(Products::class) {
+                    attrs.coroutineScope = props.coroutineScope
                 }
             }
         }

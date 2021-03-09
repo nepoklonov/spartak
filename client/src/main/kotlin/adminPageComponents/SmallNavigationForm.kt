@@ -3,6 +3,7 @@ package adminPageComponents
 import consts.Input
 import consts.navigationInputs
 import kotlinx.html.js.onSubmitFunction
+import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
 import react.RBuilder
@@ -18,6 +19,7 @@ external interface SmallNavigationFormProps : RProps {
 
 class SmallNavigationFormState : FormState {
     override var inputs: MutableMap<String, Input> = navigationInputs
+    override var file: File? = null
 }
 
 class SmallNavigationForm : RComponent<SmallNavigationFormProps, SmallNavigationFormState>() {

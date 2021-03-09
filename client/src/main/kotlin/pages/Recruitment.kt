@@ -11,6 +11,7 @@ import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import loading
 import model.RecruitmentDTO
+import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
 import react.RBuilder
@@ -32,6 +33,7 @@ class RecruitmentState : FormState {
     var recruitmentHtml: String? = null
     var recruitments: List<RecruitmentDTO>? = null
     override var inputs = recruitmentInputs
+    override var file: File? = null
 }
 
 class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {

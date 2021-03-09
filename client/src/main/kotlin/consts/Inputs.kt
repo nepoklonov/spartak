@@ -14,6 +14,12 @@ data class Input(
     val isFile: Boolean = false
 )
 
+val productInputs = listOf(
+    Input("Название товара", "name"),
+    Input("Стоимость", "cost"),
+    Input("Фото", "photo", isFile = true)
+).associateBy { it.inputName }.toMutableMap()
+
 val galleryInputs = listOf(
     Input("Фото", "photo", isFile = true),
 ).associateBy { it.inputName }.toMutableMap()

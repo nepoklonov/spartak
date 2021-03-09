@@ -7,6 +7,7 @@ import consts.workoutsInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
+import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
 import react.RBuilder
@@ -25,6 +26,7 @@ external interface AddFormProps : RProps {
 class AddFormState : FormState {
     var addForm: Boolean = false
     override var inputs: MutableMap<String, Input> = workoutsInputs
+    override var file: File? = null
 }
 
 class AddForm: RComponent<AddFormProps, AddFormState>() {

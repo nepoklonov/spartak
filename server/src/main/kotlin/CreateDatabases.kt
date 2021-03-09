@@ -15,5 +15,6 @@ fun createDatabases(){
         SchemaUtils.create(GallerySections)
         SchemaUtils.create(GamesSections)
         SchemaUtils.create(WorkoutsSections)
+        SchemaUtils.create(Products)
     }
 }

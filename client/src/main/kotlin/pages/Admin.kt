@@ -23,13 +23,13 @@ class Admin : RComponent<AdminProps, RState>() {
                 attrs.coroutineScope = props.coroutineScope
             }
         }
-        styledButton {
-            attrs.onClickFunction = {
-                document.cookie = "role=admin"
-                console.log(document.cookie)
-            }
-            +"войти"
-        }
+//        styledButton {
+//            attrs.onClickFunction = {
+//                document.cookie = "role=admin"
+//                console.log(document.cookie)
+//            }
+//            +"войти"
+//        }
         styledButton {
             attrs.onClickFunction = {
                 document.cookie = "role=basic"

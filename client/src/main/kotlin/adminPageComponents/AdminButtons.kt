@@ -1,10 +1,7 @@
 package adminPageComponents
 
 import isAdmin
-import kotlinx.css.Cursor
-import kotlinx.css.cursor
-import kotlinx.css.px
-import kotlinx.css.width
+import kotlinx.css.*
 import kotlinx.html.js.onClickFunction
 import react.RBuilder
 import styled.css
@@ -21,6 +18,7 @@ fun RBuilder.adminButton(button: AdminButtonType, updateState: () -> Unit) {
         styledImg(src = button.src) {
             attrs.onClickFunction = { updateState() }
             css {
+                alignSelf = Align.flexStart
                 width = 20.px
                 cursor = Cursor.pointer
             }

@@ -94,6 +94,7 @@ fun Application.main() {
             rpc(WorkoutsNavigationService::class)
             rpc(MainNavigationService::class)
             rpc(HtmlService::class)
+            rpc(ProductService::class)
 
             post("upload/image") {
                 var location: String? = null

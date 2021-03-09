@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
 import model.TeamMemberDTO
+import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
 import react.RBuilder
@@ -25,6 +26,7 @@ external interface AddTeamMemberFormProps : RProps {
 class AddTeamMemberFormState : FormState {
     var addTeamMemberForm: Boolean = false
     override var inputs: MutableMap<String, Input> = teamMemberInputs
+    override var file: File? = null
 }
 
 class AddTeamMemberForm : RComponent<AddTeamMemberFormProps, AddTeamMemberFormState>() {

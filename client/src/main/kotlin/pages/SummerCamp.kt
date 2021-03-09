@@ -1,7 +1,7 @@
 package pages
 
 import adminPageComponents.EditorComponent
-import kotlinx.browser.document
+import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import loading
@@ -15,7 +15,6 @@ external interface SummerCampProps : RProps {
 }
 
 class SummerCampState : RState {
-    var error: Throwable? = null
     var summerCampHtml: String? = null
 }
 
@@ -36,7 +35,7 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
     }
 
     override fun RBuilder.render() {
-        if (document.cookie.contains("role=admin") && (state.summerCampHtml != null)) {
+        if ((isAdmin) && (state.summerCampHtml != null)) {
             child(EditorComponent::class) {
                 attrs.text = state.summerCampHtml!!
                 attrs.coroutineScope = props.coroutineScope

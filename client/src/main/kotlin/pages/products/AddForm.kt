@@ -1,12 +1,13 @@
-package pages.teams
+package pages.products
 
 import adminPageComponents.AdminButtonType
 import adminPageComponents.adminButton
 import consts.Input
+import consts.productInputs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.html.js.onSubmitFunction
-import model.TrainerDTO
+import model.ProductDTO
 import org.w3c.files.File
 import pageComponents.FormState
 import pageComponents.formComponent
@@ -14,43 +15,34 @@ import react.RBuilder
 import react.RComponent
 import react.RProps
 import react.setState
-import services.TrainerService
+import services.ProductService
 import styled.styledForm
 
-external interface TrainerButtonsProps : RProps {
+external interface AddFormProps : RProps {
     var coroutineScope: CoroutineScope
-    var trainer: TrainerDTO
-    var selectedTeam: String
 }
 
-class TrainerButtonsState : FormState {
-    override var inputs: MutableMap<String, Input> = consts.trainerInputs
-    var editTrainerForm: TrainerDTO? = null
+class AddFormState : FormState {
+    var addForm: Boolean = false
+    override var inputs: MutableMap<String, Input> = productInputs
     override var file: File? = null
 }
 
-class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
-    init {
-        state.inputs = consts.trainerInputs
-        state.editTrainerForm = null
-    }
+class AddForm : RComponent<AddFormProps, AddFormState>() {
 
     private val coroutineContext
         get() = props.coroutineScope.coroutineContext
 
+    init {
+        state.addForm = false
+        state.inputs = productInputs
+    }
+
     override fun RBuilder.render() {
-        adminButton(AdminButtonType.Delete) {
-            val trainerService = TrainerService(coroutineContext)
-            props.coroutineScope.launch {
-                trainerService.deleteTrainer(props.trainer.id!!)
-            }
-        }
-        if (state.editTrainerForm != props.trainer) {
-            adminButton(AdminButtonType.Edit) {
+        if (!state.addForm) {
+            adminButton(AdminButtonType.Add) {
                 setState {
-                    editTrainerForm = props.trainer
-                    state.inputs["name"]!!.inputValue = props.trainer.name
-                    state.inputs["info"]!!.inputValue = props.trainer.info
+                    addForm = true
                 }
             }
         } else {
@@ -58,7 +50,7 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                 attrs.onSubmitFunction = { event ->
                     event.preventDefault()
                     event.stopPropagation()
-                    val trainerService = TrainerService(coroutineContext)
+                    val productService = ProductService(coroutineContext)
                     props.coroutineScope.launch {
                         var formIsCompleted = true
                         state.inputs.values.forEach {
@@ -67,13 +59,12 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                             }
                         }
                         if (formIsCompleted) {
-                            trainerService.editTrainer(
-                                TrainerDTO(
-                                    props.trainer.id,
-                                    props.selectedTeam,
-                                    "address.png",
+                            productService.addProduct(
+                                ProductDTO(
+                                    null,
                                     state.inputs["name"]!!.inputValue,
-                                    state.inputs["info"]!!.inputValue,
+                                    state.inputs["cost"]!!.inputValue,
+                                    "address.png"
                                 )
                             )
                         }
@@ -82,6 +73,5 @@ class TrainerButtons : RComponent<TrainerButtonsProps, TrainerButtonsState>() {
                 formComponent(this)
             }
         }
-
     }
 }
