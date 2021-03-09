@@ -77,4 +77,7 @@ tasks.jar {
     manifest {
         attributes("Main-Class" to application.mainClassName)
     }
+//    from (
+//        configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) }
+//    )
 }

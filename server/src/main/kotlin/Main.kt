@@ -14,6 +14,9 @@ import io.ktor.sessions.*
 import kotlinx.coroutines.*
 import kotlinx.css.*
 import kotlinx.html.*
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 import rpc.rpc
 import services.*
 import java.io.File
@@ -93,47 +96,86 @@ fun Application.main() {
             rpc(HtmlService::class)
 
             post("upload/image") {
-                suspend fun InputStream.copyToSuspend(
-                    out: OutputStream,
-                    bufferSize: Int = DEFAULT_BUFFER_SIZE,
-                    yieldSize: Int = 4 * 1024 * 1024,
-                    dispatcher: CoroutineDispatcher = Dispatchers.IO
-                ): Long {
-                    return withContext(dispatcher) {
-                        val buffer = ByteArray(bufferSize)
-                        var bytesCopied = 0L
-                        var bytesAfterYield = 0L
-                        while (true) {
-                            val bytes = read(buffer).takeIf { it >= 0 } ?: break
-                            out.write(buffer, 0, bytes)
-                            if (bytesAfterYield >= yieldSize) {
-                                yield()
-                                bytesAfterYield %= yieldSize
-                            }
-                            bytesCopied += bytes
-                            bytesAfterYield += bytes
-                        }
-                        return@withContext bytesCopied
-                    }
-                }
-
+                var location: String? = null
+                val files = mutableListOf<File>()
+                val uploadDir = "uploads"
+                val timestamp = createTimestamp("yyyy-MM-dd-HH-mm-ss-SSS")
+                var counter = 0
                 val multipart = call.receiveMultipart()
+
                 multipart.forEachPart { part ->
                     when (part) {
+                        is PartData.FormItem -> {
+                            if (part.name == "location") {
+                                location = part.value
+                            }
+                        }
+
                         is PartData.FileItem -> {
-                            val uploadDir = "uploads"  // CREATED LINE
-                            val ext = File(part.originalFileName!!).extension
-                            val file = File(uploadDir, "upload-${System.currentTimeMillis()}.$ext")
+                            val suffix = randomString(8L)
+                            val fileName = "$timestamp-$counter-$suffix"
+                            val extension = part.originalFileName?.let { File(it) }?.extension ?: "file"
+                            val file = File(uploadDir, "$fileName.$extension").also { it.parentFile.mkdirs() }
+                            files += file
                             part.streamProvider().use { input ->
                                 file.outputStream().buffered().use { output -> input.copyToSuspend(output) }
                             }
                         }
-                        else -> TODO()
+                        is PartData.BinaryItem -> TODO()
                     }
-
                     part.dispose()
+                    counter += 1
+                }
+
+                location
+                    ?.takeIf { it.startsWith("uploads") || it.startsWith("images") }
+                    ?.takeIf { !it.contains("..") } //perfect task for the interview
+                    ?.let { dir ->
+                        files.replaceAll { file ->
+                            File(dir, file.name)
+                                .also { it.parentFile.mkdirs() }
+                                .takeIf { !it.exists() }
+                                ?.also { destination ->
+                                    file.copyTo(destination)
+                                    file.delete()
+                                } ?: file
+                        }
+                    }
+                val address: File.() -> String = { "$parent/$name" }
+                when (files.size) {
+                    0 -> call.respond(HttpStatusCode.BadRequest)
+                    1 -> call.respondText(files[0].address())
+                    else -> call.respondText {
+                        Json.encodeToString(ListSerializer(String.serializer()), files.map(address))
+                    }
                 }
             }
         }
+    }
+}
+
+
+@Suppress("BlockingMethodInNonBlockingContext")
+suspend fun InputStream.copyToSuspend(
+    out: OutputStream,
+    bufferSize: Int = DEFAULT_BUFFER_SIZE,
+    yieldSize: Int = 4 * 1024 * 1024,
+    dispatcher: CoroutineDispatcher = Dispatchers.IO
+): Long {
+    return withContext(dispatcher) {
+        val buffer = ByteArray(bufferSize)
+        var bytesCopied = 0L
+        var bytesAfterYield = 0L
+        while (true) {
+            val bytes = read(buffer).takeIf { it >= 0 } ?: break
+            out.write(buffer, 0, bytes)
+            if (bytesAfterYield >= yieldSize) {
+                yield()
+                bytesAfterYield %= yieldSize
+            }
+            bytesCopied += bytes
+            bytesAfterYield += bytes
+        }
+        return@withContext bytesCopied
     }
 }
