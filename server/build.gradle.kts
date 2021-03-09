@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.serialization")
     id("application")
     id("distribution")
+    id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
 val kotlinxSerializationVersion = project.property("kotlinx.serialization.version") as String
@@ -70,3 +71,10 @@ tasks.register<JavaExec>("devServer") {
 }
 
 ///////////////
+
+
+tasks.jar {
+    manifest {
+        attributes("Main-Class" to application.mainClassName)
+    }
+}
