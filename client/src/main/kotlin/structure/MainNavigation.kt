@@ -22,8 +22,8 @@ enum class Pages(val header: String, val link: String) {
     Workouts("Тренировки", "/workouts"),
     SummerCamp("Летние Сборы", "/summerCamp"),
     Gallery("Галерея", "/gallery"),
-    About("О клубе", "/about"),
-    Products("Товары", "/products")
+//    About("О клубе", "/about"),
+//    Products("Товары", "/products")
 }
 
 external interface MainNavigationProps : RProps {
