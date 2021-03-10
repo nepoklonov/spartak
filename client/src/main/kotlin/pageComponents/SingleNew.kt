@@ -100,7 +100,7 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
                 if (state.longNews?.news != null) {
                     attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
                 } else {
-                    +"загрузка..."
+                    +""
                 }
             }
             styledDiv {

@@ -4,10 +4,13 @@ import adminPageComponents.EditorComponent
 import isAdmin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.css.ObjectFit
+import kotlinx.css.objectFit
 import loading
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
+import styled.css
 import styled.styledDiv
 
 external interface SummerCampProps : RProps {
@@ -43,6 +46,13 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
             }
         }
         styledDiv {
+            css {
+                child("div"){
+                    child("img"){
+                        objectFit = ObjectFit.cover
+                    }
+                }
+            }
             state.summerCampHtml?.let {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.summerCampHtml!!)
             } ?: run { loading() }

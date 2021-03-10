@@ -29,6 +29,7 @@ private class Application : CoroutineScope {
                     styledDiv {
 //                        attrs.id = "root"
                         css {
+                            minWidth = 1060.px
                             position = Position.relative
                             marginLeft = 100.px
                             marginRight = 100.px

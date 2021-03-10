@@ -45,11 +45,12 @@ fun Application.main() {
             }
             call.respondHtml {
                 head {
+                    link(rel = "icon", href = "/favicon.ico", type = "image/x-icon")
                     meta {
                         charset = "utf-8"
                     }
                     title {
-                        +"Kotlin full stack application demo"
+                        +"Молодежный хоккейный клуб «Спартак»"
                     }
                     style {
                         unsafe {
@@ -60,7 +61,7 @@ fun Application.main() {
                 body {
                     div {
                         id = "react-app"
-                        +"Loading..."
+                        +""
                     }
                     script(src = "/resources/client.js") { }
                 }

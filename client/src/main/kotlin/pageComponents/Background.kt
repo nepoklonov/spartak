@@ -8,6 +8,7 @@ import styled.styledDiv
 fun RBuilder.background(){
     styledDiv {
         css {
+            minWidth = 1260.px
             position = Position.fixed
             backgroundImage = Image("url(/images/background.jpg)")
             backgroundSize = "cover"

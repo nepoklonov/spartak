@@ -21,10 +21,10 @@ class HeaderComponent : RComponent<HeaderProps, RState>() {
     private fun RBuilder.addIcon(src: String) {
         styledImg(src = src) {
             css {
-                media("(max-width: 1024px)"){
-                    height = 10.px
-                    margin = 3.px.toString()
-                }
+//                media("(max-width: 1024px)"){
+//                    height = 10.px
+//                    margin = 3.px.toString()
+//                }
                 height = 20.px
                 margin = 5.px.toString()
             }
@@ -50,19 +50,19 @@ class HeaderComponent : RComponent<HeaderProps, RState>() {
                 display = Display.flex
                 justifyContent = JustifyContent.spaceAround
                 alignItems = Align.center
-                media("(max-width: 1024px)"){
-                    minHeight = 150.px
-                }
+//                media("(max-width: 1024px)"){
+//                    minHeight = 150.px
+//                }
             }
 
             styledImg(src = "/images/logo.png") {
                 css {
                     width = 200.px
                     height = 231.px
-                    media("(max-width: 1024px)"){
-                        width = 100.px
-                        height = 116.px
-                    }
+//                    media("(max-width: 1024px)"){
+//                        width = 100.px
+//                        height = 116.px
+//                    }
                 }
             }
 
@@ -71,12 +71,12 @@ class HeaderComponent : RComponent<HeaderProps, RState>() {
                     alignSelf = Align.center
                     fontSize = 60.px
                     lineHeight = LineHeight.normal
-                    media("(max-width: 1024px)"){
-                        fontSize = 26.px
-                    }
-                    media("(max-width: 1200px)"){
-                        fontSize = 40.px
-                    }
+//                    media("(max-width: 1024px)"){
+//                        fontSize = 26.px
+//                    }
+//                    media("(max-width: 1200px)"){
+//                        fontSize = 40.px
+//                    }
                 }
                 +"Молодежный хоккейный клуб «Спартак»"
             }
@@ -93,9 +93,9 @@ class HeaderComponent : RComponent<HeaderProps, RState>() {
                     css {
                         lineHeight = LineHeight.normal
                         marginBottom = 30.px
-                        media("(max-width: 1024px)"){
-                           fontSize = 8.pt
-                        }
+//                        media("(max-width: 1024px)"){
+//                           fontSize = 8.pt
+//                        }
                     }
                     TextWithIcon.Address.let {
                         addIconOnPage(it.iconSrc, it.text, it.isLinked)
@@ -103,9 +103,9 @@ class HeaderComponent : RComponent<HeaderProps, RState>() {
                 }
                 styledDiv {
                     css {
-                        media("(max-width: 1024px)"){
-                            fontSize = 8.pt
-                        }
+//                        media("(max-width: 1024px)"){
+//                            fontSize = 8.pt
+//                        }
                         display = Display.flex
                         alignItems = Align.center
                         justifyContent = JustifyContent.spaceBetween

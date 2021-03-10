@@ -4,10 +4,12 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import adminPageComponents.EditorComponent
+import kotlinx.css.*
 import pageComponents.MainNews
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
+import styled.css
 import styled.styledDiv
 
 external interface MainProps : RProps {
@@ -46,10 +48,17 @@ class Main : RComponent<MainProps, MainState>() {
         }
 
         styledDiv {
+            css {
+                child("div"){
+                    child("img"){
+                        objectFit = ObjectFit.cover
+                    }
+                }
+            }
             if (state.mainHtml != null) {
                 attrs["dangerouslySetInnerHTML"] = InnerHTML(state.mainHtml!!)
             } else {
-                +"загрузка..."
+                +""
             }
         }
             child(MainNews::class) {
