@@ -134,6 +134,9 @@ INSERT INTO news (url, "date") VALUES ('/newsHtml/18.html', 1593717170000);
 INSERT INTO news (url, "date") VALUES ('/newsHtml/19.html', 1595531570000);
 INSERT INTO news (url, "date") VALUES ('/newsHtml/20.html', 1597086770000);
 INSERT INTO news (url, "date") VALUES ('/newsHtml/21.html', 1605035570000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/22.html', 1608897600000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/23.html', 1614168000000);
+INSERT INTO news (url, "date") VALUES ('/newsHtml/24.html', 1615377600000);
 
 INSERT INTO games ("date", "time", "year", "teamAId", "teamBId", stadium, "result") VALUES ('03.10.20', '19:15', 'championship2003', 4, 1, 'ЛОК', '3:6');
 INSERT INTO games ("date", "time", "year", "teamAId", "teamBId", stadium, "result") VALUES ('10.10.20', '19:45', 'championship2003', 1, 5, 'ГКА', '9:1');
