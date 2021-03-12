@@ -2,6 +2,7 @@ package structure
 
 import kotlinx.css.*
 import Consts.TextWithIcon
+import kotlinext.js.jsObject
 import react.RBuilder
 import react.RComponent
 import react.RProps
@@ -92,7 +93,12 @@ class FooterComponent : RComponent<RProps, RState>() {
                     +"Адрес на карте:"
                 }
                 styledDiv {
-                    attrs["dangerouslySetInnerHTML"] = InnerHTML("<iframe src=\"https://yandex.ru/map-widget/v1/?um=constructor%3A36ba0b6e5870ceca959a551496be2f606620f725e1f212c0ef8aa0abc8af3aff&amp;source=constructor\" width=\"400\" height=\"225\" frameborder=\"0\"></iframe>")
+                    attrs["dangerouslySetInnerHTML"] = jsObject<InnerHTML> {
+                        //language=HTML
+                        __html = "<iframe src=\"https://yandex.ru/map-widget/v1/?um=constructor%3A36ba0b6e5870ceca959" +
+                            "a551496be2f606620f725e1f212c0ef8aa0abc8af3aff&amp;source=constructor\" width=\"400\" " +
+                            "height=\"225\" frameborder=\"0\"></iframe>"
+                    }
                 }
             }
 

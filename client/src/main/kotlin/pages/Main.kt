@@ -4,6 +4,7 @@ import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import adminPageComponents.EditorComponent
+import kotlinext.js.jsObject
 import pageComponents.MainNews
 import react.*
 import react.dom.InnerHTML
@@ -47,7 +48,7 @@ class Main : RComponent<MainProps, MainState>() {
 
         styledDiv {
             if (state.mainHtml != null) {
-                attrs["dangerouslySetInnerHTML"] = InnerHTML(state.mainHtml!!)
+                attrs["dangerouslySetInnerHTML"] = jsObject<InnerHTML> { __html = state.mainHtml!! }
             } else {
                 +"загрузка..."
             }

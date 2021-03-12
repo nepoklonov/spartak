@@ -69,4 +69,8 @@ tasks.register<JavaExec>("devServer") {
     main = "io.ktor.server.netty.EngineMain"
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions.useIR = true
+}
+
 ///////////////

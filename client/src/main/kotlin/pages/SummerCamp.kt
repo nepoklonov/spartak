@@ -1,6 +1,7 @@
 package pages
 
 import adminPageComponents.EditorComponent
+import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -45,7 +46,7 @@ class SummerCamp : RComponent<SummerCampProps, SummerCampState>() {
         }
         styledDiv {
             state.summerCampHtml?.let {
-                attrs["dangerouslySetInnerHTML"] = InnerHTML(state.summerCampHtml!!)
+                attrs["dangerouslySetInnerHTML"] = jsObject<InnerHTML> { __html = state.summerCampHtml!! }
             } ?: run { loading() }
         }
     }

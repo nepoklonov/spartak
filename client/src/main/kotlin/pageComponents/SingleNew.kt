@@ -2,6 +2,7 @@ package pageComponents
 
 import adminPageComponents.EditorComponent
 import buttonSecondary
+import kotlinext.js.jsObject
 import kotlinx.browser.document
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -98,7 +99,7 @@ class SingleNew : RComponent<NewsProps, NewsState>() {
                     overflow = Overflow.hidden
                 }
                 if (state.longNews?.news != null) {
-                    attrs["dangerouslySetInnerHTML"] = InnerHTML(state.longNews?.news!!)
+                    attrs["dangerouslySetInnerHTML"] = jsObject<InnerHTML> { __html = state.longNews?.news!! }
                 } else {
                     +"загрузка..."
                 }

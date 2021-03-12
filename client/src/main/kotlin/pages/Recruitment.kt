@@ -3,13 +3,13 @@ package pages
 import Consts.recruitmentInputs
 import adminPageComponents.*
 import isAdmin
+import kotlinext.js.jsObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.css.*
 import kotlinx.html.js.onSubmitFunction
 import loading
 import model.RecruitmentDTO
-import pageComponents.*
 import react.*
 import react.dom.InnerHTML
 import services.HtmlService
@@ -88,16 +88,16 @@ class Recruitment : RComponent<RecruitmentProps, RecruitmentState>() {
                         attrs.url = "htmlPages/Recruitment.html"
                     }
                 }
-                    styledDiv {
-                        css {
-                            margin(top = 13.px)
-                            textAlign = TextAlign.center
-                            fontSize = 16.pt
-                            fontWeight = FontWeight.bold
-                        }
-                        attrs["dangerouslySetInnerHTML"] = InnerHTML(it)
+                styledDiv {
+                    css {
+                        margin(top = 13.px)
+                        textAlign = TextAlign.center
+                        fontSize = 16.pt
+                        fontWeight = FontWeight.bold
                     }
-                } ?: run { loading() }
+                    attrs["dangerouslySetInnerHTML"] = jsObject<InnerHTML> { __html = it }
+                }
+            } ?: run { loading() }
 
             styledDiv {
                 css {
